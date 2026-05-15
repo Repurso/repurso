@@ -293,6 +293,9 @@ The rewritten content must feel:
 - emotionally intelligent
 
 Avoid robotic AI writing.
+Do not add markdown section titles unless the original content already uses them.
+Preserve the same platform context as the original section.
+Return only the improved rewritten content.
 
 ${templateInstructions}
 
