@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import ReactMarkdown from "react-markdown";
+import { getPlanLimits } from "@/lib/planLimits";
 
 type Generation = {
   id: string;
@@ -15,6 +16,7 @@ type Generation = {
 type Profile = {
   plan: string;
   generation_count: number;
+  rewrite_count: number;
 };
 
 type OutputSection = {
@@ -35,12 +37,6 @@ const SECTION_TITLES = [
   "TikTok Script",
   "YouTube Description",
 ];
-
-function getPlanLimit(plan: string) {
-  if (plan === "creator") return 300;
-  if (plan === "pro") return 1000;
-  return 3;
-}
 
 function getCheckoutUrl(baseUrl: string, email: string) {
   return `${baseUrl}?checkout[email]=${encodeURIComponent(
@@ -75,6 +71,7 @@ function splitOutput(raw: string): OutputSection[] {
     if (start === -1) return;
 
     const contentStart = start + currentMarker.length;
+
     const end = nextMarker ? formatted.indexOf(nextMarker, contentStart) : -1;
 
     const content =
@@ -113,6 +110,7 @@ export default function DashboardPage() {
       } = await supabase.auth.getSession();
 
       const email = session?.user?.email ?? null;
+
       setUserEmail(email);
 
       if (!email) {
@@ -122,7 +120,7 @@ export default function DashboardPage() {
 
       const { data: profileData } = await supabase
         .from("profiles")
-        .select("plan, generation_count")
+        .select("plan, generation_count, rewrite_count")
         .eq("user_email", email)
         .single();
 
@@ -171,9 +169,39 @@ export default function DashboardPage() {
     setGenerations((prev) => prev.filter((item) => item.id !== id));
   }
 
+  function exportFile(filename: string, content: string, type: string) {
+    const blob = new Blob([content], {
+      type,
+    });
+
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+
+    a.href = url;
+    a.download = filename;
+
+    a.click();
+
+    URL.revokeObjectURL(url);
+  }
+
   const currentPlan = profile?.plan || "free";
-  const currentUsage = profile?.generation_count || 0;
-  const currentLimit = getPlanLimit(currentPlan);
+
+  const limits = getPlanLimits(currentPlan);
+
+  const generationUsage = profile?.generation_count || 0;
+  const rewriteUsage = profile?.rewrite_count || 0;
+
+  const generationPercent = Math.min(
+    (generationUsage / limits.generations) * 100,
+    100
+  );
+
+  const rewritePercent = Math.min(
+    (rewriteUsage / limits.rewrites) * 100,
+    100
+  );
 
   const creatorUrl = userEmail
     ? getCheckoutUrl(CREATOR_CHECKOUT, userEmail)
@@ -183,15 +211,41 @@ export default function DashboardPage() {
     ? getCheckoutUrl(PRO_CHECKOUT, userEmail)
     : "/login";
 
+  const analytics = useMemo(() => {
+    const totalCharacters = generations.reduce((acc, item) => {
+      return acc + item.input.length;
+    }, 0);
+
+    const thisWeek = generations.filter((item) => {
+      const created = new Date(item.created_at).getTime();
+
+      const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+
+      return created >= weekAgo;
+    });
+
+    const averageCharacters =
+      generations.length > 0
+        ? Math.round(totalCharacters / generations.length)
+        : 0;
+
+    return {
+      totalGenerations: generations.length,
+      thisWeek: thisWeek.length,
+      totalCharacters,
+      averageCharacters,
+    };
+  }, [generations]);
+
   return (
     <main className="min-h-screen bg-black px-6 py-10 text-white">
-      <div className="mx-auto max-w-6xl">
+      <div className="mx-auto max-w-7xl">
         <div className="mb-10 flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
           <div>
             <h1 className="text-5xl font-bold">Dashboard</h1>
 
             <p className="mt-3 text-zinc-400">
-              Your generated content history.
+              Analytics, usage insights and content history.
             </p>
           </div>
 
@@ -212,35 +266,144 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {userEmail && (
+        {loading ? (
+          <p className="text-zinc-400">Loading...</p>
+        ) : !userEmail ? (
+          <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-8">
+            <h2 className="mb-3 text-2xl font-bold">Login required</h2>
+
+            <p className="mb-6 text-zinc-400">
+              Please login to view your dashboard.
+            </p>
+
+            <a
+              href="/login"
+              className="inline-block rounded-xl bg-white px-5 py-3 font-semibold text-black"
+            >
+              Login
+            </a>
+          </div>
+        ) : (
           <>
-            <div className="mb-8 grid gap-4 md:grid-cols-4">
+            <div className="mb-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
               <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
-                <p className="text-sm text-zinc-500">Account</p>
+                <p className="text-sm text-zinc-500">Current plan</p>
 
-                <p className="mt-2 truncate font-semibold">{userEmail}</p>
-              </div>
-
-              <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
-                <p className="text-sm text-zinc-500">Plan</p>
-
-                <p className="mt-2 text-3xl font-bold capitalize">
+                <p className="mt-3 text-3xl font-bold capitalize">
                   {currentPlan}
                 </p>
               </div>
 
               <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
-                <p className="text-sm text-zinc-500">Usage</p>
+                <p className="text-sm text-zinc-500">Total generations</p>
 
-                <p className="mt-2 text-3xl font-bold">
-                  {currentUsage} / {currentLimit}
+                <p className="mt-3 text-3xl font-bold">
+                  {analytics.totalGenerations}
                 </p>
               </div>
 
               <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
-                <p className="text-sm text-zinc-500">Status</p>
+                <p className="text-sm text-zinc-500">Rewrites used</p>
 
-                <p className="mt-2 font-semibold text-green-400">Active</p>
+                <p className="mt-3 text-3xl font-bold">
+                  {rewriteUsage}
+                </p>
+              </div>
+
+              <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
+                <p className="text-sm text-zinc-500">This week</p>
+
+                <p className="mt-3 text-3xl font-bold">
+                  {analytics.thisWeek}
+                </p>
+              </div>
+            </div>
+
+            <div className="mb-8 grid gap-4 xl:grid-cols-2">
+              <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
+                <div className="mb-5 flex items-center justify-between">
+                  <div>
+                    <h2 className="text-2xl font-bold">
+                      Generation usage
+                    </h2>
+
+                    <p className="mt-1 text-zinc-400">
+                      Monthly AI generation usage.
+                    </p>
+                  </div>
+
+                  <p className="text-lg font-bold">
+                    {generationUsage} / {limits.generations}
+                  </p>
+                </div>
+
+                <div className="h-3 overflow-hidden rounded-full bg-zinc-900">
+                  <div
+                    className="h-full rounded-full bg-white transition-all"
+                    style={{
+                      width: `${generationPercent}%`,
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
+                <div className="mb-5 flex items-center justify-between">
+                  <div>
+                    <h2 className="text-2xl font-bold">
+                      Rewrite usage
+                    </h2>
+
+                    <p className="mt-1 text-zinc-400">
+                      Monthly rewrite usage.
+                    </p>
+                  </div>
+
+                  <p className="text-lg font-bold">
+                    {rewriteUsage} / {limits.rewrites}
+                  </p>
+                </div>
+
+                <div className="h-3 overflow-hidden rounded-full bg-zinc-900">
+                  <div
+                    className="h-full rounded-full bg-white transition-all"
+                    style={{
+                      width: `${rewritePercent}%`,
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="mb-8 grid gap-4 xl:grid-cols-3">
+              <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
+                <p className="text-sm text-zinc-500">
+                  Total input characters
+                </p>
+
+                <p className="mt-3 text-3xl font-bold">
+                  {analytics.totalCharacters.toLocaleString()}
+                </p>
+              </div>
+
+              <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
+                <p className="text-sm text-zinc-500">
+                  Average input size
+                </p>
+
+                <p className="mt-3 text-3xl font-bold">
+                  {analytics.averageCharacters}
+                </p>
+              </div>
+
+              <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
+                <p className="text-sm text-zinc-500">
+                  Account status
+                </p>
+
+                <p className="mt-3 text-3xl font-bold text-green-400">
+                  Active
+                </p>
               </div>
             </div>
 
@@ -250,7 +413,7 @@ export default function DashboardPage() {
                   <h2 className="text-2xl font-bold">Billing</h2>
 
                   <p className="mt-2 text-zinc-400">
-                    Manage your Repurso plan and monthly generation limit.
+                    Upgrade your monthly limits and unlock more AI power.
                   </p>
                 </div>
 
@@ -286,122 +449,170 @@ export default function DashboardPage() {
                   )}
 
                   {currentPlan === "pro" && (
-                    <p className="rounded-xl border border-green-500 px-5 py-3 font-semibold text-green-400">
-                      You are on the highest plan
-                    </p>
+                    <div className="rounded-xl border border-green-500 px-5 py-3 font-semibold text-green-400">
+                      Highest plan active
+                    </div>
                   )}
                 </div>
               </div>
             </div>
-          </>
-        )}
 
-        {loading ? (
-          <p className="text-zinc-400">Loading...</p>
-        ) : !userEmail ? (
-          <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-8">
-            <h2 className="mb-3 text-2xl font-bold">Login required</h2>
+            {generations.length === 0 ? (
+              <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-8">
+                <h2 className="mb-3 text-2xl font-bold">
+                  No generations yet
+                </h2>
 
-            <p className="mb-6 text-zinc-400">
-              Please login to view your generation history.
-            </p>
+                <p className="mb-6 text-zinc-400">
+                  Generate your first content to see analytics and history.
+                </p>
 
-            <a
-              href="/login"
-              className="inline-block rounded-xl bg-white px-5 py-3 font-semibold text-black"
-            >
-              Login
-            </a>
-          </div>
-        ) : generations.length === 0 ? (
-          <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-8">
-            <h2 className="mb-3 text-2xl font-bold">No generations yet</h2>
-
-            <p className="mb-6 text-zinc-400">
-              Generate your first content to see it here.
-            </p>
-
-            <a
-              href="/#generator"
-              className="inline-block rounded-xl bg-white px-5 py-3 font-semibold text-black"
-            >
-              Generate content
-            </a>
-          </div>
-        ) : (
-          <div className="space-y-5">
-            {generations.map((item) => {
-              const outputSections = splitOutput(item.output);
-
-              return (
-                <div
-                  key={item.id}
-                  className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6"
+                <a
+                  href="/#generator"
+                  className="inline-block rounded-xl bg-white px-5 py-3 font-semibold text-black"
                 >
-                  <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-                    <div className="text-sm text-zinc-500">
-                      <p>{new Date(item.created_at).toLocaleString()}</p>
-                      <p>{item.user_email}</p>
-                    </div>
+                  Generate content
+                </a>
+              </div>
+            ) : (
+              <div className="space-y-5">
+                {generations.map((item) => {
+                  const outputSections = splitOutput(item.output);
 
-                    <button
-                      onClick={() => deleteGeneration(item.id)}
-                      className="rounded-xl border border-red-500 px-4 py-2 font-semibold text-red-400"
+                  return (
+                    <div
+                      key={item.id}
+                      className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6"
                     >
-                      Delete
-                    </button>
-                  </div>
+                      <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                        <div className="text-sm text-zinc-500">
+                          <p>
+                            {new Date(item.created_at).toLocaleString()}
+                          </p>
 
-                  <div className="mb-5 rounded-2xl border border-zinc-800 bg-black p-5">
-                    <h2 className="mb-2 font-bold">Input</h2>
+                          <p>{item.user_email}</p>
+                        </div>
 
-                    <p className="whitespace-pre-wrap text-zinc-300">
-                      {item.input}
-                    </p>
-                  </div>
-
-                  <div className="space-y-4">
-                    {outputSections.map((section) => (
-                      <div
-                        key={`${item.id}-${section.title}`}
-                        className="rounded-2xl border border-zinc-800 bg-black p-5"
-                      >
-                        <div className="mb-4 flex items-center justify-between gap-4">
-                          <h2 className="text-xl font-bold">
-                            {section.title}
-                          </h2>
+                        <div className="flex flex-wrap gap-3">
+                          <button
+                            onClick={() =>
+                              exportFile(
+                                `generation-${item.id}.txt`,
+                                item.output,
+                                "text/plain;charset=utf-8"
+                              )
+                            }
+                            className="rounded-xl border border-zinc-700 px-4 py-2 font-semibold"
+                          >
+                            Export TXT
+                          </button>
 
                           <button
-                            onClick={() => copyText(section.content)}
-                            className="rounded-xl bg-white px-4 py-2 font-semibold text-black"
+                            onClick={() =>
+                              exportFile(
+                                `generation-${item.id}.md`,
+                                item.output,
+                                "text/markdown;charset=utf-8"
+                              )
+                            }
+                            className="rounded-xl border border-zinc-700 px-4 py-2 font-semibold"
                           >
-                            Copy
+                            Export MD
+                          </button>
+
+                          <button
+                            onClick={() => deleteGeneration(item.id)}
+                            className="rounded-xl border border-red-500 px-4 py-2 font-semibold text-red-400"
+                          >
+                            Delete
                           </button>
                         </div>
-
-                        <div className="leading-8 text-zinc-200">
-                          <ReactMarkdown
-                            components={{
-                              p: ({ children }) => (
-                                <p className="mb-4 whitespace-pre-wrap">
-                                  {children}
-                                </p>
-                              ),
-                              li: ({ children }) => (
-                                <li className="mb-2">{children}</li>
-                              ),
-                            }}
-                          >
-                            {section.content}
-                          </ReactMarkdown>
-                        </div>
                       </div>
-                    ))}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+
+                      <div className="mb-5 rounded-2xl border border-zinc-800 bg-black p-5">
+                        <h2 className="mb-2 font-bold">Input</h2>
+
+                        <p className="whitespace-pre-wrap text-zinc-300">
+                          {item.input}
+                        </p>
+                      </div>
+
+                      <div className="space-y-4">
+                        {outputSections.map((section) => (
+                          <div
+                            key={`${item.id}-${section.title}`}
+                            className="rounded-2xl border border-zinc-800 bg-black p-5"
+                          >
+                            <div className="mb-4 flex items-center justify-between gap-4">
+                              <h2 className="text-xl font-bold">
+                                {section.title}
+                              </h2>
+
+                              <div className="flex gap-3">
+                                <button
+                                  onClick={() =>
+                                    exportFile(
+                                      `${section.title}.txt`,
+                                      section.content,
+                                      "text/plain;charset=utf-8"
+                                    )
+                                  }
+                                  className="rounded-xl border border-zinc-700 px-4 py-2 font-semibold"
+                                >
+                                  TXT
+                                </button>
+
+                                <button
+                                  onClick={() =>
+                                    exportFile(
+                                      `${section.title}.md`,
+                                      `# ${section.title}\n\n${section.content}`,
+                                      "text/markdown;charset=utf-8"
+                                    )
+                                  }
+                                  className="rounded-xl border border-zinc-700 px-4 py-2 font-semibold"
+                                >
+                                  MD
+                                </button>
+
+                                <button
+                                  onClick={() =>
+                                    copyText(section.content)
+                                  }
+                                  className="rounded-xl bg-white px-4 py-2 font-semibold text-black"
+                                >
+                                  Copy
+                                </button>
+                              </div>
+                            </div>
+
+                            <div className="leading-8 text-zinc-200">
+                              <ReactMarkdown
+                                components={{
+                                  p: ({ children }) => (
+                                    <p className="mb-4 whitespace-pre-wrap">
+                                      {children}
+                                    </p>
+                                  ),
+                                  li: ({ children }) => (
+                                    <li className="mb-2">
+                                      {children}
+                                    </li>
+                                  ),
+                                }}
+                              >
+                                {section.content}
+                              </ReactMarkdown>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </>
         )}
       </div>
     </main>
