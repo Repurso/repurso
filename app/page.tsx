@@ -4,6 +4,12 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 
+const CREATOR_CHECKOUT =
+  "https://repursoapp.lemonsqueezy.com/checkout/buy/5f45028d-de97-458d-a827-64f8a7adc153";
+
+const PRO_CHECKOUT =
+  "https://repursoapp.lemonsqueezy.com/checkout/buy/548cbc91-792f-4fae-b6a5-569f95c119c3";
+
 export default function HomePage() {
   const [input, setInput] = useState("");
   const [result, setResult] = useState("");
@@ -18,7 +24,6 @@ export default function HomePage() {
 
       if (session?.user?.email) {
         const email = session.user.email;
-
         setUserEmail(email);
 
         const { data: existingProfile } = await supabase
@@ -67,7 +72,7 @@ export default function HomePage() {
       } else {
         setResult(data.result);
       }
-    } catch (error) {
+    } catch {
       alert("Failed to generate content.");
     }
 
@@ -86,9 +91,13 @@ export default function HomePage() {
           <h1 className="text-3xl font-bold">Repurso</h1>
 
           <div className="flex items-center gap-4">
+            <a href="#pricing" className="text-sm text-zinc-400">
+              Pricing
+            </a>
+
             {userEmail ? (
               <>
-                <span className="text-sm text-zinc-400">
+                <span className="hidden text-sm text-zinc-400 md:block">
                   {userEmail}
                 </span>
 
@@ -128,26 +137,24 @@ export default function HomePage() {
             </h2>
 
             <p className="mb-8 text-xl leading-9 text-zinc-400">
-              Repurso helps creators, founders and marketers transform one
-              piece of content into LinkedIn posts, Instagram captions,
-              X posts, TikTok scripts and YouTube descriptions.
+              Repurso helps creators, founders and marketers transform one piece
+              of content into LinkedIn posts, Instagram captions, X posts,
+              TikTok scripts and YouTube descriptions.
             </p>
 
             <div className="flex flex-wrap gap-4">
               <a
-                href="https://repursoapp.lemonsqueezy.com/checkout/buy/5f45028d-de97-458d-a827-64f8a7adc153"
-                target="_blank"
+                href="#generator"
                 className="rounded-2xl bg-white px-8 py-4 font-bold text-black"
               >
-                Get Creator
+                Try it free
               </a>
 
               <a
-                href="https://repursoapp.lemonsqueezy.com/checkout/buy/548cbc91-792f-4fae-b6a5-569f95c119c3"
-                target="_blank"
+                href="#pricing"
                 className="rounded-2xl border border-zinc-700 px-8 py-4 font-bold"
               >
-                Get Pro
+                View pricing
               </a>
             </div>
           </div>
@@ -160,40 +167,37 @@ export default function HomePage() {
             </div>
 
             <div className="rounded-3xl bg-black p-6">
-              <div className="mb-8">
-                <p className="mb-3 text-zinc-500">Input</p>
+              <p className="mb-3 text-zinc-500">Input</p>
 
-                <p className="text-xl leading-9">
-                  AI tools help creators save time by turning one piece of
-                  content into many different formats.
-                </p>
-              </div>
+              <p className="mb-8 text-xl leading-9">
+                AI tools help creators save time by turning one piece of content
+                into many different formats.
+              </p>
 
-              <div>
-                <p className="mb-3 text-zinc-500">Output</p>
+              <p className="mb-3 text-zinc-500">Output</p>
 
-                <div className="space-y-4">
-                  <div className="rounded-2xl border border-zinc-800 p-4">
-                    LinkedIn post generated
-                  </div>
+              <div className="space-y-4">
+                <div className="rounded-2xl border border-zinc-800 p-4">
+                  LinkedIn post generated
+                </div>
 
-                  <div className="rounded-2xl border border-zinc-800 p-4">
-                    Instagram caption generated
-                  </div>
+                <div className="rounded-2xl border border-zinc-800 p-4">
+                  Instagram caption generated
+                </div>
 
-                  <div className="rounded-2xl border border-zinc-800 p-4">
-                    TikTok script generated
-                  </div>
+                <div className="rounded-2xl border border-zinc-800 p-4">
+                  TikTok script generated
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        <section className="rounded-[32px] border border-zinc-800 bg-zinc-950 p-8">
-          <h3 className="mb-2 text-5xl font-bold">
-            Generate content
-          </h3>
+        <section
+          id="generator"
+          className="mb-24 rounded-[32px] border border-zinc-800 bg-zinc-950 p-8"
+        >
+          <h3 className="mb-2 text-5xl font-bold">Generate content</h3>
 
           <p className="mb-8 text-xl text-zinc-400">
             Paste your content and let Repurso turn it into multiple formats.
@@ -219,6 +223,112 @@ export default function HomePage() {
               {result}
             </div>
           )}
+        </section>
+
+        <section id="pricing" className="py-16">
+          <div className="mb-12 text-center">
+            <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-zinc-500">
+              Pricing
+            </p>
+
+            <h2 className="mb-4 text-5xl font-bold">
+              Choose your content engine.
+            </h2>
+
+            <p className="mx-auto max-w-2xl text-lg leading-8 text-zinc-400">
+              Start free, then upgrade when Repurso becomes part of your content
+              workflow.
+            </p>
+          </div>
+
+          <div className="grid gap-6 lg:grid-cols-3">
+            <div className="rounded-[32px] border border-zinc-800 bg-zinc-950 p-8">
+              <h3 className="mb-2 text-2xl font-bold">Free</h3>
+
+              <p className="mb-6 text-zinc-400">For testing the product.</p>
+
+              <div className="mb-8">
+                <span className="text-5xl font-bold">₺0</span>
+                <span className="text-zinc-500"> / forever</span>
+              </div>
+
+              <ul className="mb-8 space-y-4 text-zinc-300">
+                <li>✓ 3 AI generations</li>
+                <li>✓ 5 output formats</li>
+                <li>✓ Google login</li>
+                <li>✓ Dashboard history</li>
+              </ul>
+
+              <a
+                href="#generator"
+                className="block rounded-2xl border border-zinc-700 px-6 py-4 text-center font-bold"
+              >
+                Start free
+              </a>
+            </div>
+
+            <div className="relative rounded-[32px] border border-white bg-white p-8 text-black">
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-black px-4 py-2 text-sm font-bold text-white">
+                Most popular
+              </div>
+
+              <h3 className="mb-2 text-2xl font-bold">Creator</h3>
+
+              <p className="mb-6 text-zinc-600">
+                For creators posting every week.
+              </p>
+
+              <div className="mb-8">
+                <span className="text-5xl font-bold">₺299</span>
+                <span className="text-zinc-600"> / month</span>
+              </div>
+
+              <ul className="mb-8 space-y-4">
+                <li>✓ 300 AI generations / month</li>
+                <li>✓ Better output quality</li>
+                <li>✓ Saved content history</li>
+                <li>✓ Copy and delete outputs</li>
+                <li>✓ Great for solo creators</li>
+              </ul>
+
+              <a
+                href={CREATOR_CHECKOUT}
+                target="_blank"
+                className="block rounded-2xl bg-black px-6 py-4 text-center font-bold text-white"
+              >
+                Upgrade to Creator
+              </a>
+            </div>
+
+            <div className="rounded-[32px] border border-zinc-800 bg-zinc-950 p-8">
+              <h3 className="mb-2 text-2xl font-bold">Pro</h3>
+
+              <p className="mb-6 text-zinc-400">
+                For power users and small teams.
+              </p>
+
+              <div className="mb-8">
+                <span className="text-5xl font-bold">₺599</span>
+                <span className="text-zinc-500"> / month</span>
+              </div>
+
+              <ul className="mb-8 space-y-4 text-zinc-300">
+                <li>✓ 1000 AI generations / month</li>
+                <li>✓ Priority content workflows</li>
+                <li>✓ Advanced repurposing formats</li>
+                <li>✓ Best for agencies and teams</li>
+                <li>✓ More room to scale</li>
+              </ul>
+
+              <a
+                href={PRO_CHECKOUT}
+                target="_blank"
+                className="block rounded-2xl border border-zinc-700 px-6 py-4 text-center font-bold"
+              >
+                Upgrade to Pro
+              </a>
+            </div>
+          </div>
         </section>
       </div>
     </main>
