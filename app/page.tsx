@@ -4,6 +4,11 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import ReactMarkdown from "react-markdown";
+import {
+  DEFAULT_PROMPT_TEMPLATE_ID,
+  PROMPT_TEMPLATES,
+  PromptTemplateId,
+} from "@/lib/templates";
 
 const CREATOR_CHECKOUT = (email: string) =>
   `https://repursoapp.lemonsqueezy.com/checkout/buy/5f45028d-de97-458d-a827-64f8a7adc153?checkout[email]=${encodeURIComponent(email)}&checkout[custom][user_email]=${encodeURIComponent(email)}`;
@@ -28,7 +33,10 @@ function formatOutput(raw: string) {
   let text = raw;
 
   SECTION_TITLES.forEach((title) => {
-    text = text.replace(new RegExp(`\\n?#{0,6}\\s*${title}`, "gi"), `\n\n# ${title}\n`);
+    text = text.replace(
+      new RegExp(`\\n?#{0,6}\\s*${title}`, "gi"),
+      `\n\n# ${title}\n`
+    );
   });
 
   return text.trim();
@@ -78,6 +86,8 @@ export default function HomePage() {
   const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
   const [userEmail, setUserEmail] = useState("");
+  const [selectedTemplate, setSelectedTemplate] =
+    useState<PromptTemplateId>(DEFAULT_PROMPT_TEMPLATE_ID);
 
   const outputSections = result ? splitOutput(result) : [];
 
@@ -127,6 +137,7 @@ export default function HomePage() {
         },
         body: JSON.stringify({
           input,
+          template: selectedTemplate,
           userEmail: userEmail || "anonymous",
         }),
       });
@@ -273,6 +284,43 @@ export default function HomePage() {
           <p className="mb-8 text-xl text-zinc-400">
             Paste your content and let Repurso turn it into multiple formats.
           </p>
+
+          <div className="mb-8">
+            <p className="mb-4 text-sm font-semibold uppercase tracking-[0.25em] text-zinc-500">
+              Template
+            </p>
+
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
+              {PROMPT_TEMPLATES.map((template) => {
+                const isSelected = selectedTemplate === template.id;
+
+                return (
+                  <button
+                    key={template.id}
+                    type="button"
+                    onClick={() => setSelectedTemplate(template.id)}
+                    className={`rounded-3xl border p-5 text-left transition ${
+                      isSelected
+                        ? "border-white bg-white text-black"
+                        : "border-zinc-800 bg-black text-white hover:border-zinc-600"
+                    }`}
+                  >
+                    <h4 className="mb-2 text-lg font-bold">
+                      {template.name}
+                    </h4>
+
+                    <p
+                      className={`text-sm leading-6 ${
+                        isSelected ? "text-zinc-700" : "text-zinc-400"
+                      }`}
+                    >
+                      {template.description}
+                    </p>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
 
           <textarea
             placeholder="Paste your content here..."
