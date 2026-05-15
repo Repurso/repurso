@@ -17,17 +17,28 @@ type Profile = {
   generation_count: number;
 };
 
+const CREATOR_CHECKOUT =
+  "https://repursoapp.lemonsqueezy.com/checkout/buy/5f45028d-de97-458d-a827-64f8a7adc153";
+
+const PRO_CHECKOUT =
+  "https://repursoapp.lemonsqueezy.com/checkout/buy/548cbc91-792f-4fae-b6a5-569f95c119c3";
+
 function getPlanLimit(plan: string) {
   if (plan === "creator") return 300;
   if (plan === "pro") return 1000;
   return 3;
 }
 
+function getCheckoutUrl(baseUrl: string, email: string) {
+  return `${baseUrl}?checkout[email]=${encodeURIComponent(
+    email
+  )}&checkout[custom][user_email]=${encodeURIComponent(email)}`;
+}
+
 export default function DashboardPage() {
   const [generations, setGenerations] = useState<Generation[]>([]);
   const [loading, setLoading] = useState(true);
   const [userEmail, setUserEmail] = useState<string | null>(null);
-
   const [profile, setProfile] = useState<Profile | null>(null);
 
   useEffect(() => {
@@ -37,7 +48,6 @@ export default function DashboardPage() {
       } = await supabase.auth.getSession();
 
       const email = session?.user?.email ?? null;
-
       setUserEmail(email);
 
       if (!email) {
@@ -93,14 +103,20 @@ export default function DashboardPage() {
       return;
     }
 
-    setGenerations((prev) =>
-      prev.filter((item) => item.id !== id)
-    );
+    setGenerations((prev) => prev.filter((item) => item.id !== id));
   }
 
   const currentPlan = profile?.plan || "free";
   const currentUsage = profile?.generation_count || 0;
   const currentLimit = getPlanLimit(currentPlan);
+
+  const creatorUrl = userEmail
+    ? getCheckoutUrl(CREATOR_CHECKOUT, userEmail)
+    : "/login";
+
+  const proUrl = userEmail
+    ? getCheckoutUrl(PRO_CHECKOUT, userEmail)
+    : "/login";
 
   return (
     <main className="min-h-screen bg-black px-6 py-10 text-white">
@@ -108,7 +124,6 @@ export default function DashboardPage() {
         <div className="mb-10 flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
           <div>
             <h1 className="text-5xl font-bold">Dashboard</h1>
-
             <p className="mt-3 text-zinc-400">
               Your generated content history.
             </p>
@@ -132,49 +147,89 @@ export default function DashboardPage() {
         </div>
 
         {userEmail && (
-          <div className="mb-8 grid gap-4 md:grid-cols-4">
-            <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
-              <p className="text-sm text-zinc-500">Account</p>
+          <>
+            <div className="mb-8 grid gap-4 md:grid-cols-4">
+              <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
+                <p className="text-sm text-zinc-500">Account</p>
+                <p className="mt-2 truncate font-semibold">{userEmail}</p>
+              </div>
 
-              <p className="mt-2 truncate font-semibold">
-                {userEmail}
-              </p>
+              <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
+                <p className="text-sm text-zinc-500">Plan</p>
+                <p className="mt-2 text-3xl font-bold capitalize">
+                  {currentPlan}
+                </p>
+              </div>
+
+              <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
+                <p className="text-sm text-zinc-500">Usage</p>
+                <p className="mt-2 text-3xl font-bold">
+                  {currentUsage} / {currentLimit}
+                </p>
+              </div>
+
+              <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
+                <p className="text-sm text-zinc-500">Status</p>
+                <p className="mt-2 font-semibold text-green-400">Active</p>
+              </div>
             </div>
 
-            <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
-              <p className="text-sm text-zinc-500">Plan</p>
+            <div className="mb-8 rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
+              <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+                <div>
+                  <h2 className="text-2xl font-bold">Billing</h2>
+                  <p className="mt-2 text-zinc-400">
+                    Manage your Repurso plan and monthly generation limit.
+                  </p>
+                </div>
 
-              <p className="mt-2 text-3xl font-bold capitalize">
-                {currentPlan}
-              </p>
+                <div className="flex flex-wrap gap-3">
+                  {currentPlan === "free" && (
+                    <>
+                      <a
+                        href={creatorUrl}
+                        target="_blank"
+                        className="rounded-xl bg-white px-5 py-3 font-semibold text-black"
+                      >
+                        Upgrade to Creator
+                      </a>
+
+                      <a
+                        href={proUrl}
+                        target="_blank"
+                        className="rounded-xl border border-zinc-700 px-5 py-3 font-semibold"
+                      >
+                        Upgrade to Pro
+                      </a>
+                    </>
+                  )}
+
+                  {currentPlan === "creator" && (
+                    <a
+                      href={proUrl}
+                      target="_blank"
+                      className="rounded-xl bg-white px-5 py-3 font-semibold text-black"
+                    >
+                      Upgrade to Pro
+                    </a>
+                  )}
+
+                  {currentPlan === "pro" && (
+                    <p className="rounded-xl border border-green-500 px-5 py-3 font-semibold text-green-400">
+                      You are on the highest plan
+                    </p>
+                  )}
+                </div>
+              </div>
             </div>
-
-            <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
-              <p className="text-sm text-zinc-500">Usage</p>
-
-              <p className="mt-2 text-3xl font-bold">
-                {currentUsage} / {currentLimit}
-              </p>
-            </div>
-
-            <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
-              <p className="text-sm text-zinc-500">Status</p>
-
-              <p className="mt-2 font-semibold text-green-400">
-                Active
-              </p>
-            </div>
-          </div>
+          </>
         )}
 
         {loading ? (
           <p className="text-zinc-400">Loading...</p>
         ) : !userEmail ? (
           <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-8">
-            <h2 className="mb-3 text-2xl font-bold">
-              Login required
-            </h2>
-
+            <h2 className="mb-3 text-2xl font-bold">Login required</h2>
             <p className="mb-6 text-zinc-400">
               Please login to view your generation history.
             </p>
@@ -188,10 +243,7 @@ export default function DashboardPage() {
           </div>
         ) : generations.length === 0 ? (
           <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-8">
-            <h2 className="mb-3 text-2xl font-bold">
-              No generations yet
-            </h2>
-
+            <h2 className="mb-3 text-2xl font-bold">No generations yet</h2>
             <p className="mb-6 text-zinc-400">
               Generate your first content to see it here.
             </p>
@@ -212,10 +264,7 @@ export default function DashboardPage() {
               >
                 <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                   <div className="text-sm text-zinc-500">
-                    <p>
-                      {new Date(item.created_at).toLocaleString()}
-                    </p>
-
+                    <p>{new Date(item.created_at).toLocaleString()}</p>
                     <p>{item.user_email}</p>
                   </div>
 
@@ -238,7 +287,6 @@ export default function DashboardPage() {
 
                 <div className="mb-5 rounded-2xl border border-zinc-800 bg-black p-5">
                   <h2 className="mb-2 font-bold">Input</h2>
-
                   <p className="whitespace-pre-wrap text-zinc-300">
                     {item.input}
                   </p>
@@ -248,9 +296,7 @@ export default function DashboardPage() {
                   <h2 className="mb-4 font-bold">Output</h2>
 
                   <div className="prose prose-invert max-w-none">
-                    <ReactMarkdown>
-                      {item.output}
-                    </ReactMarkdown>
+                    <ReactMarkdown>{item.output}</ReactMarkdown>
                   </div>
                 </div>
               </div>
