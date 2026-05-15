@@ -205,10 +205,7 @@ export default function HomePage() {
       });
 
       const rebuiltResult = updatedSections
-        .map(
-          (section) =>
-            `# ${section.title}\n\n${section.content}`
-        )
+        .map((section) => `# ${section.title}\n\n${section.content}`)
         .join("\n\n");
 
       setResult(rebuiltResult);
@@ -413,11 +410,7 @@ export default function HomePage() {
                     <div className="flex flex-wrap gap-3">
                       <button
                         onClick={() =>
-                          rewriteSection(
-                            section.id,
-                            section.content,
-                            "default"
-                          )
+                          rewriteSection(section.id, section.content, "default")
                         }
                         disabled={rewriteLoadingId === section.id}
                         className="rounded-xl border border-zinc-700 px-4 py-2 text-sm font-semibold hover:border-zinc-500 disabled:opacity-60"
@@ -451,6 +444,40 @@ export default function HomePage() {
                         className="rounded-xl border border-zinc-700 px-4 py-2 text-sm font-semibold hover:border-zinc-500 disabled:opacity-60"
                       >
                         More Professional
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          rewriteSection(section.id, section.content, "shorter")
+                        }
+                        disabled={rewriteLoadingId === section.id}
+                        className="rounded-xl border border-zinc-700 px-4 py-2 text-sm font-semibold hover:border-zinc-500 disabled:opacity-60"
+                      >
+                        Shorter
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          rewriteSection(section.id, section.content, "longer")
+                        }
+                        disabled={rewriteLoadingId === section.id}
+                        className="rounded-xl border border-zinc-700 px-4 py-2 text-sm font-semibold hover:border-zinc-500 disabled:opacity-60"
+                      >
+                        Longer
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          rewriteSection(
+                            section.id,
+                            section.content,
+                            "more-emotional"
+                          )
+                        }
+                        disabled={rewriteLoadingId === section.id}
+                        className="rounded-xl border border-zinc-700 px-4 py-2 text-sm font-semibold hover:border-zinc-500 disabled:opacity-60"
+                      >
+                        More Emotional
                       </button>
 
                       <button
