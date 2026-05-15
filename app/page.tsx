@@ -11,6 +11,11 @@ import {
 } from "@/lib/templates";
 import { getPlanLimits } from "@/lib/planLimits";
 import { SavedPrompt } from "@/types/prompt";
+import {
+  DEFAULT_QUALITY_MODE,
+  QUALITY_MODES,
+  QualityModeId,
+} from "@/lib/qualityModes";
 
 const CREATOR_CHECKOUT = (email: string) =>
   `https://repursoapp.lemonsqueezy.com/checkout/buy/5f45028d-de97-458d-a827-64f8a7adc153?checkout[email]=${encodeURIComponent(
@@ -102,6 +107,9 @@ export default function HomePage() {
 
   const [selectedTemplate, setSelectedTemplate] =
     useState<PromptTemplateId>(DEFAULT_PROMPT_TEMPLATE_ID);
+
+  const [qualityMode, setQualityMode] =
+    useState<QualityModeId>(DEFAULT_QUALITY_MODE);
 
   const [rewriteLoadingId, setRewriteLoadingId] = useState<string | null>(null);
 
@@ -200,6 +208,7 @@ export default function HomePage() {
         body: JSON.stringify({
           input,
           template: selectedTemplate,
+          qualityMode,
           userEmail: userEmail || "anonymous",
         }),
       });
@@ -257,6 +266,7 @@ export default function HomePage() {
           content,
           rewriteType,
           template: selectedTemplate,
+          qualityMode,
           userEmail: userEmail || "anonymous",
         }),
       });
@@ -503,6 +513,41 @@ export default function HomePage() {
           <p className="mb-8 text-xl text-zinc-400">
             Paste your content and let Repurso turn it into multiple formats.
           </p>
+
+          <div className="mb-8">
+            <p className="mb-4 text-sm font-semibold uppercase tracking-[0.25em] text-zinc-500">
+              Quality Mode
+            </p>
+
+            <div className="grid gap-4 md:grid-cols-3">
+              {QUALITY_MODES.map((mode) => {
+                const isSelected = qualityMode === mode.id;
+
+                return (
+                  <button
+                    key={mode.id}
+                    type="button"
+                    onClick={() => setQualityMode(mode.id)}
+                    className={`rounded-3xl border p-5 text-left transition ${
+                      isSelected
+                        ? "border-white bg-white text-black"
+                        : "border-zinc-800 bg-black text-white hover:border-zinc-600"
+                    }`}
+                  >
+                    <h4 className="mb-2 text-lg font-bold">{mode.name}</h4>
+
+                    <p
+                      className={`text-sm leading-6 ${
+                        isSelected ? "text-zinc-700" : "text-zinc-400"
+                      }`}
+                    >
+                      {mode.description}
+                    </p>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
 
           <div className="mb-8">
             <p className="mb-4 text-sm font-semibold uppercase tracking-[0.25em] text-zinc-500">
@@ -936,8 +981,7 @@ export default function HomePage() {
                 <li>✓ 10 rewrites / month</li>
                 <li>✓ 1,000 characters</li>
                 <li>✓ 5 output formats</li>
-                <li>✓ Google login</li>
-                <li>✓ Dashboard history</li>
+                <li>✓ AI quality modes</li>
                 <li>✓ Saved prompt library</li>
               </ul>
 
@@ -969,9 +1013,8 @@ export default function HomePage() {
                 <li>✓ 300 AI generations / month</li>
                 <li>✓ 500 rewrites / month</li>
                 <li>✓ 5,000 characters</li>
+                <li>✓ AI quality modes</li>
                 <li>✓ Saved prompt library</li>
-                <li>✓ Better output quality</li>
-                <li>✓ Saved content history</li>
                 <li>✓ TXT and Markdown export</li>
               </ul>
 
@@ -1000,10 +1043,9 @@ export default function HomePage() {
                 <li>✓ 1000 AI generations / month</li>
                 <li>✓ 2000 rewrites / month</li>
                 <li>✓ 10,000 characters</li>
+                <li>✓ AI quality modes</li>
                 <li>✓ Saved prompt library</li>
                 <li>✓ Priority content workflows</li>
-                <li>✓ TXT and Markdown export</li>
-                <li>✓ Best for agencies and teams</li>
               </ul>
 
               <a

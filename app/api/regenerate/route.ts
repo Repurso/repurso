@@ -7,6 +7,11 @@ import {
   PromptTemplateId,
 } from "@/lib/templates";
 import { getPlanLimits } from "@/lib/planLimits";
+import {
+  DEFAULT_QUALITY_MODE,
+  isQualityMode,
+  QualityModeId,
+} from "@/lib/qualityModes";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -121,6 +126,47 @@ STYLE DIRECTION:
   }
 }
 
+function getQualityInstructions(mode: QualityModeId) {
+  switch (mode) {
+    case "fast":
+      return {
+        temperature: 0.5,
+        instructions: `
+QUALITY MODE:
+- Fast mode is selected.
+- Keep rewrites shorter, cleaner, and more direct.
+- Prioritize clarity and speed.
+- Preserve the core meaning.
+`,
+      };
+
+    case "viral":
+      return {
+        temperature: 1,
+        instructions: `
+QUALITY MODE:
+- Viral mode is selected.
+- Make the rewrite more attention-grabbing.
+- Strengthen hooks, curiosity, emotion, and retention.
+- Optimize for comments, shares, saves, and scroll-stopping impact.
+`,
+      };
+
+    case "premium":
+    default:
+      return {
+        temperature: 0.8,
+        instructions: `
+QUALITY MODE:
+- Premium mode is selected.
+- Make the rewrite polished, strategic, and creator-level.
+- Improve structure, emotional intelligence, and platform-native feel.
+- Keep the writing human, premium, and non-robotic.
+`,
+      };
+  }
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
@@ -132,6 +178,10 @@ export async function POST(req: Request) {
     const template = isPromptTemplateId(body.template)
       ? body.template
       : DEFAULT_PROMPT_TEMPLATE_ID;
+
+    const qualityMode = isQualityMode(body.qualityMode)
+      ? body.qualityMode
+      : DEFAULT_QUALITY_MODE;
 
     if (!content || !content.trim()) {
       return NextResponse.json(
@@ -219,9 +269,11 @@ export async function POST(req: Request) {
 
     const rewriteInstructions = getRewriteInstructions(rewriteType);
     const templateInstructions = getTemplateInstructions(template);
+    const qualitySettings = getQualityInstructions(qualityMode);
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4.1-mini",
+      temperature: qualitySettings.temperature,
       messages: [
         {
           role: "system",
@@ -245,6 +297,8 @@ Avoid robotic AI writing.
 ${templateInstructions}
 
 ${rewriteInstructions}
+
+${qualitySettings.instructions}
 `,
         },
         {

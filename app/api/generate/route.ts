@@ -7,6 +7,11 @@ import {
   PromptTemplateId,
 } from "@/lib/templates";
 import { getPlanLimits } from "@/lib/planLimits";
+import {
+  DEFAULT_QUALITY_MODE,
+  isQualityMode,
+  QualityModeId,
+} from "@/lib/qualityModes";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -79,6 +84,51 @@ STYLE DIRECTION:
   }
 }
 
+function getQualityInstructions(mode: QualityModeId) {
+  switch (mode) {
+    case "fast":
+      return {
+        temperature: 0.5,
+        instructions: `
+QUALITY MODE:
+- Fast mode is selected.
+- Keep outputs shorter and more direct.
+- Prioritize speed, clarity, and clean formatting.
+- Avoid unnecessary length.
+- Still make the writing useful and platform-native.
+`,
+      };
+
+    case "viral":
+      return {
+        temperature: 1,
+        instructions: `
+QUALITY MODE:
+- Viral mode is selected.
+- Prioritize scroll-stopping hooks.
+- Make the content more emotionally charged.
+- Optimize for comments, shares, saves, and retention.
+- Use punchier lines and stronger curiosity loops.
+- Make every platform section feel highly engaging.
+`,
+      };
+
+    case "premium":
+    default:
+      return {
+        temperature: 0.8,
+        instructions: `
+QUALITY MODE:
+- Premium mode is selected.
+- Prioritize polished, high-quality creator-style writing.
+- Add emotional depth and strong structure.
+- Make the content feel strategic, human, and premium.
+- Balance clarity, engagement, and authority.
+`,
+      };
+  }
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
@@ -89,6 +139,10 @@ export async function POST(req: Request) {
     const template = isPromptTemplateId(body.template)
       ? body.template
       : DEFAULT_PROMPT_TEMPLATE_ID;
+
+    const qualityMode = isQualityMode(body.qualityMode)
+      ? body.qualityMode
+      : DEFAULT_QUALITY_MODE;
 
     if (!input || !input.trim()) {
       return NextResponse.json(
@@ -201,9 +255,11 @@ export async function POST(req: Request) {
     }
 
     const templateInstructions = getTemplateInstructions(template);
+    const qualitySettings = getQualityInstructions(qualityMode);
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4.1-mini",
+      temperature: qualitySettings.temperature,
       messages: [
         {
           role: "system",
@@ -239,6 +295,8 @@ Every section title MUST start with #.
 Use blank lines between sections.
 
 ${templateInstructions}
+
+${qualitySettings.instructions}
 `,
         },
         {
