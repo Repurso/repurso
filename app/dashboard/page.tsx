@@ -24,6 +24,9 @@ type OutputSection = {
   content: string;
 };
 
+type DateFilter = "all" | "today" | "week" | "month";
+type SortOrder = "latest" | "oldest";
+
 const CREATOR_CHECKOUT =
   "https://repursoapp.lemonsqueezy.com/checkout/buy/5f45028d-de97-458d-a827-64f8a7adc153";
 
@@ -106,12 +109,44 @@ function getPercent(used: number, limit: number) {
   return Math.min((used / limit) * 100, 100);
 }
 
+function isWithinDateFilter(date: string, filter: DateFilter) {
+  if (filter === "all") return true;
+
+  const created = new Date(date);
+  const now = new Date();
+
+  if (filter === "today") {
+    return (
+      created.getFullYear() === now.getFullYear() &&
+      created.getMonth() === now.getMonth() &&
+      created.getDate() === now.getDate()
+    );
+  }
+
+  if (filter === "week") {
+    const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+
+    return created.getTime() >= weekAgo;
+  }
+
+  if (filter === "month") {
+    return (
+      created.getFullYear() === now.getFullYear() &&
+      created.getMonth() === now.getMonth()
+    );
+  }
+
+  return true;
+}
+
 export default function DashboardPage() {
   const [generations, setGenerations] = useState<Generation[]>([]);
   const [loading, setLoading] = useState(true);
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [dateFilter, setDateFilter] = useState<DateFilter>("all");
+  const [sortOrder, setSortOrder] = useState<SortOrder>("latest");
 
   useEffect(() => {
     async function loadDashboard() {
@@ -194,6 +229,12 @@ export default function DashboardPage() {
     URL.revokeObjectURL(url);
   }
 
+  function clearFilters() {
+    setSearchQuery("");
+    setDateFilter("all");
+    setSortOrder("latest");
+  }
+
   const currentPlan = profile?.plan || "free";
   const limits = getPlanLimits(currentPlan);
 
@@ -221,16 +262,27 @@ export default function DashboardPage() {
   const filteredGenerations = useMemo(() => {
     const query = searchQuery.toLowerCase().trim();
 
-    if (!query) return generations;
-
-    return generations.filter((item) => {
-      return (
+    const filtered = generations.filter((item) => {
+      const matchesSearch =
+        !query ||
         item.input.toLowerCase().includes(query) ||
         item.output.toLowerCase().includes(query) ||
-        new Date(item.created_at).toLocaleString().toLowerCase().includes(query)
-      );
+        new Date(item.created_at).toLocaleString().toLowerCase().includes(query);
+
+      const matchesDate = isWithinDateFilter(item.created_at, dateFilter);
+
+      return matchesSearch && matchesDate;
     });
-  }, [generations, searchQuery]);
+
+    return filtered.sort((a, b) => {
+      const aTime = new Date(a.created_at).getTime();
+      const bTime = new Date(b.created_at).getTime();
+
+      if (sortOrder === "latest") return bTime - aTime;
+
+      return aTime - bTime;
+    });
+  }, [generations, searchQuery, dateFilter, sortOrder]);
 
   const analytics = useMemo(() => {
     const totalCharacters = generations.reduce((acc, item) => {
@@ -354,9 +406,7 @@ export default function DashboardPage() {
               <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
                 <p className="text-sm text-zinc-500">Rewrites remaining</p>
 
-                <p className="mt-3 text-3xl font-bold">
-                  {rewriteRemaining}
-                </p>
+                <p className="mt-3 text-3xl font-bold">{rewriteRemaining}</p>
 
                 <p className="mt-2 text-sm text-zinc-500">
                   {rewriteUsage} used of {limits.rewrites}
@@ -515,22 +565,53 @@ export default function DashboardPage() {
             </div>
 
             <div className="mb-6 rounded-3xl border border-zinc-800 bg-zinc-950 p-5">
-              <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+              <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                 <div>
                   <h2 className="text-2xl font-bold">Content history</h2>
 
                   <p className="mt-1 text-sm text-zinc-500">
-                    Search by input, output, or date.
+                    {filteredGenerations.length} result
+                    {filteredGenerations.length === 1 ? "" : "s"} shown from{" "}
+                    {generations.length} total.
                   </p>
                 </div>
 
+                <button
+                  onClick={clearFilters}
+                  className="rounded-xl border border-zinc-700 px-4 py-2 text-sm font-semibold text-zinc-300"
+                >
+                  Clear filters
+                </button>
+              </div>
+
+              <div className="grid gap-3 md:grid-cols-3">
                 <input
                   type="text"
                   placeholder="Search history..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="h-12 w-full rounded-2xl border border-zinc-800 bg-black px-5 text-white outline-none placeholder:text-zinc-600 md:max-w-sm"
+                  className="h-12 rounded-2xl border border-zinc-800 bg-black px-5 text-white outline-none placeholder:text-zinc-600"
                 />
+
+                <select
+                  value={dateFilter}
+                  onChange={(e) => setDateFilter(e.target.value as DateFilter)}
+                  className="h-12 rounded-2xl border border-zinc-800 bg-black px-5 text-white outline-none"
+                >
+                  <option value="all">All time</option>
+                  <option value="today">Today</option>
+                  <option value="week">This week</option>
+                  <option value="month">This month</option>
+                </select>
+
+                <select
+                  value={sortOrder}
+                  onChange={(e) => setSortOrder(e.target.value as SortOrder)}
+                  className="h-12 rounded-2xl border border-zinc-800 bg-black px-5 text-white outline-none"
+                >
+                  <option value="latest">Latest first</option>
+                  <option value="oldest">Oldest first</option>
+                </select>
               </div>
             </div>
 
@@ -555,9 +636,16 @@ export default function DashboardPage() {
               <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-8 text-center">
                 <h2 className="mb-3 text-2xl font-bold">No results found</h2>
 
-                <p className="text-zinc-400">
-                  Try a different search term.
+                <p className="mb-6 text-zinc-400">
+                  Try a different search term or filter.
                 </p>
+
+                <button
+                  onClick={clearFilters}
+                  className="rounded-xl bg-white px-5 py-3 font-semibold text-black"
+                >
+                  Clear filters
+                </button>
               </div>
             ) : (
               <div className="space-y-5">
