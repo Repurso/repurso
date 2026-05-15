@@ -10,12 +10,17 @@ import {
   PromptTemplateId,
 } from "@/lib/templates";
 import { getPlanLimits } from "@/lib/planLimits";
+import { SavedPrompt } from "@/types/prompt";
 
 const CREATOR_CHECKOUT = (email: string) =>
-  `https://repursoapp.lemonsqueezy.com/checkout/buy/5f45028d-de97-458d-a827-64f8a7adc153?checkout[email]=${encodeURIComponent(email)}&checkout[custom][user_email]=${encodeURIComponent(email)}`;
+  `https://repursoapp.lemonsqueezy.com/checkout/buy/5f45028d-de97-458d-a827-64f8a7adc153?checkout[email]=${encodeURIComponent(
+    email
+  )}&checkout[custom][user_email]=${encodeURIComponent(email)}`;
 
 const PRO_CHECKOUT = (email: string) =>
-  `https://repursoapp.lemonsqueezy.com/checkout/buy/548cbc91-792f-4fae-b6a5-569f95c119c3?checkout[email]=${encodeURIComponent(email)}&checkout[custom][user_email]=${encodeURIComponent(email)}`;
+  `https://repursoapp.lemonsqueezy.com/checkout/buy/548cbc91-792f-4fae-b6a5-569f95c119c3?checkout[email]=${encodeURIComponent(
+    email
+  )}&checkout[custom][user_email]=${encodeURIComponent(email)}`;
 
 const SECTION_TITLES = [
   "LinkedIn Post",
@@ -58,7 +63,6 @@ function splitOutput(raw: string): OutputSection[] {
     if (start === -1) return;
 
     const contentStart = start + currentMarker.length;
-
     const end = nextMarker ? formatted.indexOf(nextMarker, contentStart) : -1;
 
     const content =
@@ -90,14 +94,21 @@ export default function HomePage() {
   const [input, setInput] = useState("");
   const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
+
   const [userEmail, setUserEmail] = useState("");
   const [userPlan, setUserPlan] = useState("free");
   const [generationUsage, setGenerationUsage] = useState(0);
   const [rewriteUsage, setRewriteUsage] = useState(0);
+
   const [selectedTemplate, setSelectedTemplate] =
     useState<PromptTemplateId>(DEFAULT_PROMPT_TEMPLATE_ID);
 
   const [rewriteLoadingId, setRewriteLoadingId] = useState<string | null>(null);
+
+  const [savedPrompts, setSavedPrompts] = useState<SavedPrompt[]>([]);
+  const [promptTitle, setPromptTitle] = useState("");
+  const [showPromptLibrary, setShowPromptLibrary] = useState(false);
+  const [savingPrompt, setSavingPrompt] = useState(false);
 
   const outputSections = result ? splitOutput(result) : [];
   const characterCount = input.length;
@@ -147,6 +158,14 @@ export default function HomePage() {
           setGenerationUsage(existingProfile.generation_count || 0);
           setRewriteUsage(existingProfile.rewrite_count || 0);
         }
+
+        const { data: promptData } = await supabase
+          .from("saved_prompts")
+          .select("*")
+          .eq("user_email", email)
+          .order("created_at", { ascending: false });
+
+        setSavedPrompts(promptData || []);
       }
     }
 
@@ -279,6 +298,66 @@ export default function HomePage() {
     } finally {
       setRewriteLoadingId(null);
     }
+  }
+
+  async function savePrompt() {
+    if (!input.trim()) {
+      alert("Please enter content first.");
+      return;
+    }
+
+    if (!promptTitle.trim()) {
+      alert("Please enter a prompt title.");
+      return;
+    }
+
+    if (!userEmail) {
+      alert("Please login first.");
+      return;
+    }
+
+    try {
+      setSavingPrompt(true);
+
+      const { data, error } = await supabase
+        .from("saved_prompts")
+        .insert({
+          user_email: userEmail,
+          title: promptTitle,
+          prompt: input,
+        })
+        .select()
+        .single();
+
+      if (error) {
+        alert(error.message);
+        return;
+      }
+
+      setSavedPrompts((prev) => [data, ...prev]);
+      setPromptTitle("");
+
+      alert("Prompt saved.");
+    } catch {
+      alert("Failed to save prompt.");
+    } finally {
+      setSavingPrompt(false);
+    }
+  }
+
+  async function deletePrompt(id: string) {
+    const confirmed = confirm("Delete this prompt?");
+
+    if (!confirmed) return;
+
+    const { error } = await supabase.from("saved_prompts").delete().eq("id", id);
+
+    if (error) {
+      alert(error.message);
+      return;
+    }
+
+    setSavedPrompts((prev) => prev.filter((item) => item.id !== id));
   }
 
   async function copyText(text: string) {
@@ -544,6 +623,31 @@ export default function HomePage() {
             </p>
           </div>
 
+          <div className="mb-5 flex flex-col gap-3 md:flex-row">
+            <input
+              type="text"
+              placeholder="Prompt title..."
+              value={promptTitle}
+              onChange={(e) => setPromptTitle(e.target.value)}
+              className="h-14 flex-1 rounded-2xl border border-zinc-800 bg-black px-5 text-white outline-none placeholder:text-zinc-600"
+            />
+
+            <button
+              onClick={savePrompt}
+              disabled={savingPrompt}
+              className="rounded-2xl border border-zinc-700 bg-zinc-950 px-6 py-3 font-bold text-white disabled:opacity-60"
+            >
+              {savingPrompt ? "Saving..." : "Save Prompt"}
+            </button>
+
+            <button
+              onClick={() => setShowPromptLibrary(true)}
+              className="rounded-2xl border border-zinc-700 bg-zinc-950 px-6 py-3 font-bold text-white"
+            >
+              Prompt Library
+            </button>
+          </div>
+
           <button
             onClick={generateContent}
             disabled={
@@ -555,6 +659,79 @@ export default function HomePage() {
           >
             {loading ? "Generating..." : "Generate"}
           </button>
+
+          {showPromptLibrary && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-6">
+              <div className="max-h-[80vh] w-full max-w-3xl overflow-y-auto rounded-[32px] border border-zinc-800 bg-zinc-950 p-8">
+                <div className="mb-6 flex items-center justify-between">
+                  <div>
+                    <h2 className="text-3xl font-bold">Prompt Library</h2>
+
+                    <p className="mt-2 text-zinc-400">
+                      Reuse your saved prompts instantly.
+                    </p>
+                  </div>
+
+                  <button
+                    onClick={() => setShowPromptLibrary(false)}
+                    className="rounded-2xl border border-zinc-700 px-5 py-3 font-bold"
+                  >
+                    Close
+                  </button>
+                </div>
+
+                {savedPrompts.length === 0 ? (
+                  <div className="rounded-3xl border border-zinc-800 bg-black p-8 text-center">
+                    <p className="text-zinc-400">No saved prompts yet.</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {savedPrompts.map((prompt) => (
+                      <div
+                        key={prompt.id}
+                        className="rounded-3xl border border-zinc-800 bg-black p-5"
+                      >
+                        <div className="mb-4 flex items-start justify-between gap-4">
+                          <div>
+                            <h3 className="text-xl font-bold">
+                              {prompt.title}
+                            </h3>
+
+                            <p className="mt-2 text-sm text-zinc-500">
+                              {new Date(prompt.created_at).toLocaleString()}
+                            </p>
+                          </div>
+
+                          <div className="flex gap-3">
+                            <button
+                              onClick={() => {
+                                setInput(prompt.prompt);
+                                setShowPromptLibrary(false);
+                              }}
+                              className="rounded-xl bg-white px-4 py-2 font-semibold text-black"
+                            >
+                              Use
+                            </button>
+
+                            <button
+                              onClick={() => deletePrompt(prompt.id)}
+                              className="rounded-xl border border-red-500 px-4 py-2 font-semibold text-red-400"
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </div>
+
+                        <p className="whitespace-pre-wrap text-zinc-300">
+                          {prompt.prompt}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
 
           {result && (
             <div className="mt-10 space-y-5">
@@ -761,6 +938,7 @@ export default function HomePage() {
                 <li>✓ 5 output formats</li>
                 <li>✓ Google login</li>
                 <li>✓ Dashboard history</li>
+                <li>✓ Saved prompt library</li>
               </ul>
 
               <a
@@ -791,10 +969,10 @@ export default function HomePage() {
                 <li>✓ 300 AI generations / month</li>
                 <li>✓ 500 rewrites / month</li>
                 <li>✓ 5,000 characters</li>
+                <li>✓ Saved prompt library</li>
                 <li>✓ Better output quality</li>
                 <li>✓ Saved content history</li>
                 <li>✓ TXT and Markdown export</li>
-                <li>✓ Great for solo creators</li>
               </ul>
 
               <a
@@ -822,8 +1000,8 @@ export default function HomePage() {
                 <li>✓ 1000 AI generations / month</li>
                 <li>✓ 2000 rewrites / month</li>
                 <li>✓ 10,000 characters</li>
+                <li>✓ Saved prompt library</li>
                 <li>✓ Priority content workflows</li>
-                <li>✓ Advanced repurposing formats</li>
                 <li>✓ TXT and Markdown export</li>
                 <li>✓ Best for agencies and teams</li>
               </ul>
