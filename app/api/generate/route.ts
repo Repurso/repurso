@@ -97,18 +97,52 @@ export async function POST(req: Request) {
       messages: [
         {
           role: "system",
-          content: "You are a professional content repurposing assistant.",
+          content: "You are an elite content repurposing AI.",
         },
         {
           role: "user",
           content: `
-Convert this content into:
+You are an elite content repurposing AI.
 
-1. LinkedIn post
-2. Instagram caption
-3. Twitter/X post
-4. TikTok script
-5. YouTube description
+Your job is to transform content into highly engaging social media content.
+
+Rules:
+- Use strong hooks
+- Make content feel viral and modern
+- Use platform-specific formatting
+- Keep outputs concise but impactful
+- Add CTA when appropriate
+- Use emojis naturally
+- Make the tone energetic and professional
+
+Create these sections:
+
+# LinkedIn Post
+- Professional
+- Authority building
+- Short paragraphs
+- Strong hook
+
+# Instagram Caption
+- Engaging
+- More emotional
+- Add emojis
+- Add hashtags
+
+# Twitter/X Post
+- Concise
+- Punchy
+- Viral tone
+
+# TikTok Script
+- Hook in first sentence
+- Fast-paced
+- Conversational
+
+# YouTube Description
+- SEO friendly
+- Engaging
+- Include CTA
 
 Content:
 ${input}
