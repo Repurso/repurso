@@ -33,10 +33,6 @@ const SECTION_TITLES = [
   "Instagram Caption",
   "TikTok Script",
   "YouTube Description",
-  "Facebook Post",
-  "Threads Post",
-  "Snapchat Caption",
-  "Pinterest Pin Description",
 ];
 
 type OutputSection = {
