@@ -92,6 +92,7 @@ export default function HomePage() {
   const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
   const [userEmail, setUserEmail] = useState("");
+  const [userPlan, setUserPlan] = useState("free");
   const [selectedTemplate, setSelectedTemplate] =
     useState<PromptTemplateId>(DEFAULT_PROMPT_TEMPLATE_ID);
 
@@ -100,6 +101,11 @@ export default function HomePage() {
   );
 
   const outputSections = result ? splitOutput(result) : [];
+
+  const characterCount = input.length;
+
+  const characterLimit =
+    userPlan === "pro" ? 10000 : userPlan === "creator" ? 5000 : 1000;
 
   useEffect(() => {
     async function getUser() {
@@ -123,6 +129,10 @@ export default function HomePage() {
             user_email: email,
             plan: "free",
           });
+
+          setUserPlan("free");
+        } else {
+          setUserPlan(existingProfile.plan || "free");
         }
       }
     }
@@ -133,6 +143,11 @@ export default function HomePage() {
   async function generateContent() {
     if (!input.trim()) {
       alert("Please enter content.");
+      return;
+    }
+
+    if (characterCount > characterLimit) {
+      alert(`Your ${userPlan} plan allows maximum ${characterLimit} characters.`);
       return;
     }
 
@@ -382,16 +397,53 @@ export default function HomePage() {
             </div>
           </div>
 
+          <div className="mb-3 flex items-center justify-between">
+            <p className="text-sm text-zinc-500">Character usage</p>
+
+            <p
+              className={`text-sm font-semibold ${
+                characterCount > characterLimit
+                  ? "text-red-400"
+                  : "text-zinc-400"
+              }`}
+            >
+              {characterCount} / {characterLimit}
+            </p>
+          </div>
+
           <textarea
             placeholder="Paste your content here..."
-            className="mb-6 h-56 w-full rounded-3xl border border-zinc-800 bg-black p-6 text-lg text-white outline-none placeholder:text-zinc-600"
+            className="mb-3 h-56 w-full rounded-3xl border border-zinc-800 bg-black p-6 text-lg text-white outline-none placeholder:text-zinc-600"
             value={input}
             onChange={(e) => setInput(e.target.value)}
           />
 
+          <div className="mb-6">
+            <div className="h-2 overflow-hidden rounded-full bg-zinc-900">
+              <div
+                className={`h-full rounded-full transition-all ${
+                  characterCount > characterLimit ? "bg-red-500" : "bg-white"
+                }`}
+                style={{
+                  width: `${Math.min(
+                    (characterCount / characterLimit) * 100,
+                    100
+                  )}%`,
+                }}
+              />
+            </div>
+
+            <p className="mt-2 text-sm text-zinc-500">
+              Current plan:{" "}
+              <span className="font-semibold capitalize text-white">
+                {userPlan}
+              </span>
+            </p>
+          </div>
+
           <button
             onClick={generateContent}
-            disabled={loading}
+            disabled={loading || characterCount > characterLimit}
             className="rounded-2xl bg-white px-8 py-4 font-bold text-black disabled:opacity-60"
           >
             {loading ? "Generating..." : "Generate"}
