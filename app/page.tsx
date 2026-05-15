@@ -396,9 +396,9 @@ export default function HomePage() {
   }
 
   return (
-    <main className="min-h-screen bg-black px-4 py-6 text-white sm:px-6 sm:py-10">
+    <main className="min-h-screen bg-black px-4 py-6 text-white sm:px-6 sm:py-8">
       <div className="mx-auto max-w-6xl">
-        <nav className="mb-12 flex flex-col gap-5 sm:mb-16 sm:flex-row sm:items-center sm:justify-between">
+        <nav className="mb-8 flex flex-col gap-5 sm:mb-10 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center justify-between">
             <h1 className="text-3xl font-bold">Repurso</h1>
 
@@ -448,17 +448,17 @@ export default function HomePage() {
           </div>
         </nav>
 
-        <section className="mb-20 grid gap-10 sm:mb-24 lg:grid-cols-2 lg:gap-16">
+        <section className="mb-10 grid items-center gap-8 sm:mb-12 lg:grid-cols-2 lg:gap-14">
           <div>
-            <div className="mb-5 inline-flex rounded-full border border-zinc-800 px-4 py-2 text-sm text-zinc-400">
+            <div className="mb-4 inline-flex rounded-full border border-zinc-800 px-4 py-2 text-sm text-zinc-400">
               AI content repurposing tool
             </div>
 
-            <h2 className="mb-6 text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl">
+            <h2 className="mb-5 text-4xl font-bold leading-tight sm:text-5xl">
               Turn one idea into content for every platform.
             </h2>
 
-            <p className="mb-8 text-lg leading-8 text-zinc-400 sm:text-xl sm:leading-9">
+            <p className="mb-6 text-base leading-7 text-zinc-400 sm:text-lg sm:leading-8">
               Repurso helps creators, founders and marketers transform one piece
               of content into LinkedIn posts, Instagram captions, X posts,
               TikTok scripts and YouTube descriptions.
@@ -481,24 +481,24 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="rounded-[28px] border border-zinc-800 bg-zinc-950 p-5 sm:rounded-[32px] sm:p-8">
-            <div className="mb-6 flex gap-2">
+          <div className="rounded-[28px] border border-zinc-800 bg-zinc-950 p-5 sm:rounded-[32px] sm:p-6">
+            <div className="mb-5 flex gap-2">
               <div className="h-3 w-3 rounded-full bg-zinc-700" />
               <div className="h-3 w-3 rounded-full bg-zinc-700" />
               <div className="h-3 w-3 rounded-full bg-zinc-700" />
             </div>
 
-            <div className="rounded-3xl bg-black p-5 sm:p-6">
-              <p className="mb-3 text-zinc-500">Input</p>
+            <div className="rounded-3xl bg-black p-5">
+              <p className="mb-3 text-sm text-zinc-500">Input</p>
 
-              <p className="mb-8 text-lg leading-8 sm:text-xl sm:leading-9">
+              <p className="mb-6 text-base leading-7 sm:text-lg sm:leading-8">
                 AI tools help creators save time by turning one piece of content
                 into many different formats.
               </p>
 
-              <p className="mb-3 text-zinc-500">Output</p>
+              <p className="mb-3 text-sm text-zinc-500">Output</p>
 
-              <div className="space-y-4">
+              <div className="space-y-3">
                 <div className="rounded-2xl border border-zinc-800 p-4">
                   LinkedIn post generated
                 </div>
@@ -517,7 +517,7 @@ export default function HomePage() {
 
         <section
           id="generator"
-          className="mb-20 rounded-[28px] border border-zinc-800 bg-zinc-950 p-5 sm:mb-24 sm:rounded-[32px] sm:p-8"
+          className="mb-16 rounded-[28px] border border-zinc-800 bg-zinc-950 p-5 sm:mb-20 sm:rounded-[32px] sm:p-8"
         >
           <h3 className="mb-2 text-3xl font-bold sm:text-5xl">
             Generate content
@@ -802,95 +802,28 @@ export default function HomePage() {
                     <h4 className="text-2xl font-bold">{section.title}</h4>
 
                     <div className="grid gap-3 sm:grid-cols-2 lg:flex lg:flex-wrap lg:items-center">
-                      <button
-                        onClick={() =>
-                          rewriteSection(section.id, section.content, "default")
-                        }
-                        disabled={
-                          rewriteLoadingId === section.id ||
-                          rewriteUsage >= rewriteLimit
-                        }
-                        className="rounded-2xl border border-zinc-700 bg-zinc-950 px-4 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:border-zinc-500 hover:bg-zinc-900 disabled:opacity-60"
-                      >
-                        Regenerate
-                      </button>
-
-                      <button
-                        onClick={() =>
-                          rewriteSection(
-                            section.id,
-                            section.content,
-                            "more-viral"
-                          )
-                        }
-                        disabled={
-                          rewriteLoadingId === section.id ||
-                          rewriteUsage >= rewriteLimit
-                        }
-                        className="rounded-2xl border border-zinc-700 bg-zinc-950 px-4 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:border-zinc-500 hover:bg-zinc-900 disabled:opacity-60"
-                      >
-                        More Viral
-                      </button>
-
-                      <button
-                        onClick={() =>
-                          rewriteSection(
-                            section.id,
-                            section.content,
-                            "more-professional"
-                          )
-                        }
-                        disabled={
-                          rewriteLoadingId === section.id ||
-                          rewriteUsage >= rewriteLimit
-                        }
-                        className="rounded-2xl border border-zinc-700 bg-zinc-950 px-4 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:border-zinc-500 hover:bg-zinc-900 disabled:opacity-60"
-                      >
-                        More Professional
-                      </button>
-
-                      <button
-                        onClick={() =>
-                          rewriteSection(section.id, section.content, "shorter")
-                        }
-                        disabled={
-                          rewriteLoadingId === section.id ||
-                          rewriteUsage >= rewriteLimit
-                        }
-                        className="rounded-2xl border border-zinc-700 bg-zinc-950 px-4 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:border-zinc-500 hover:bg-zinc-900 disabled:opacity-60"
-                      >
-                        Shorter
-                      </button>
-
-                      <button
-                        onClick={() =>
-                          rewriteSection(section.id, section.content, "longer")
-                        }
-                        disabled={
-                          rewriteLoadingId === section.id ||
-                          rewriteUsage >= rewriteLimit
-                        }
-                        className="rounded-2xl border border-zinc-700 bg-zinc-950 px-4 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:border-zinc-500 hover:bg-zinc-900 disabled:opacity-60"
-                      >
-                        Longer
-                      </button>
-
-                      <button
-                        onClick={() =>
-                          rewriteSection(
-                            section.id,
-                            section.content,
-                            "more-emotional"
-                          )
-                        }
-                        disabled={
-                          rewriteLoadingId === section.id ||
-                          rewriteUsage >= rewriteLimit
-                        }
-                        className="rounded-2xl border border-zinc-700 bg-zinc-950 px-4 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:border-zinc-500 hover:bg-zinc-900 disabled:opacity-60"
-                      >
-                        More Emotional
-                      </button>
+                      {[
+                        ["Regenerate", "default"],
+                        ["More Viral", "more-viral"],
+                        ["More Professional", "more-professional"],
+                        ["Shorter", "shorter"],
+                        ["Longer", "longer"],
+                        ["More Emotional", "more-emotional"],
+                      ].map(([label, type]) => (
+                        <button
+                          key={type}
+                          onClick={() =>
+                            rewriteSection(section.id, section.content, type)
+                          }
+                          disabled={
+                            rewriteLoadingId === section.id ||
+                            rewriteUsage >= rewriteLimit
+                          }
+                          className="rounded-2xl border border-zinc-700 bg-zinc-950 px-4 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:border-zinc-500 hover:bg-zinc-900 disabled:opacity-60"
+                        >
+                          {label}
+                        </button>
+                      ))}
 
                       <button
                         onClick={() =>
