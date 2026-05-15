@@ -417,21 +417,21 @@ export default function HomePage() {
               Pricing
             </a>
 
+            <button
+              onClick={() =>
+                (window.location.href =
+                  "mailto:repurso.app@gmail.com?subject=Repurso Feedback")
+              }
+              className="rounded-xl border border-zinc-700 bg-zinc-950 px-4 py-2 text-sm font-semibold text-white transition hover:border-zinc-500 hover:bg-zinc-900 sm:text-base"
+            >
+              Feedback
+            </button>
+
             {userEmail ? (
               <>
                 <span className="w-full truncate text-sm text-zinc-400 sm:w-auto">
                   {userEmail}
                 </span>
-
-                <button
-                  onClick={() =>
-                    (window.location.href =
-                      "mailto:repurso.app@gmail.com?subject=Repurso Feedback")
-                  }
-                  className="rounded-xl border border-zinc-700 bg-zinc-950 px-4 py-2 text-sm font-semibold text-white transition hover:border-zinc-500 hover:bg-zinc-900 sm:text-base"
-                >
-                  Feedback
-                </button>
 
                 <Link
                   href="/dashboard"
