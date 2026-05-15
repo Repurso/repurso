@@ -347,6 +347,22 @@ Write the TikTok script here.
 
 Write the YouTube description here.
 
+# Facebook Post
+
+Write the Facebook post here.
+
+# Threads Post
+
+Write the Threads post here.
+
+# Snapchat Caption
+
+Write the Snapchat caption here.
+
+# Pinterest Pin Description
+
+Write the Pinterest pin description here.
+
 CONTENT:
 ${input}
 `,
