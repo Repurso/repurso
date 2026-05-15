@@ -1,11 +1,43 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase";
 
 export default function Home() {
   const [input, setInput] = useState("");
   const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function loadUser() {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (session?.user?.email) {
+        setUserEmail(session.user.email);
+      }
+    }
+
+    loadUser();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUserEmail(session?.user?.email ?? null);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  async function logout() {
+    await supabase.auth.signOut();
+    setUserEmail(null);
+    window.location.reload();
+  }
 
   async function generateContent() {
     if (!input.trim()) {
@@ -20,9 +52,12 @@ export default function Home() {
       const response = await fetch("/api/generate", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ input })
+        body: JSON.stringify({
+          input,
+          userEmail: userEmail || "anonymous",
+        }),
       });
 
       const data = await response.json();
@@ -43,14 +78,38 @@ export default function Home() {
     <main className="min-h-screen bg-[#050505] text-white">
       <section className="mx-auto max-w-6xl px-6 py-8">
         <nav className="flex items-center justify-between">
-          <div className="text-2xl font-bold tracking-tight">
+          <a href="/" className="text-2xl font-bold tracking-tight">
             Repurso
-          </div>
+          </a>
 
-          <div className="hidden gap-6 text-sm text-zinc-400 md:flex">
-            <span>Features</span>
-            <span>Pricing</span>
-            <span>Login</span>
+          <div className="flex items-center gap-6 text-sm text-zinc-400">
+            <a href="#features">Features</a>
+
+            <a href="#pricing">Pricing</a>
+
+            <a href="/dashboard">Dashboard</a>
+
+            {userEmail ? (
+              <div className="flex items-center gap-3">
+                <span className="hidden max-w-[220px] truncate sm:inline">
+                  {userEmail}
+                </span>
+
+                <button
+                  onClick={logout}
+                  className="rounded-lg bg-white px-4 py-2 font-semibold text-black"
+                >
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <a
+                href="/login"
+                className="rounded-lg bg-white px-4 py-2 font-semibold text-black"
+              >
+                Login
+              </a>
+            )}
           </div>
         </nav>
 
@@ -96,19 +155,23 @@ export default function Home() {
 
             <div className="rounded-2xl bg-black p-5">
               <p className="mb-3 text-sm text-zinc-500">Input</p>
+
               <p className="mb-6 text-zinc-300">
                 AI tools help creators save time by turning one piece of content
                 into many different formats.
               </p>
 
               <p className="mb-3 text-sm text-zinc-500">Output</p>
+
               <div className="space-y-3 text-sm text-zinc-300">
                 <div className="rounded-xl border border-zinc-800 p-3">
                   LinkedIn post generated
                 </div>
+
                 <div className="rounded-xl border border-zinc-800 p-3">
                   Instagram caption generated
                 </div>
+
                 <div className="rounded-xl border border-zinc-800 p-3">
                   TikTok script generated
                 </div>
@@ -117,14 +180,39 @@ export default function Home() {
           </div>
         </div>
 
+        <section id="features" className="grid gap-5 py-8 md:grid-cols-3">
+          <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
+            <h3 className="mb-3 text-xl font-bold">One input</h3>
+
+            <p className="text-zinc-400">
+              Paste a single idea, paragraph, script or post.
+            </p>
+          </div>
+
+          <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
+            <h3 className="mb-3 text-xl font-bold">Multiple outputs</h3>
+
+            <p className="text-zinc-400">
+              Generate content for social platforms instantly.
+            </p>
+          </div>
+
+          <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
+            <h3 className="mb-3 text-xl font-bold">Save time</h3>
+
+            <p className="text-zinc-400">
+              Repurpose your content instead of starting from zero.
+            </p>
+          </div>
+        </section>
+
         <section
           id="generator"
-          className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6"
+          className="mt-8 rounded-3xl border border-zinc-800 bg-zinc-950 p-6"
         >
           <div className="mb-6">
-            <h2 className="mb-2 text-3xl font-bold">
-              Generate content
-            </h2>
+            <h2 className="mb-2 text-3xl font-bold">Generate content</h2>
+
             <p className="text-zinc-400">
               Paste your content and let Repurso turn it into multiple formats.
             </p>
@@ -154,9 +242,8 @@ export default function Home() {
 
         <section id="pricing" className="py-16">
           <div className="mb-8 text-center">
-            <h2 className="mb-3 text-4xl font-bold">
-              Simple pricing
-            </h2>
+            <h2 className="mb-3 text-4xl font-bold">Simple pricing</h2>
+
             <p className="text-zinc-400">
               Start free. Upgrade when you need more content.
             </p>
@@ -165,8 +252,11 @@ export default function Home() {
           <div className="grid gap-5 md:grid-cols-3">
             <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
               <h3 className="mb-2 text-2xl font-bold">Free</h3>
+
               <p className="mb-5 text-zinc-400">For testing the product.</p>
+
               <p className="mb-6 text-4xl font-bold">$0</p>
+
               <ul className="space-y-3 text-zinc-300">
                 <li>3 generations/day</li>
                 <li>5 output formats</li>
@@ -176,8 +266,11 @@ export default function Home() {
 
             <div className="rounded-3xl border border-white bg-white p-6 text-black">
               <h3 className="mb-2 text-2xl font-bold">Creator</h3>
+
               <p className="mb-5 text-zinc-600">For active creators.</p>
+
               <p className="mb-6 text-4xl font-bold">$9/mo</p>
+
               <ul className="space-y-3">
                 <li>300 generations/month</li>
                 <li>Better output quality</li>
@@ -187,8 +280,11 @@ export default function Home() {
 
             <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
               <h3 className="mb-2 text-2xl font-bold">Pro</h3>
+
               <p className="mb-5 text-zinc-400">For power users.</p>
+
               <p className="mb-6 text-4xl font-bold">$19/mo</p>
+
               <ul className="space-y-3 text-zinc-300">
                 <li>1000 generations/month</li>
                 <li>Priority generation</li>
