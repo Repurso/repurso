@@ -10,6 +10,8 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
+const MAX_REWRITE_CHARACTERS = 5000;
+
 function getRewriteInstructions(type: string) {
   switch (type) {
     case "more-viral":
@@ -129,6 +131,15 @@ export async function POST(req: Request) {
       return NextResponse.json(
         {
           error: "Content is required.",
+        },
+        { status: 400 }
+      );
+    }
+
+    if (content.length > MAX_REWRITE_CHARACTERS) {
+      return NextResponse.json(
+        {
+          error: `Rewrite content is too long. Maximum ${MAX_REWRITE_CHARACTERS} characters allowed.`,
         },
         { status: 400 }
       );
