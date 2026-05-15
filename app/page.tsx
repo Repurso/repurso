@@ -11,11 +11,75 @@ const CREATOR_CHECKOUT = (email: string) =>
 const PRO_CHECKOUT = (email: string) =>
   `https://repursoapp.lemonsqueezy.com/checkout/buy/548cbc91-792f-4fae-b6a5-569f95c119c3?checkout[email]=${encodeURIComponent(email)}&checkout[custom][user_email]=${encodeURIComponent(email)}`;
 
+const SECTION_TITLES = [
+  "LinkedIn Post",
+  "Twitter/X Post",
+  "Instagram Caption",
+  "TikTok Script",
+  "YouTube Description",
+];
+
+type OutputSection = {
+  title: string;
+  content: string;
+};
+
+function formatOutput(raw: string) {
+  let text = raw;
+
+  SECTION_TITLES.forEach((title) => {
+    text = text.replace(new RegExp(`\\n?#{0,6}\\s*${title}`, "gi"), `\n\n# ${title}\n`);
+  });
+
+  return text.trim();
+}
+
+function splitOutput(raw: string): OutputSection[] {
+  const formatted = formatOutput(raw);
+  const sections: OutputSection[] = [];
+
+  SECTION_TITLES.forEach((title, index) => {
+    const currentMarker = `# ${title}`;
+    const nextTitle = SECTION_TITLES[index + 1];
+    const nextMarker = nextTitle ? `# ${nextTitle}` : null;
+
+    const start = formatted.indexOf(currentMarker);
+
+    if (start === -1) return;
+
+    const contentStart = start + currentMarker.length;
+    const end = nextMarker ? formatted.indexOf(nextMarker, contentStart) : -1;
+
+    const content =
+      end === -1
+        ? formatted.slice(contentStart).trim()
+        : formatted.slice(contentStart, end).trim();
+
+    sections.push({
+      title,
+      content,
+    });
+  });
+
+  if (sections.length === 0) {
+    return [
+      {
+        title: "Generated Content",
+        content: raw,
+      },
+    ];
+  }
+
+  return sections;
+}
+
 export default function HomePage() {
   const [input, setInput] = useState("");
   const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
   const [userEmail, setUserEmail] = useState("");
+
+  const outputSections = result ? splitOutput(result) : [];
 
   useEffect(() => {
     async function getUser() {
@@ -79,6 +143,11 @@ export default function HomePage() {
     }
 
     setLoading(false);
+  }
+
+  async function copyText(text: string) {
+    await navigator.clipboard.writeText(text);
+    alert("Copied.");
   }
 
   async function logout() {
@@ -221,41 +290,41 @@ export default function HomePage() {
           </button>
 
           {result && (
-            <div className="mt-10 rounded-3xl border border-zinc-800 bg-black p-8">
-              <div className="max-w-none">
-                <ReactMarkdown
-                  components={{
-                    h1: ({ children }) => (
-                      <h1 className="mb-6 mt-12 text-4xl font-bold text-white first:mt-0">
-                        {children}
-                      </h1>
-                    ),
-                    h2: ({ children }) => (
-                      <h2 className="mb-4 mt-10 text-3xl font-semibold text-white">
-                        {children}
-                      </h2>
-                    ),
-                    p: ({ children }) => (
-                      <p className="mb-5 whitespace-pre-wrap leading-8 text-zinc-200">
-                        {children}
-                      </p>
-                    ),
-                    li: ({ children }) => (
-                      <li className="mb-2 text-zinc-200">{children}</li>
-                    ),
-                  }}
+            <div className="mt-10 space-y-5">
+              {outputSections.map((section) => (
+                <div
+                  key={section.title}
+                  className="rounded-3xl border border-zinc-800 bg-black p-6"
                 >
-                  {result
-                    .replace(/LinkedIn Post/g, "# LinkedIn Post")
-                    .replace(/Twitter\/X Post/g, "# Twitter/X Post")
-                    .replace(/Instagram Caption/g, "# Instagram Caption")
-                    .replace(/TikTok Script/g, "# TikTok Script")
-                    .replace(
-                      /YouTube Description/g,
-                      "# YouTube Description"
-                    )}
-                </ReactMarkdown>
-              </div>
+                  <div className="mb-5 flex items-center justify-between gap-4">
+                    <h4 className="text-2xl font-bold">{section.title}</h4>
+
+                    <button
+                      onClick={() => copyText(section.content)}
+                      className="rounded-xl bg-white px-4 py-2 font-semibold text-black"
+                    >
+                      Copy
+                    </button>
+                  </div>
+
+                  <div className="leading-8 text-zinc-200">
+                    <ReactMarkdown
+                      components={{
+                        p: ({ children }) => (
+                          <p className="mb-4 whitespace-pre-wrap">
+                            {children}
+                          </p>
+                        ),
+                        li: ({ children }) => (
+                          <li className="mb-2">{children}</li>
+                        ),
+                      }}
+                    >
+                      {section.content}
+                    </ReactMarkdown>
+                  </div>
+                </div>
+              ))}
             </div>
           )}
         </section>
