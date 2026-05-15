@@ -396,9 +396,9 @@ export default function HomePage() {
   }
 
   return (
-    <main className="min-h-screen bg-black px-4 py-6 text-white sm:px-6 sm:py-8">
-      <div className="mx-auto max-w-6xl">
-        <nav className="mb-8 flex flex-col gap-5 sm:mb-10 sm:flex-row sm:items-center sm:justify-between">
+    <main className="min-h-screen bg-black px-4 py-5 text-white sm:px-6 sm:py-6">
+      <div className="mx-auto max-w-7xl">
+        <nav className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center justify-between">
             <h1 className="text-3xl font-bold">Repurso</h1>
 
@@ -448,8 +448,8 @@ export default function HomePage() {
           </div>
         </nav>
 
-        <section className="mb-10 grid items-center gap-8 sm:mb-12 lg:grid-cols-2 lg:gap-14">
-          <div>
+        <section className="mb-16 grid items-start gap-6 lg:grid-cols-[0.8fr_1.2fr] lg:gap-8">
+          <div className="pt-2 lg:sticky lg:top-6">
             <div className="mb-4 inline-flex rounded-full border border-zinc-800 px-4 py-2 text-sm text-zinc-400">
               AI content repurposing tool
             </div>
@@ -464,7 +464,7 @@ export default function HomePage() {
               TikTok scripts and YouTube descriptions.
             </p>
 
-            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <a
                 href="#generator"
                 className="rounded-2xl bg-white px-8 py-4 text-center font-bold text-black"
@@ -479,420 +479,400 @@ export default function HomePage() {
                 View pricing
               </a>
             </div>
+
+            <div className="hidden rounded-[28px] border border-zinc-800 bg-zinc-950 p-5 lg:block">
+              <p className="mb-3 text-sm text-zinc-500">Output formats</p>
+
+              <div className="grid gap-3">
+                {SECTION_TITLES.map((title) => (
+                  <div
+                    key={title}
+                    className="rounded-2xl border border-zinc-800 bg-black p-3 text-sm text-zinc-300"
+                  >
+                    {title}
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
 
-          <div className="rounded-[28px] border border-zinc-800 bg-zinc-950 p-5 sm:rounded-[32px] sm:p-6">
-            <div className="mb-5 flex gap-2">
-              <div className="h-3 w-3 rounded-full bg-zinc-700" />
-              <div className="h-3 w-3 rounded-full bg-zinc-700" />
-              <div className="h-3 w-3 rounded-full bg-zinc-700" />
-            </div>
+          <section
+            id="generator"
+            className="rounded-[28px] border border-zinc-800 bg-zinc-950 p-5 sm:rounded-[32px] sm:p-7"
+          >
+            <h3 className="mb-2 text-3xl font-bold sm:text-4xl">
+              Generate content
+            </h3>
 
-            <div className="rounded-3xl bg-black p-5">
-              <p className="mb-3 text-sm text-zinc-500">Input</p>
+            <p className="mb-6 text-base text-zinc-400 sm:text-lg">
+              Paste your content and let Repurso turn it into multiple formats.
+            </p>
 
-              <p className="mb-6 text-base leading-7 sm:text-lg sm:leading-8">
-                AI tools help creators save time by turning one piece of content
-                into many different formats.
+            <div className="mb-6">
+              <p className="mb-3 text-sm font-semibold uppercase tracking-[0.25em] text-zinc-500">
+                Quality Mode
               </p>
 
-              <p className="mb-3 text-sm text-zinc-500">Output</p>
+              <div className="grid gap-3 sm:grid-cols-3">
+                {QUALITY_MODES.map((mode) => {
+                  const isSelected = qualityMode === mode.id;
 
-              <div className="space-y-3">
-                <div className="rounded-2xl border border-zinc-800 p-4">
-                  LinkedIn post generated
-                </div>
+                  return (
+                    <button
+                      key={mode.id}
+                      type="button"
+                      onClick={() => setQualityMode(mode.id)}
+                      className={`rounded-2xl border p-4 text-left transition ${
+                        isSelected
+                          ? "border-white bg-white text-black"
+                          : "border-zinc-800 bg-black text-white hover:border-zinc-600"
+                      }`}
+                    >
+                      <h4 className="mb-1 font-bold">{mode.name}</h4>
 
-                <div className="rounded-2xl border border-zinc-800 p-4">
-                  Instagram caption generated
-                </div>
-
-                <div className="rounded-2xl border border-zinc-800 p-4">
-                  TikTok script generated
-                </div>
+                      <p
+                        className={`text-xs leading-5 ${
+                          isSelected ? "text-zinc-700" : "text-zinc-400"
+                        }`}
+                      >
+                        {mode.description}
+                      </p>
+                    </button>
+                  );
+                })}
               </div>
             </div>
-          </div>
-        </section>
 
-        <section
-          id="generator"
-          className="mb-16 rounded-[28px] border border-zinc-800 bg-zinc-950 p-5 sm:mb-20 sm:rounded-[32px] sm:p-8"
-        >
-          <h3 className="mb-2 text-3xl font-bold sm:text-5xl">
-            Generate content
-          </h3>
+            <div className="mb-6">
+              <p className="mb-3 text-sm font-semibold uppercase tracking-[0.25em] text-zinc-500">
+                Template
+              </p>
 
-          <p className="mb-8 text-lg text-zinc-400 sm:text-xl">
-            Paste your content and let Repurso turn it into multiple formats.
-          </p>
+              <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+                {PROMPT_TEMPLATES.map((template) => {
+                  const isSelected = selectedTemplate === template.id;
 
-          <div className="mb-8">
-            <p className="mb-4 text-sm font-semibold uppercase tracking-[0.25em] text-zinc-500">
-              Quality Mode
-            </p>
-
-            <div className="grid gap-4 sm:grid-cols-3">
-              {QUALITY_MODES.map((mode) => {
-                const isSelected = qualityMode === mode.id;
-
-                return (
-                  <button
-                    key={mode.id}
-                    type="button"
-                    onClick={() => setQualityMode(mode.id)}
-                    className={`rounded-3xl border p-5 text-left transition ${
-                      isSelected
-                        ? "border-white bg-white text-black"
-                        : "border-zinc-800 bg-black text-white hover:border-zinc-600"
-                    }`}
-                  >
-                    <h4 className="mb-2 text-lg font-bold">{mode.name}</h4>
-
-                    <p
-                      className={`text-sm leading-6 ${
-                        isSelected ? "text-zinc-700" : "text-zinc-400"
+                  return (
+                    <button
+                      key={template.id}
+                      type="button"
+                      onClick={() => setSelectedTemplate(template.id)}
+                      className={`rounded-2xl border p-4 text-left transition ${
+                        isSelected
+                          ? "border-white bg-white text-black"
+                          : "border-zinc-800 bg-black text-white hover:border-zinc-600"
                       }`}
                     >
-                      {mode.description}
-                    </p>
-                  </button>
-                );
-              })}
+                      <h4 className="mb-1 font-bold">{template.name}</h4>
+
+                      <p
+                        className={`text-xs leading-5 ${
+                          isSelected ? "text-zinc-700" : "text-zinc-400"
+                        }`}
+                      >
+                        {template.description}
+                      </p>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
-          </div>
 
-          <div className="mb-8">
-            <p className="mb-4 text-sm font-semibold uppercase tracking-[0.25em] text-zinc-500">
-              Template
-            </p>
+            <div className="mb-3 flex items-center justify-between gap-4">
+              <p className="text-sm text-zinc-500">Character usage</p>
 
-            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
-              {PROMPT_TEMPLATES.map((template) => {
-                const isSelected = selectedTemplate === template.id;
-
-                return (
-                  <button
-                    key={template.id}
-                    type="button"
-                    onClick={() => setSelectedTemplate(template.id)}
-                    className={`rounded-3xl border p-5 text-left transition ${
-                      isSelected
-                        ? "border-white bg-white text-black"
-                        : "border-zinc-800 bg-black text-white hover:border-zinc-600"
-                    }`}
-                  >
-                    <h4 className="mb-2 text-lg font-bold">
-                      {template.name}
-                    </h4>
-
-                    <p
-                      className={`text-sm leading-6 ${
-                        isSelected ? "text-zinc-700" : "text-zinc-400"
-                      }`}
-                    >
-                      {template.description}
-                    </p>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          <div className="mb-3 flex items-center justify-between gap-4">
-            <p className="text-sm text-zinc-500">Character usage</p>
-
-            <p
-              className={`text-sm font-semibold ${
-                characterCount > characterLimit
-                  ? "text-red-400"
-                  : "text-zinc-400"
-              }`}
-            >
-              {characterCount} / {characterLimit}
-            </p>
-          </div>
-
-          <textarea
-            placeholder="Paste your content here..."
-            className="mb-3 h-52 w-full rounded-3xl border border-zinc-800 bg-black p-5 text-base text-white outline-none placeholder:text-zinc-600 sm:h-56 sm:p-6 sm:text-lg"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-          />
-
-          <div className="mb-6">
-            <div className="h-2 overflow-hidden rounded-full bg-zinc-900">
-              <div
-                className={`h-full rounded-full transition-all ${
-                  characterCount > characterLimit ? "bg-red-500" : "bg-white"
+              <p
+                className={`text-sm font-semibold ${
+                  characterCount > characterLimit
+                    ? "text-red-400"
+                    : "text-zinc-400"
                 }`}
-                style={{
-                  width: `${Math.min(
-                    (characterCount / characterLimit) * 100,
-                    100
-                  )}%`,
-                }}
-              />
+              >
+                {characterCount} / {characterLimit}
+              </p>
             </div>
 
-            <div className="mt-5 grid gap-4 sm:grid-cols-2">
-              <div className="rounded-2xl border border-zinc-800 bg-black p-4">
-                <div className="mb-2 flex items-center justify-between text-sm">
-                  <span className="text-zinc-500">Generations</span>
-                  <span className="font-semibold text-white">
-                    {generationUsage} / {generationLimit}
-                  </span>
-                </div>
-
-                <div className="h-2 overflow-hidden rounded-full bg-zinc-900">
-                  <div
-                    className="h-full rounded-full bg-white transition-all"
-                    style={{
-                      width: `${generationPercent}%`,
-                    }}
-                  />
-                </div>
-              </div>
-
-              <div className="rounded-2xl border border-zinc-800 bg-black p-4">
-                <div className="mb-2 flex items-center justify-between text-sm">
-                  <span className="text-zinc-500">Rewrites</span>
-                  <span className="font-semibold text-white">
-                    {rewriteUsage} / {rewriteLimit}
-                  </span>
-                </div>
-
-                <div className="h-2 overflow-hidden rounded-full bg-zinc-900">
-                  <div
-                    className="h-full rounded-full bg-white transition-all"
-                    style={{
-                      width: `${rewritePercent}%`,
-                    }}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <p className="mt-3 text-sm text-zinc-500">
-              Current plan:{" "}
-              <span className="font-semibold capitalize text-white">
-                {userPlan}
-              </span>
-            </p>
-          </div>
-
-          <div className="mb-5 flex flex-col gap-3 lg:flex-row">
-            <input
-              type="text"
-              placeholder="Prompt title..."
-              value={promptTitle}
-              onChange={(e) => setPromptTitle(e.target.value)}
-              className="h-14 flex-1 rounded-2xl border border-zinc-800 bg-black px-5 text-white outline-none placeholder:text-zinc-600"
+            <textarea
+              placeholder="Paste your content here..."
+              className="mb-3 h-40 w-full rounded-3xl border border-zinc-800 bg-black p-5 text-base text-white outline-none placeholder:text-zinc-600 sm:h-44"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
             />
 
-            <button
-              onClick={savePrompt}
-              disabled={savingPrompt}
-              className="rounded-2xl border border-zinc-700 bg-zinc-950 px-6 py-3 font-bold text-white disabled:opacity-60"
-            >
-              {savingPrompt ? "Saving..." : "Save Prompt"}
-            </button>
-
-            <button
-              onClick={() => setShowPromptLibrary(true)}
-              className="rounded-2xl border border-zinc-700 bg-zinc-950 px-6 py-3 font-bold text-white"
-            >
-              Prompt Library
-            </button>
-          </div>
-
-          <button
-            onClick={generateContent}
-            disabled={
-              loading ||
-              characterCount > characterLimit ||
-              generationUsage >= generationLimit
-            }
-            className="w-full rounded-2xl bg-white px-8 py-4 font-bold text-black disabled:opacity-60 sm:w-auto"
-          >
-            {loading ? "Generating..." : "Generate"}
-          </button>
-
-          {showPromptLibrary && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 sm:p-6">
-              <div className="max-h-[85vh] w-full max-w-3xl overflow-y-auto rounded-[28px] border border-zinc-800 bg-zinc-950 p-5 sm:rounded-[32px] sm:p-8">
-                <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                  <div>
-                    <h2 className="text-3xl font-bold">Prompt Library</h2>
-
-                    <p className="mt-2 text-zinc-400">
-                      Reuse your saved prompts instantly.
-                    </p>
-                  </div>
-
-                  <button
-                    onClick={() => setShowPromptLibrary(false)}
-                    className="rounded-2xl border border-zinc-700 px-5 py-3 font-bold"
-                  >
-                    Close
-                  </button>
-                </div>
-
-                {savedPrompts.length === 0 ? (
-                  <div className="rounded-3xl border border-zinc-800 bg-black p-8 text-center">
-                    <p className="text-zinc-400">No saved prompts yet.</p>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    {savedPrompts.map((prompt) => (
-                      <div
-                        key={prompt.id}
-                        className="rounded-3xl border border-zinc-800 bg-black p-5"
-                      >
-                        <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                          <div>
-                            <h3 className="text-xl font-bold">
-                              {prompt.title}
-                            </h3>
-
-                            <p className="mt-2 text-sm text-zinc-500">
-                              {new Date(prompt.created_at).toLocaleString()}
-                            </p>
-                          </div>
-
-                          <div className="flex flex-col gap-3 sm:flex-row">
-                            <button
-                              onClick={() => {
-                                setInput(prompt.prompt);
-                                setShowPromptLibrary(false);
-                              }}
-                              className="rounded-xl bg-white px-4 py-2 font-semibold text-black"
-                            >
-                              Use
-                            </button>
-
-                            <button
-                              onClick={() => deletePrompt(prompt.id)}
-                              className="rounded-xl border border-red-500 px-4 py-2 font-semibold text-red-400"
-                            >
-                              Delete
-                            </button>
-                          </div>
-                        </div>
-
-                        <p className="whitespace-pre-wrap text-zinc-300">
-                          {prompt.prompt}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-
-          {result && (
-            <div className="mt-10 space-y-5">
-              {outputSections.map((section) => (
+            <div className="mb-5">
+              <div className="h-2 overflow-hidden rounded-full bg-zinc-900">
                 <div
-                  key={section.id}
-                  className="rounded-3xl border border-zinc-800 bg-black p-5 sm:p-6"
-                >
-                  <div className="mb-5 flex flex-col gap-4">
-                    <h4 className="text-2xl font-bold">{section.title}</h4>
+                  className={`h-full rounded-full transition-all ${
+                    characterCount > characterLimit ? "bg-red-500" : "bg-white"
+                  }`}
+                  style={{
+                    width: `${Math.min(
+                      (characterCount / characterLimit) * 100,
+                      100
+                    )}%`,
+                  }}
+                />
+              </div>
 
-                    <div className="grid gap-3 sm:grid-cols-2 lg:flex lg:flex-wrap lg:items-center">
-                      {[
-                        ["Regenerate", "default"],
-                        ["More Viral", "more-viral"],
-                        ["More Professional", "more-professional"],
-                        ["Shorter", "shorter"],
-                        ["Longer", "longer"],
-                        ["More Emotional", "more-emotional"],
-                      ].map(([label, type]) => (
-                        <button
-                          key={type}
-                          onClick={() =>
-                            rewriteSection(section.id, section.content, type)
-                          }
-                          disabled={
-                            rewriteLoadingId === section.id ||
-                            rewriteUsage >= rewriteLimit
-                          }
-                          className="rounded-2xl border border-zinc-700 bg-zinc-950 px-4 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:border-zinc-500 hover:bg-zinc-900 disabled:opacity-60"
-                        >
-                          {label}
-                        </button>
-                      ))}
-
-                      <button
-                        onClick={() =>
-                          exportTextFile(
-                            `${section.id}.txt`,
-                            section.content,
-                            "text/plain;charset=utf-8"
-                          )
-                        }
-                        className="rounded-2xl border border-zinc-700 bg-zinc-950 px-5 py-2 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:border-zinc-500"
-                      >
-                        Export TXT
-                      </button>
-
-                      <button
-                        onClick={() =>
-                          exportTextFile(
-                            `${section.id}.md`,
-                            `# ${section.title}\n\n${section.content}`,
-                            "text/markdown;charset=utf-8"
-                          )
-                        }
-                        className="rounded-2xl border border-zinc-700 bg-zinc-950 px-5 py-2 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:border-zinc-500"
-                      >
-                        Export MD
-                      </button>
-
-                      <button
-                        onClick={() => copyText(section.content)}
-                        className="rounded-2xl bg-white px-5 py-2 text-sm font-bold text-black transition hover:-translate-y-0.5 hover:bg-zinc-200 sm:col-span-2 lg:col-span-1"
-                      >
-                        Copy
-                      </button>
-                    </div>
+              <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                <div className="rounded-2xl border border-zinc-800 bg-black p-4">
+                  <div className="mb-2 flex items-center justify-between text-sm">
+                    <span className="text-zinc-500">Generations</span>
+                    <span className="font-semibold text-white">
+                      {generationUsage} / {generationLimit}
+                    </span>
                   </div>
 
-                  {rewriteLoadingId === section.id && (
-                    <div className="mb-5 rounded-2xl border border-zinc-800 bg-zinc-950 px-4 py-3 text-sm text-zinc-400">
-                      Rewriting content...
-                    </div>
-                  )}
-
-                  {rewriteUsage >= rewriteLimit && (
-                    <div className="mb-5 rounded-2xl border border-red-900/60 bg-red-950/30 px-4 py-3 text-sm text-red-300">
-                      Rewrite limit reached. Upgrade your plan to continue
-                      rewriting.
-                    </div>
-                  )}
-
-                  <div className="leading-8 text-zinc-200">
-                    <ReactMarkdown
-                      components={{
-                        p: ({ children }) => (
-                          <p className="mb-4 whitespace-pre-wrap">
-                            {children}
-                          </p>
-                        ),
-                        li: ({ children }) => (
-                          <li className="mb-2">{children}</li>
-                        ),
+                  <div className="h-2 overflow-hidden rounded-full bg-zinc-900">
+                    <div
+                      className="h-full rounded-full bg-white transition-all"
+                      style={{
+                        width: `${generationPercent}%`,
                       }}
-                    >
-                      {section.content}
-                    </ReactMarkdown>
+                    />
                   </div>
                 </div>
-              ))}
+
+                <div className="rounded-2xl border border-zinc-800 bg-black p-4">
+                  <div className="mb-2 flex items-center justify-between text-sm">
+                    <span className="text-zinc-500">Rewrites</span>
+                    <span className="font-semibold text-white">
+                      {rewriteUsage} / {rewriteLimit}
+                    </span>
+                  </div>
+
+                  <div className="h-2 overflow-hidden rounded-full bg-zinc-900">
+                    <div
+                      className="h-full rounded-full bg-white transition-all"
+                      style={{
+                        width: `${rewritePercent}%`,
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <p className="mt-3 text-sm text-zinc-500">
+                Current plan:{" "}
+                <span className="font-semibold capitalize text-white">
+                  {userPlan}
+                </span>
+              </p>
             </div>
-          )}
+
+            <div className="mb-4 flex flex-col gap-3 lg:flex-row">
+              <input
+                type="text"
+                placeholder="Prompt title..."
+                value={promptTitle}
+                onChange={(e) => setPromptTitle(e.target.value)}
+                className="h-13 flex-1 rounded-2xl border border-zinc-800 bg-black px-5 py-3 text-white outline-none placeholder:text-zinc-600"
+              />
+
+              <button
+                onClick={savePrompt}
+                disabled={savingPrompt}
+                className="rounded-2xl border border-zinc-700 bg-zinc-950 px-5 py-3 font-bold text-white disabled:opacity-60"
+              >
+                {savingPrompt ? "Saving..." : "Save Prompt"}
+              </button>
+
+              <button
+                onClick={() => setShowPromptLibrary(true)}
+                className="rounded-2xl border border-zinc-700 bg-zinc-950 px-5 py-3 font-bold text-white"
+              >
+                Prompt Library
+              </button>
+            </div>
+
+            <button
+              onClick={generateContent}
+              disabled={
+                loading ||
+                characterCount > characterLimit ||
+                generationUsage >= generationLimit
+              }
+              className="w-full rounded-2xl bg-white px-8 py-4 font-bold text-black disabled:opacity-60 sm:w-auto"
+            >
+              {loading ? "Generating..." : "Generate"}
+            </button>
+
+            {showPromptLibrary && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 sm:p-6">
+                <div className="max-h-[85vh] w-full max-w-3xl overflow-y-auto rounded-[28px] border border-zinc-800 bg-zinc-950 p-5 sm:rounded-[32px] sm:p-8">
+                  <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                      <h2 className="text-3xl font-bold">Prompt Library</h2>
+
+                      <p className="mt-2 text-zinc-400">
+                        Reuse your saved prompts instantly.
+                      </p>
+                    </div>
+
+                    <button
+                      onClick={() => setShowPromptLibrary(false)}
+                      className="rounded-2xl border border-zinc-700 px-5 py-3 font-bold"
+                    >
+                      Close
+                    </button>
+                  </div>
+
+                  {savedPrompts.length === 0 ? (
+                    <div className="rounded-3xl border border-zinc-800 bg-black p-8 text-center">
+                      <p className="text-zinc-400">No saved prompts yet.</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {savedPrompts.map((prompt) => (
+                        <div
+                          key={prompt.id}
+                          className="rounded-3xl border border-zinc-800 bg-black p-5"
+                        >
+                          <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                            <div>
+                              <h3 className="text-xl font-bold">
+                                {prompt.title}
+                              </h3>
+
+                              <p className="mt-2 text-sm text-zinc-500">
+                                {new Date(prompt.created_at).toLocaleString()}
+                              </p>
+                            </div>
+
+                            <div className="flex flex-col gap-3 sm:flex-row">
+                              <button
+                                onClick={() => {
+                                  setInput(prompt.prompt);
+                                  setShowPromptLibrary(false);
+                                }}
+                                className="rounded-xl bg-white px-4 py-2 font-semibold text-black"
+                              >
+                                Use
+                              </button>
+
+                              <button
+                                onClick={() => deletePrompt(prompt.id)}
+                                className="rounded-xl border border-red-500 px-4 py-2 font-semibold text-red-400"
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          </div>
+
+                          <p className="whitespace-pre-wrap text-zinc-300">
+                            {prompt.prompt}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {result && (
+              <div className="mt-8 space-y-5">
+                {outputSections.map((section) => (
+                  <div
+                    key={section.id}
+                    className="rounded-3xl border border-zinc-800 bg-black p-5 sm:p-6"
+                  >
+                    <div className="mb-5 flex flex-col gap-4">
+                      <h4 className="text-2xl font-bold">{section.title}</h4>
+
+                      <div className="grid gap-3 sm:grid-cols-2 lg:flex lg:flex-wrap lg:items-center">
+                        {[
+                          ["Regenerate", "default"],
+                          ["More Viral", "more-viral"],
+                          ["More Professional", "more-professional"],
+                          ["Shorter", "shorter"],
+                          ["Longer", "longer"],
+                          ["More Emotional", "more-emotional"],
+                        ].map(([label, type]) => (
+                          <button
+                            key={type}
+                            onClick={() =>
+                              rewriteSection(section.id, section.content, type)
+                            }
+                            disabled={
+                              rewriteLoadingId === section.id ||
+                              rewriteUsage >= rewriteLimit
+                            }
+                            className="rounded-2xl border border-zinc-700 bg-zinc-950 px-4 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:border-zinc-500 hover:bg-zinc-900 disabled:opacity-60"
+                          >
+                            {label}
+                          </button>
+                        ))}
+
+                        <button
+                          onClick={() =>
+                            exportTextFile(
+                              `${section.id}.txt`,
+                              section.content,
+                              "text/plain;charset=utf-8"
+                            )
+                          }
+                          className="rounded-2xl border border-zinc-700 bg-zinc-950 px-5 py-2 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:border-zinc-500"
+                        >
+                          Export TXT
+                        </button>
+
+                        <button
+                          onClick={() =>
+                            exportTextFile(
+                              `${section.id}.md`,
+                              `# ${section.title}\n\n${section.content}`,
+                              "text/markdown;charset=utf-8"
+                            )
+                          }
+                          className="rounded-2xl border border-zinc-700 bg-zinc-950 px-5 py-2 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:border-zinc-500"
+                        >
+                          Export MD
+                        </button>
+
+                        <button
+                          onClick={() => copyText(section.content)}
+                          className="rounded-2xl bg-white px-5 py-2 text-sm font-bold text-black transition hover:-translate-y-0.5 hover:bg-zinc-200 sm:col-span-2 lg:col-span-1"
+                        >
+                          Copy
+                        </button>
+                      </div>
+                    </div>
+
+                    {rewriteLoadingId === section.id && (
+                      <div className="mb-5 rounded-2xl border border-zinc-800 bg-zinc-950 px-4 py-3 text-sm text-zinc-400">
+                        Rewriting content...
+                      </div>
+                    )}
+
+                    {rewriteUsage >= rewriteLimit && (
+                      <div className="mb-5 rounded-2xl border border-red-900/60 bg-red-950/30 px-4 py-3 text-sm text-red-300">
+                        Rewrite limit reached. Upgrade your plan to continue
+                        rewriting.
+                      </div>
+                    )}
+
+                    <div className="leading-8 text-zinc-200">
+                      <ReactMarkdown
+                        components={{
+                          p: ({ children }) => (
+                            <p className="mb-4 whitespace-pre-wrap">
+                              {children}
+                            </p>
+                          ),
+                          li: ({ children }) => (
+                            <li className="mb-2">{children}</li>
+                          ),
+                        }}
+                      >
+                        {section.content}
+                      </ReactMarkdown>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
         </section>
 
         <section id="pricing" className="py-12 sm:py-16">
