@@ -57,7 +57,10 @@ function splitOutput(raw: string): OutputSection[] {
     if (start === -1) return;
 
     const contentStart = start + currentMarker.length;
-    const end = nextMarker ? formatted.indexOf(nextMarker, contentStart) : -1;
+
+    const end = nextMarker
+      ? formatted.indexOf(nextMarker, contentStart)
+      : -1;
 
     const content =
       end === -1
@@ -91,6 +94,10 @@ export default function HomePage() {
   const [userEmail, setUserEmail] = useState("");
   const [selectedTemplate, setSelectedTemplate] =
     useState<PromptTemplateId>(DEFAULT_PROMPT_TEMPLATE_ID);
+
+  const [rewriteLoadingId, setRewriteLoadingId] = useState<string | null>(
+    null
+  );
 
   const outputSections = result ? splitOutput(result) : [];
 
@@ -157,6 +164,59 @@ export default function HomePage() {
     }
 
     setLoading(false);
+  }
+
+  async function rewriteSection(
+    sectionId: string,
+    content: string,
+    rewriteType: string
+  ) {
+    try {
+      setRewriteLoadingId(sectionId);
+
+      const res = await fetch("/api/regenerate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          content,
+          rewriteType,
+          template: selectedTemplate,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.error || "Rewrite failed.");
+        return;
+      }
+
+      const updatedSections = outputSections.map((section) => {
+        if (section.id === sectionId) {
+          return {
+            ...section,
+            content: data.result,
+          };
+        }
+
+        return section;
+      });
+
+      const rebuiltResult = updatedSections
+        .map(
+          (section) =>
+            `# ${section.title}\n\n${section.content}`
+        )
+        .join("\n\n");
+
+      setResult(rebuiltResult);
+    } catch {
+      alert("Rewrite failed.");
+    } finally {
+      setRewriteLoadingId(null);
+    }
   }
 
   async function copyText(text: string) {
@@ -347,16 +407,66 @@ export default function HomePage() {
                   key={section.id}
                   className="rounded-3xl border border-zinc-800 bg-black p-6"
                 >
-                  <div className="mb-5 flex items-center justify-between gap-4">
+                  <div className="mb-5 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                     <h4 className="text-2xl font-bold">{section.title}</h4>
 
-                    <button
-                      onClick={() => copyText(section.content)}
-                      className="rounded-xl bg-white px-4 py-2 font-semibold text-black"
-                    >
-                      Copy
-                    </button>
+                    <div className="flex flex-wrap gap-3">
+                      <button
+                        onClick={() =>
+                          rewriteSection(
+                            section.id,
+                            section.content,
+                            "default"
+                          )
+                        }
+                        disabled={rewriteLoadingId === section.id}
+                        className="rounded-xl border border-zinc-700 px-4 py-2 text-sm font-semibold hover:border-zinc-500 disabled:opacity-60"
+                      >
+                        Regenerate
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          rewriteSection(
+                            section.id,
+                            section.content,
+                            "more-viral"
+                          )
+                        }
+                        disabled={rewriteLoadingId === section.id}
+                        className="rounded-xl border border-zinc-700 px-4 py-2 text-sm font-semibold hover:border-zinc-500 disabled:opacity-60"
+                      >
+                        More Viral
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          rewriteSection(
+                            section.id,
+                            section.content,
+                            "more-professional"
+                          )
+                        }
+                        disabled={rewriteLoadingId === section.id}
+                        className="rounded-xl border border-zinc-700 px-4 py-2 text-sm font-semibold hover:border-zinc-500 disabled:opacity-60"
+                      >
+                        More Professional
+                      </button>
+
+                      <button
+                        onClick={() => copyText(section.content)}
+                        className="rounded-xl bg-white px-4 py-2 font-semibold text-black"
+                      >
+                        Copy
+                      </button>
+                    </div>
                   </div>
+
+                  {rewriteLoadingId === section.id && (
+                    <div className="mb-5 rounded-2xl border border-zinc-800 bg-zinc-950 px-4 py-3 text-sm text-zinc-400">
+                      Rewriting content...
+                    </div>
+                  )}
 
                   <div className="leading-8 text-zinc-200">
                     <ReactMarkdown
