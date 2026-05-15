@@ -25,6 +25,7 @@ const SECTION_TITLES = [
 ];
 
 type OutputSection = {
+  id: string;
   title: string;
   content: string;
 };
@@ -64,6 +65,7 @@ function splitOutput(raw: string): OutputSection[] {
         : formatted.slice(contentStart, end).trim();
 
     sections.push({
+      id: title.toLowerCase().replaceAll(" ", "-"),
       title,
       content,
     });
@@ -72,6 +74,7 @@ function splitOutput(raw: string): OutputSection[] {
   if (sections.length === 0) {
     return [
       {
+        id: "generated-content",
         title: "Generated Content",
         content: raw,
       },
@@ -341,7 +344,7 @@ export default function HomePage() {
             <div className="mt-10 space-y-5">
               {outputSections.map((section) => (
                 <div
-                  key={section.title}
+                  key={section.id}
                   className="rounded-3xl border border-zinc-800 bg-black p-6"
                 >
                   <div className="mb-5 flex items-center justify-between gap-4">
