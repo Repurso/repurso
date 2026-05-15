@@ -1,43 +1,43 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 
-export default function Home() {
+export default function HomePage() {
   const [input, setInput] = useState("");
   const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
-  const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [userEmail, setUserEmail] = useState("");
 
   useEffect(() => {
-    async function loadUser() {
+    async function getUser() {
       const {
         data: { session },
       } = await supabase.auth.getSession();
 
       if (session?.user?.email) {
-        setUserEmail(session.user.email);
+        const email = session.user.email;
+
+        setUserEmail(email);
+
+        const { data: existingProfile } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("user_email", email)
+          .single();
+
+        if (!existingProfile) {
+          await supabase.from("profiles").insert({
+            user_email: email,
+            plan: "free",
+          });
+        }
       }
     }
 
-    loadUser();
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUserEmail(session?.user?.email ?? null);
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
+    getUser();
   }, []);
-
-  async function logout() {
-    await supabase.auth.signOut();
-    setUserEmail(null);
-    window.location.reload();
-  }
 
   async function generateContent() {
     if (!input.trim()) {
@@ -49,7 +49,7 @@ export default function Home() {
     setResult("");
 
     try {
-      const response = await fetch("/api/generate", {
+      const res = await fetch("/api/generate", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -60,167 +60,148 @@ export default function Home() {
         }),
       });
 
-      const data = await response.json();
+      const data = await res.json();
 
-      if (!response.ok) {
-        throw new Error(data.error || "Something went wrong.");
+      if (!res.ok) {
+        alert(data.error || "Something went wrong.");
+      } else {
+        setResult(data.result);
       }
-
-      setResult(data.result);
-    } catch (error: any) {
-      alert(error.message);
-    } finally {
-      setLoading(false);
+    } catch (error) {
+      alert("Failed to generate content.");
     }
+
+    setLoading(false);
+  }
+
+  async function logout() {
+    await supabase.auth.signOut();
+    location.reload();
   }
 
   return (
-    <main className="min-h-screen bg-[#050505] text-white">
-      <section className="mx-auto max-w-6xl px-6 py-8">
-        <nav className="flex items-center justify-between">
-          <a href="/" className="text-2xl font-bold tracking-tight">
-            Repurso
-          </a>
+    <main className="min-h-screen bg-black px-6 py-10 text-white">
+      <div className="mx-auto max-w-6xl">
+        <nav className="mb-16 flex items-center justify-between">
+          <h1 className="text-3xl font-bold">Repurso</h1>
 
-          <div className="flex items-center gap-6 text-sm text-zinc-400">
-            <a href="#features">Features</a>
-
-            <a href="#pricing">Pricing</a>
-
-            <a href="/dashboard">Dashboard</a>
-
+          <div className="flex items-center gap-4">
             {userEmail ? (
-              <div className="flex items-center gap-3">
-                <span className="hidden max-w-[220px] truncate sm:inline">
+              <>
+                <span className="text-sm text-zinc-400">
                   {userEmail}
                 </span>
 
+                <Link
+                  href="/dashboard"
+                  className="rounded-xl border border-zinc-700 px-4 py-2"
+                >
+                  Dashboard
+                </Link>
+
                 <button
                   onClick={logout}
-                  className="rounded-lg bg-white px-4 py-2 font-semibold text-black"
+                  className="rounded-xl bg-white px-4 py-2 font-semibold text-black"
                 >
                   Logout
                 </button>
-              </div>
+              </>
             ) : (
-              <a
+              <Link
                 href="/login"
-                className="rounded-lg bg-white px-4 py-2 font-semibold text-black"
+                className="rounded-xl bg-white px-4 py-2 font-semibold text-black"
               >
                 Login
-              </a>
+              </Link>
             )}
           </div>
         </nav>
 
-        <div className="grid items-center gap-10 py-16 md:grid-cols-2">
+        <section className="mb-24 grid gap-16 lg:grid-cols-2">
           <div>
-            <div className="mb-5 inline-flex rounded-full border border-zinc-800 bg-zinc-950 px-4 py-2 text-sm text-zinc-400">
+            <div className="mb-6 inline-flex rounded-full border border-zinc-800 px-4 py-2 text-sm text-zinc-400">
               AI content repurposing tool
             </div>
 
-            <h1 className="mb-6 text-5xl font-bold leading-tight md:text-6xl">
+            <h2 className="mb-6 text-6xl font-bold leading-tight">
               Turn one idea into content for every platform.
-            </h1>
+            </h2>
 
-            <p className="mb-8 text-lg leading-8 text-zinc-400">
-              Repurso helps creators, founders and marketers transform one piece
-              of content into LinkedIn posts, Instagram captions, X posts,
-              short-form video scripts and YouTube descriptions.
+            <p className="mb-8 text-xl leading-9 text-zinc-400">
+              Repurso helps creators, founders and marketers transform one
+              piece of content into LinkedIn posts, Instagram captions,
+              X posts, TikTok scripts and YouTube descriptions.
             </p>
 
-            <div className="flex flex-col gap-3 sm:flex-row">
+            <div className="flex flex-wrap gap-4">
               <a
-                href="#generator"
-                className="rounded-xl bg-white px-6 py-3 text-center font-semibold text-black"
+                href="https://repursoapp.lemonsqueezy.com/checkout/buy/5f45028d-de97-458d-a827-64f8a7adc153"
+                target="_blank"
+                className="rounded-2xl bg-white px-8 py-4 font-bold text-black"
               >
-                Try it free
+                Get Creator
               </a>
 
               <a
-                href="#pricing"
-                className="rounded-xl border border-zinc-800 px-6 py-3 text-center font-semibold text-white"
+                href="https://repursoapp.lemonsqueezy.com/checkout/buy/548cbc91-792f-4fae-b6a5-569f95c119c3"
+                target="_blank"
+                className="rounded-2xl border border-zinc-700 px-8 py-4 font-bold"
               >
-                View pricing
+                Get Pro
               </a>
             </div>
           </div>
 
-          <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-5 shadow-2xl">
-            <div className="mb-4 flex gap-2">
+          <div className="rounded-[32px] border border-zinc-800 bg-zinc-950 p-8">
+            <div className="mb-6 flex gap-2">
               <div className="h-3 w-3 rounded-full bg-zinc-700" />
               <div className="h-3 w-3 rounded-full bg-zinc-700" />
               <div className="h-3 w-3 rounded-full bg-zinc-700" />
             </div>
 
-            <div className="rounded-2xl bg-black p-5">
-              <p className="mb-3 text-sm text-zinc-500">Input</p>
+            <div className="rounded-3xl bg-black p-6">
+              <div className="mb-8">
+                <p className="mb-3 text-zinc-500">Input</p>
 
-              <p className="mb-6 text-zinc-300">
-                AI tools help creators save time by turning one piece of content
-                into many different formats.
-              </p>
+                <p className="text-xl leading-9">
+                  AI tools help creators save time by turning one piece of
+                  content into many different formats.
+                </p>
+              </div>
 
-              <p className="mb-3 text-sm text-zinc-500">Output</p>
+              <div>
+                <p className="mb-3 text-zinc-500">Output</p>
 
-              <div className="space-y-3 text-sm text-zinc-300">
-                <div className="rounded-xl border border-zinc-800 p-3">
-                  LinkedIn post generated
-                </div>
+                <div className="space-y-4">
+                  <div className="rounded-2xl border border-zinc-800 p-4">
+                    LinkedIn post generated
+                  </div>
 
-                <div className="rounded-xl border border-zinc-800 p-3">
-                  Instagram caption generated
-                </div>
+                  <div className="rounded-2xl border border-zinc-800 p-4">
+                    Instagram caption generated
+                  </div>
 
-                <div className="rounded-xl border border-zinc-800 p-3">
-                  TikTok script generated
+                  <div className="rounded-2xl border border-zinc-800 p-4">
+                    TikTok script generated
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-
-        <section id="features" className="grid gap-5 py-8 md:grid-cols-3">
-          <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
-            <h3 className="mb-3 text-xl font-bold">One input</h3>
-
-            <p className="text-zinc-400">
-              Paste a single idea, paragraph, script or post.
-            </p>
-          </div>
-
-          <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
-            <h3 className="mb-3 text-xl font-bold">Multiple outputs</h3>
-
-            <p className="text-zinc-400">
-              Generate content for social platforms instantly.
-            </p>
-          </div>
-
-          <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
-            <h3 className="mb-3 text-xl font-bold">Save time</h3>
-
-            <p className="text-zinc-400">
-              Repurpose your content instead of starting from zero.
-            </p>
-          </div>
         </section>
 
-        <section
-          id="generator"
-          className="mt-8 rounded-3xl border border-zinc-800 bg-zinc-950 p-6"
-        >
-          <div className="mb-6">
-            <h2 className="mb-2 text-3xl font-bold">Generate content</h2>
+        <section className="rounded-[32px] border border-zinc-800 bg-zinc-950 p-8">
+          <h3 className="mb-2 text-5xl font-bold">
+            Generate content
+          </h3>
 
-            <p className="text-zinc-400">
-              Paste your content and let Repurso turn it into multiple formats.
-            </p>
-          </div>
+          <p className="mb-8 text-xl text-zinc-400">
+            Paste your content and let Repurso turn it into multiple formats.
+          </p>
 
           <textarea
-            className="min-h-56 w-full rounded-2xl border border-zinc-800 bg-black p-5 text-white outline-none placeholder:text-zinc-600"
             placeholder="Paste your content here..."
+            className="mb-6 h-56 w-full rounded-3xl border border-zinc-800 bg-black p-6 text-lg text-white outline-none placeholder:text-zinc-600"
             value={input}
             onChange={(e) => setInput(e.target.value)}
           />
@@ -228,72 +209,18 @@ export default function Home() {
           <button
             onClick={generateContent}
             disabled={loading}
-            className="mt-4 w-full rounded-2xl bg-white py-4 font-bold text-black disabled:opacity-60"
+            className="rounded-2xl bg-white px-8 py-4 font-bold text-black disabled:opacity-60"
           >
-            {loading ? "Generating..." : "Generate Content"}
+            {loading ? "Generating..." : "Generate"}
           </button>
 
           {result && (
-            <div className="mt-6 whitespace-pre-wrap rounded-2xl border border-zinc-800 bg-black p-6 leading-7 text-zinc-200">
+            <div className="mt-10 whitespace-pre-wrap rounded-3xl border border-zinc-800 bg-black p-8 leading-8">
               {result}
             </div>
           )}
         </section>
-
-        <section id="pricing" className="py-16">
-          <div className="mb-8 text-center">
-            <h2 className="mb-3 text-4xl font-bold">Simple pricing</h2>
-
-            <p className="text-zinc-400">
-              Start free. Upgrade when you need more content.
-            </p>
-          </div>
-
-          <div className="grid gap-5 md:grid-cols-3">
-            <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
-              <h3 className="mb-2 text-2xl font-bold">Free</h3>
-
-              <p className="mb-5 text-zinc-400">For testing the product.</p>
-
-              <p className="mb-6 text-4xl font-bold">$0</p>
-
-              <ul className="space-y-3 text-zinc-300">
-                <li>3 generations/day</li>
-                <li>5 output formats</li>
-                <li>Basic content quality</li>
-              </ul>
-            </div>
-
-            <div className="rounded-3xl border border-white bg-white p-6 text-black">
-              <h3 className="mb-2 text-2xl font-bold">Creator</h3>
-
-              <p className="mb-5 text-zinc-600">For active creators.</p>
-
-              <p className="mb-6 text-4xl font-bold">$9/mo</p>
-
-              <ul className="space-y-3">
-                <li>300 generations/month</li>
-                <li>Better output quality</li>
-                <li>Content history</li>
-              </ul>
-            </div>
-
-            <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
-              <h3 className="mb-2 text-2xl font-bold">Pro</h3>
-
-              <p className="mb-5 text-zinc-400">For power users.</p>
-
-              <p className="mb-6 text-4xl font-bold">$19/mo</p>
-
-              <ul className="space-y-3 text-zinc-300">
-                <li>1000 generations/month</li>
-                <li>Priority generation</li>
-                <li>Advanced formats</li>
-              </ul>
-            </div>
-          </div>
-        </section>
-      </section>
+      </div>
     </main>
   );
 }
