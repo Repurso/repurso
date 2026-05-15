@@ -407,13 +407,13 @@ export default function HomePage() {
                   <div className="mb-5 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                     <h4 className="text-2xl font-bold">{section.title}</h4>
 
-                    <div className="flex flex-wrap gap-3">
+                    <div className="flex flex-wrap items-center gap-3">
                       <button
                         onClick={() =>
                           rewriteSection(section.id, section.content, "default")
                         }
                         disabled={rewriteLoadingId === section.id}
-                        className="rounded-xl border border-zinc-700 px-4 py-2 text-sm font-semibold hover:border-zinc-500 disabled:opacity-60"
+                        className="rounded-2xl border border-zinc-700 bg-zinc-950 px-4 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:border-zinc-500 hover:bg-zinc-900 disabled:opacity-60"
                       >
                         Regenerate
                       </button>
@@ -427,7 +427,7 @@ export default function HomePage() {
                           )
                         }
                         disabled={rewriteLoadingId === section.id}
-                        className="rounded-xl border border-zinc-700 px-4 py-2 text-sm font-semibold hover:border-zinc-500 disabled:opacity-60"
+                        className="rounded-2xl border border-zinc-700 bg-zinc-950 px-4 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:border-zinc-500 hover:bg-zinc-900 disabled:opacity-60"
                       >
                         More Viral
                       </button>
@@ -441,7 +441,7 @@ export default function HomePage() {
                           )
                         }
                         disabled={rewriteLoadingId === section.id}
-                        className="rounded-xl border border-zinc-700 px-4 py-2 text-sm font-semibold hover:border-zinc-500 disabled:opacity-60"
+                        className="rounded-2xl border border-zinc-700 bg-zinc-950 px-4 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:border-zinc-500 hover:bg-zinc-900 disabled:opacity-60"
                       >
                         More Professional
                       </button>
@@ -451,7 +451,7 @@ export default function HomePage() {
                           rewriteSection(section.id, section.content, "shorter")
                         }
                         disabled={rewriteLoadingId === section.id}
-                        className="rounded-xl border border-zinc-700 px-4 py-2 text-sm font-semibold hover:border-zinc-500 disabled:opacity-60"
+                        className="rounded-2xl border border-zinc-700 bg-zinc-950 px-4 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:border-zinc-500 hover:bg-zinc-900 disabled:opacity-60"
                       >
                         Shorter
                       </button>
@@ -461,7 +461,7 @@ export default function HomePage() {
                           rewriteSection(section.id, section.content, "longer")
                         }
                         disabled={rewriteLoadingId === section.id}
-                        className="rounded-xl border border-zinc-700 px-4 py-2 text-sm font-semibold hover:border-zinc-500 disabled:opacity-60"
+                        className="rounded-2xl border border-zinc-700 bg-zinc-950 px-4 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:border-zinc-500 hover:bg-zinc-900 disabled:opacity-60"
                       >
                         Longer
                       </button>
@@ -475,14 +475,14 @@ export default function HomePage() {
                           )
                         }
                         disabled={rewriteLoadingId === section.id}
-                        className="rounded-xl border border-zinc-700 px-4 py-2 text-sm font-semibold hover:border-zinc-500 disabled:opacity-60"
+                        className="rounded-2xl border border-zinc-700 bg-zinc-950 px-4 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:border-zinc-500 hover:bg-zinc-900 disabled:opacity-60"
                       >
                         More Emotional
                       </button>
 
                       <button
                         onClick={() => copyText(section.content)}
-                        className="rounded-xl bg-white px-4 py-2 font-semibold text-black"
+                        className="rounded-2xl bg-white px-5 py-2 text-sm font-bold text-black transition hover:-translate-y-0.5 hover:bg-zinc-200"
                       >
                         Copy
                       </button>
