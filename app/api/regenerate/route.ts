@@ -1,5 +1,6 @@
 import OpenAI from "openai";
 import { NextResponse } from "next/server";
+import { createClient } from "@supabase/supabase-js";
 import {
   DEFAULT_PROMPT_TEMPLATE_ID,
   isPromptTemplateId,
@@ -10,63 +11,21 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-const MAX_REWRITE_CHARACTERS = 5000;
+const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
-function getRewriteInstructions(type: string) {
-  switch (type) {
-    case "more-viral":
-      return `
-Make the content:
-- more viral
-- more emotionally engaging
-- more curiosity-driven
-- more attention-grabbing
-- faster paced
-- more shareable
-`;
+function getPlanLimit(plan: string) {
+  if (plan === "creator") return 300;
+  if (plan === "pro") return 1000;
+  return 3;
+}
 
-    case "more-professional":
-      return `
-Make the content:
-- more polished
-- more authority-driven
-- more professional
-- more credible
-- more executive-level
-`;
-
-    case "shorter":
-      return `
-Make the content:
-- shorter
-- tighter
-- more concise
-- easier to skim
-`;
-
-    case "longer":
-      return `
-Make the content:
-- longer
-- more detailed
-- more valuable
-- more insight-driven
-`;
-
-    case "more-emotional":
-      return `
-Make the content:
-- more emotional
-- more relatable
-- more human
-- more story-driven
-`;
-
-    default:
-      return `
-Improve the content quality while preserving the original intent.
-`;
-  }
+function getCharacterLimit(plan: string) {
+  if (plan === "creator") return 5000;
+  if (plan === "pro") return 10000;
+  return 1000;
 }
 
 function getTemplateInstructions(template: PromptTemplateId) {
@@ -78,6 +37,9 @@ STYLE DIRECTION:
 - Focus on authority and credibility
 - Use sharp professional insights
 - Prioritize trust and thought leadership
+- Make the writing polished and intelligent
+- Use strong LinkedIn style hooks
+- Encourage comments and discussion
 `;
 
     case "viral-short-form":
@@ -87,6 +49,9 @@ STYLE DIRECTION:
 - Prioritize virality and retention
 - Use punchy short sentences
 - Create curiosity loops
+- Use strong hooks immediately
+- Make every line highly scroll-stopping
+- Optimize heavily for shares and attention
 `;
 
     case "product-launch":
@@ -96,6 +61,9 @@ STYLE DIRECTION:
 - Focus on benefits and transformation
 - Create excitement naturally
 - Increase desire and curiosity
+- Highlight pain points and outcomes
+- Use persuasive marketing language
+- Add CTA naturally
 `;
 
     case "educational-content":
@@ -104,6 +72,10 @@ STYLE DIRECTION:
 - Make the content highly educational
 - Explain concepts clearly
 - Focus on actionable insights
+- Make the writing easy to understand
+- Teach step-by-step when relevant
+- Optimize for saves and shares
+- Sound smart but accessible
 `;
 
     case "general":
@@ -111,7 +83,9 @@ STYLE DIRECTION:
       return `
 STYLE DIRECTION:
 - Create balanced high-quality social content
-- Keep the tone modern and engaging
+- Make the writing modern and engaging
+- Focus on clarity and platform optimization
+- Keep the tone premium and human
 `;
   }
 }
@@ -120,32 +94,113 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    const content = body.content;
-    const rewriteType = body.rewriteType || "default";
+    const input = body.input;
+
+    const userEmail = body.userEmail || "anonymous";
 
     const template = isPromptTemplateId(body.template)
       ? body.template
       : DEFAULT_PROMPT_TEMPLATE_ID;
 
-    if (!content || !content.trim()) {
+    if (!input || !input.trim()) {
       return NextResponse.json(
-        {
-          error: "Content is required.",
-        },
+        { error: "Input is required." },
         { status: 400 }
       );
     }
 
-    if (content.length > MAX_REWRITE_CHARACTERS) {
+    let plan = "free";
+    let generationCount = 0;
+    let limit = 3;
+
+    if (userEmail !== "anonymous") {
+      const { data: profile, error: profileError } = await supabaseAdmin
+        .from("profiles")
+        .select("user_email, plan, generation_count")
+        .eq("user_email", userEmail)
+        .maybeSingle();
+
+      if (profileError) {
+        return NextResponse.json(
+          { error: profileError.message },
+          { status: 500 }
+        );
+      }
+
+      if (!profile) {
+        const { data: newProfile, error: insertProfileError } =
+          await supabaseAdmin
+            .from("profiles")
+            .insert({
+              user_email: userEmail,
+              plan: "free",
+              generation_count: 0,
+            })
+            .select("user_email, plan, generation_count")
+            .single();
+
+        if (insertProfileError) {
+          return NextResponse.json(
+            { error: insertProfileError.message },
+            { status: 500 }
+          );
+        }
+
+        plan = newProfile.plan || "free";
+        generationCount = newProfile.generation_count || 0;
+        limit = getPlanLimit(plan);
+      } else {
+        plan = profile.plan || "free";
+        generationCount = profile.generation_count || 0;
+        limit = getPlanLimit(plan);
+      }
+
+      if (generationCount >= limit) {
+        return NextResponse.json(
+          {
+            error: `You reached your ${plan} plan limit. Please upgrade your plan.`,
+          },
+          { status: 429 }
+        );
+      }
+    }
+
+    if (userEmail === "anonymous") {
+      const { data: usageData, error: usageError } = await supabaseAdmin
+        .from("usage_limits")
+        .select("user_email, generation_count")
+        .eq("user_email", "anonymous")
+        .maybeSingle();
+
+      if (usageError) {
+        return NextResponse.json(
+          { error: usageError.message },
+          { status: 500 }
+        );
+      }
+
+      const anonymousCount = usageData?.generation_count || 0;
+
+      if (anonymousCount >= 3) {
+        return NextResponse.json(
+          {
+            error: "Free limit reached. Please login to continue.",
+          },
+          { status: 429 }
+        );
+      }
+    }
+
+    const characterLimit = getCharacterLimit(plan);
+
+    if (input.length > characterLimit) {
       return NextResponse.json(
         {
-          error: `Rewrite content is too long. Maximum ${MAX_REWRITE_CHARACTERS} characters allowed.`,
+          error: `Your ${plan} plan allows maximum ${characterLimit} characters.`,
         },
         { status: 400 }
       );
     }
-
-    const rewriteInstructions = getRewriteInstructions(rewriteType);
 
     const templateInstructions = getTemplateInstructions(template);
 
@@ -157,31 +212,87 @@ export async function POST(req: Request) {
           content: `
 You are Repurso AI.
 
-You are an elite social media copywriter.
+You are one of the best social media content strategists in the world.
 
-Your job is to improve and rewrite content while preserving the original meaning.
+Your job is to transform raw ideas, transcripts, notes, tweets, or content into HIGHLY engaging platform-native content.
 
-The rewritten content must feel:
-- premium
+Your outputs must feel:
 - modern
+- viral
 - human
-- engaging
-- platform-native
-- emotionally intelligent
+- emotionally engaging
+- authority-building
+- concise
+- premium quality
 
-Avoid robotic AI writing.
+Avoid generic AI sounding writing.
+Never sound robotic.
+
+Always optimize for:
+- retention
+- engagement
+- shares
+- saves
+- curiosity
+
+You MUST output valid markdown.
+Never use plain text section titles.
+Every section title MUST start with #.
+Use blank lines between sections.
 
 ${templateInstructions}
-
-${rewriteInstructions}
 `,
         },
         {
           role: "user",
           content: `
-Rewrite and improve this content:
+Transform the following content into premium social media content.
 
-${content}
+IMPORTANT RULES:
+- Create extremely strong hooks
+- Avoid generic AI phrasing
+- Make the writing feel natural
+- Use line breaks properly
+- Make every section platform optimized
+- Add emotional triggers naturally
+- Make the content concise but impactful
+- Do NOT repeat the same sentences across platforms
+- Use modern creator language
+- Include CTA when appropriate
+- Use emojis naturally but not excessively
+
+MARKDOWN FORMAT RULES:
+- You MUST use proper markdown formatting.
+- Every main section title MUST start with exactly one #.
+- Put one blank line after every section title.
+- Do NOT write plain text titles.
+- Do NOT remove markdown formatting.
+- Do NOT wrap the answer in code blocks.
+
+OUTPUT FORMAT:
+
+# LinkedIn Post
+
+Write the LinkedIn post here.
+
+# Twitter/X Post
+
+Write the Twitter/X post here.
+
+# Instagram Caption
+
+Write the Instagram caption here.
+
+# TikTok Script
+
+Write the TikTok script here.
+
+# YouTube Description
+
+Write the YouTube description here.
+
+CONTENT:
+${input}
 `,
         },
       ],
@@ -189,8 +300,82 @@ ${content}
 
     const result = completion.choices[0].message.content || "";
 
+    const { error: generationInsertError } = await supabaseAdmin
+      .from("generations")
+      .insert({
+        user_email: userEmail,
+        input,
+        output: result,
+      });
+
+    if (generationInsertError) {
+      return NextResponse.json(
+        { error: generationInsertError.message },
+        { status: 500 }
+      );
+    }
+
+    if (userEmail !== "anonymous") {
+      const { error: updateProfileError } = await supabaseAdmin
+        .from("profiles")
+        .update({
+          generation_count: generationCount + 1,
+        })
+        .eq("user_email", userEmail);
+
+      if (updateProfileError) {
+        return NextResponse.json(
+          { error: updateProfileError.message },
+          { status: 500 }
+        );
+      }
+    }
+
+    if (userEmail === "anonymous") {
+      const { data: usageData } = await supabaseAdmin
+        .from("usage_limits")
+        .select("user_email, generation_count")
+        .eq("user_email", "anonymous")
+        .maybeSingle();
+
+      if (!usageData) {
+        const { error: insertUsageError } = await supabaseAdmin
+          .from("usage_limits")
+          .insert({
+            user_email: "anonymous",
+            generation_count: 1,
+          });
+
+        if (insertUsageError) {
+          return NextResponse.json(
+            { error: insertUsageError.message },
+            { status: 500 }
+          );
+        }
+      } else {
+        const { error: updateUsageError } = await supabaseAdmin
+          .from("usage_limits")
+          .update({
+            generation_count: usageData.generation_count + 1,
+          })
+          .eq("user_email", "anonymous");
+
+        if (updateUsageError) {
+          return NextResponse.json(
+            { error: updateUsageError.message },
+            { status: 500 }
+          );
+        }
+      }
+    }
+
     return NextResponse.json({
       result,
+      usage: {
+        plan,
+        used: generationCount + 1,
+        limit,
+      },
     });
   } catch (error: unknown) {
     console.error(error);
