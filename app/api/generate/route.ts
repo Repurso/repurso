@@ -2,16 +2,20 @@ import OpenAI from "openai";
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
-const client = new OpenAI({
+const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-const supabase = createClient(
+const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-const FREE_LIMIT = 3;
+function getPlanLimit(plan: string) {
+  if (plan === "creator") return 300;
+  if (plan === "pro") return 1000;
+  return 3;
+}
 
 export async function POST(req: Request) {
   try {
@@ -26,14 +30,45 @@ export async function POST(req: Request) {
       );
     }
 
-    if (userEmail === "anonymous") {
-      const { data: usageData } = await supabase
+    let plan = "free";
+    let generationCount = 0;
+    let limit = 3;
+
+    if (userEmail !== "anonymous") {
+      const { data: profile } = await supabaseAdmin
+        .from("profiles")
+        .select("*")
+        .eq("user_email", userEmail)
+        .single();
+
+      if (profile) {
+        plan = profile.plan || "free";
+        generationCount = profile.generation_count || 0;
+        limit = getPlanLimit(plan);
+      } else {
+        await supabaseAdmin.from("profiles").insert({
+          user_email: userEmail,
+          plan: "free",
+          generation_count: 0,
+        });
+      }
+
+      if (generationCount >= limit) {
+        return NextResponse.json(
+          {
+            error: `You reached your ${plan} plan limit. Please upgrade your plan.`,
+          },
+          { status: 429 }
+        );
+      }
+    } else {
+      const { data: usageData } = await supabaseAdmin
         .from("usage_limits")
         .select("*")
         .eq("user_email", "anonymous")
         .single();
 
-      if (usageData && usageData.generation_count >= FREE_LIMIT) {
+      if (usageData && usageData.generation_count >= 3) {
         return NextResponse.json(
           {
             error: "Free limit reached. Please login to continue.",
@@ -43,12 +78,12 @@ export async function POST(req: Request) {
       }
 
       if (!usageData) {
-        await supabase.from("usage_limits").insert({
+        await supabaseAdmin.from("usage_limits").insert({
           user_email: "anonymous",
           generation_count: 1,
         });
       } else {
-        await supabase
+        await supabaseAdmin
           .from("usage_limits")
           .update({
             generation_count: usageData.generation_count + 1,
@@ -57,7 +92,7 @@ export async function POST(req: Request) {
       }
     }
 
-    const completion = await client.chat.completions.create({
+    const completion = await openai.chat.completions.create({
       model: "gpt-4.1-mini",
       messages: [
         {
@@ -84,11 +119,20 @@ ${input}
 
     const result = completion.choices[0].message.content || "";
 
-    await supabase.from("generations").insert({
+    await supabaseAdmin.from("generations").insert({
       user_email: userEmail,
       input,
       output: result,
     });
+
+    if (userEmail !== "anonymous") {
+      await supabaseAdmin
+        .from("profiles")
+        .update({
+          generation_count: generationCount + 1,
+        })
+        .eq("user_email", userEmail);
+    }
 
     return NextResponse.json({ result });
   } catch (error: any) {
@@ -98,9 +142,7 @@ ${input}
       {
         error: error.message || "Server error",
       },
-      {
-        status: 500,
-      }
+      { status: 500 }
     );
   }
 }

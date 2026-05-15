@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
+import ReactMarkdown from "react-markdown";
 
 type Generation = {
   id: string;
@@ -23,7 +24,6 @@ export default function DashboardPage() {
       } = await supabase.auth.getSession();
 
       const email = session?.user?.email ?? null;
-
       setUserEmail(email);
 
       if (!email) {
@@ -49,24 +49,77 @@ export default function DashboardPage() {
     loadDashboard();
   }, []);
 
+  async function copyText(text: string) {
+    await navigator.clipboard.writeText(text);
+    alert("Copied.");
+  }
+
+  async function deleteGeneration(id: string) {
+    const confirmed = confirm("Delete this generation?");
+
+    if (!confirmed) return;
+
+    const { error } = await supabase
+      .from("generations")
+      .delete()
+      .eq("id", id);
+
+    if (error) {
+      alert(error.message);
+      return;
+    }
+
+    setGenerations((prev) =>
+      prev.filter((item) => item.id !== id)
+    );
+  }
+
   return (
     <main className="min-h-screen bg-black px-6 py-10 text-white">
-      <div className="mx-auto max-w-5xl">
-        <div className="mb-8 flex items-center justify-between">
+      <div className="mx-auto max-w-6xl">
+        <div className="mb-10 flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
           <div>
-            <h1 className="text-4xl font-bold">Dashboard</h1>
-            <p className="mt-2 text-zinc-400">
-              View your generated content history.
+            <h1 className="text-5xl font-bold">Dashboard</h1>
+            <p className="mt-3 text-zinc-400">
+              Your generated content history.
             </p>
           </div>
 
-          <a
-            href="/"
-            className="rounded-xl bg-white px-5 py-3 font-semibold text-black"
-          >
-            Back home
-          </a>
+          <div className="flex gap-3">
+            <a
+              href="/#generator"
+              className="rounded-xl border border-zinc-700 px-5 py-3 font-semibold"
+            >
+              Generate
+            </a>
+
+            <a
+              href="/"
+              className="rounded-xl bg-white px-5 py-3 font-semibold text-black"
+            >
+              Back home
+            </a>
+          </div>
         </div>
+
+        {userEmail && (
+          <div className="mb-8 grid gap-4 md:grid-cols-3">
+            <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
+              <p className="text-sm text-zinc-500">Account</p>
+              <p className="mt-2 truncate font-semibold">{userEmail}</p>
+            </div>
+
+            <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
+              <p className="text-sm text-zinc-500">Generations</p>
+              <p className="mt-2 text-3xl font-bold">{generations.length}</p>
+            </div>
+
+            <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
+              <p className="text-sm text-zinc-500">Status</p>
+              <p className="mt-2 font-semibold text-green-400">Active</p>
+            </div>
+          </div>
+        )}
 
         {loading ? (
           <p className="text-zinc-400">Loading...</p>
@@ -105,23 +158,44 @@ export default function DashboardPage() {
                 key={item.id}
                 className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6"
               >
-                <div className="mb-4 flex flex-col gap-1 text-sm text-zinc-500">
-                  <span>{item.user_email}</span>
-                  <span>{new Date(item.created_at).toLocaleString()}</span>
+                <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                  <div className="text-sm text-zinc-500">
+                    <p>{new Date(item.created_at).toLocaleString()}</p>
+                    <p>{item.user_email}</p>
+                  </div>
+
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => copyText(item.output)}
+                      className="rounded-xl bg-white px-4 py-2 font-semibold text-black"
+                    >
+                      Copy
+                    </button>
+
+                    <button
+                      onClick={() => deleteGeneration(item.id)}
+                      className="rounded-xl border border-red-500 px-4 py-2 font-semibold text-red-400"
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </div>
 
-                <div className="mb-5">
+                <div className="mb-5 rounded-2xl border border-zinc-800 bg-black p-5">
                   <h2 className="mb-2 font-bold">Input</h2>
                   <p className="whitespace-pre-wrap text-zinc-300">
                     {item.input}
                   </p>
                 </div>
 
-                <div>
-                  <h2 className="mb-2 font-bold">Output</h2>
-                  <p className="whitespace-pre-wrap text-zinc-300">
-                    {item.output}
-                  </p>
+                <div className="rounded-2xl border border-zinc-800 bg-black p-5">
+                  <h2 className="mb-4 font-bold">Output</h2>
+
+                  <div className="prose prose-invert max-w-none">
+                    <ReactMarkdown>
+                      {item.output}
+                    </ReactMarkdown>
+                  </div>
                 </div>
               </div>
             ))}
