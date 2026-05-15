@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
+import ReactMarkdown from "react-markdown";
 
 const CREATOR_CHECKOUT = (email: string) =>
   `https://repursoapp.lemonsqueezy.com/checkout/buy/5f45028d-de97-458d-a827-64f8a7adc153?checkout[email]=${encodeURIComponent(email)}&checkout[custom][user_email]=${encodeURIComponent(email)}`;
@@ -24,6 +25,7 @@ export default function HomePage() {
 
       if (session?.user?.email) {
         const email = session.user.email;
+
         setUserEmail(email);
 
         const { data: existingProfile } = await supabase
@@ -219,8 +221,10 @@ export default function HomePage() {
           </button>
 
           {result && (
-            <div className="mt-10 whitespace-pre-wrap rounded-3xl border border-zinc-800 bg-black p-8 leading-8">
-              {result}
+            <div className="mt-10 rounded-3xl border border-zinc-800 bg-black p-8">
+              <div className="prose prose-invert max-w-none">
+                <ReactMarkdown>{result}</ReactMarkdown>
+              </div>
             </div>
           )}
         </section>
