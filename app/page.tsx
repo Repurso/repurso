@@ -9,6 +9,7 @@ import {
   PROMPT_TEMPLATES,
   PromptTemplateId,
 } from "@/lib/templates";
+import { getPlanLimits } from "@/lib/planLimits";
 
 const CREATOR_CHECKOUT = (email: string) =>
   `https://repursoapp.lemonsqueezy.com/checkout/buy/5f45028d-de97-458d-a827-64f8a7adc153?checkout[email]=${encodeURIComponent(email)}&checkout[custom][user_email]=${encodeURIComponent(email)}`;
@@ -58,9 +59,7 @@ function splitOutput(raw: string): OutputSection[] {
 
     const contentStart = start + currentMarker.length;
 
-    const end = nextMarker
-      ? formatted.indexOf(nextMarker, contentStart)
-      : -1;
+    const end = nextMarker ? formatted.indexOf(nextMarker, contentStart) : -1;
 
     const content =
       end === -1
@@ -68,7 +67,7 @@ function splitOutput(raw: string): OutputSection[] {
         : formatted.slice(contentStart, end).trim();
 
     sections.push({
-      id: title.toLowerCase().replaceAll(" ", "-"),
+      id: title.toLowerCase().replaceAll(" ", "-").replaceAll("/", "-"),
       title,
       content,
     });
@@ -93,19 +92,27 @@ export default function HomePage() {
   const [loading, setLoading] = useState(false);
   const [userEmail, setUserEmail] = useState("");
   const [userPlan, setUserPlan] = useState("free");
+  const [generationUsage, setGenerationUsage] = useState(0);
+  const [rewriteUsage, setRewriteUsage] = useState(0);
   const [selectedTemplate, setSelectedTemplate] =
     useState<PromptTemplateId>(DEFAULT_PROMPT_TEMPLATE_ID);
 
-  const [rewriteLoadingId, setRewriteLoadingId] = useState<string | null>(
-    null
-  );
+  const [rewriteLoadingId, setRewriteLoadingId] = useState<string | null>(null);
 
   const outputSections = result ? splitOutput(result) : [];
-
   const characterCount = input.length;
 
-  const characterLimit =
-    userPlan === "pro" ? 10000 : userPlan === "creator" ? 5000 : 1000;
+  const limits = getPlanLimits(userPlan);
+  const characterLimit = limits.characters;
+  const generationLimit = limits.generations;
+  const rewriteLimit = limits.rewrites;
+
+  const generationPercent = Math.min(
+    (generationUsage / generationLimit) * 100,
+    100
+  );
+
+  const rewritePercent = Math.min((rewriteUsage / rewriteLimit) * 100, 100);
 
   useEffect(() => {
     async function getUser() {
@@ -128,11 +135,17 @@ export default function HomePage() {
           await supabase.from("profiles").insert({
             user_email: email,
             plan: "free",
+            generation_count: 0,
+            rewrite_count: 0,
           });
 
           setUserPlan("free");
+          setGenerationUsage(0);
+          setRewriteUsage(0);
         } else {
           setUserPlan(existingProfile.plan || "free");
+          setGenerationUsage(existingProfile.generation_count || 0);
+          setRewriteUsage(existingProfile.rewrite_count || 0);
         }
       }
     }
@@ -148,6 +161,11 @@ export default function HomePage() {
 
     if (characterCount > characterLimit) {
       alert(`Your ${userPlan} plan allows maximum ${characterLimit} characters.`);
+      return;
+    }
+
+    if (generationUsage >= generationLimit) {
+      alert(`You reached your ${userPlan} plan generation limit.`);
       return;
     }
 
@@ -171,14 +189,24 @@ export default function HomePage() {
 
       if (!res.ok) {
         alert(data.error || "Something went wrong.");
-      } else {
-        setResult(data.result);
+
+        if (data.usage) {
+          setGenerationUsage(data.usage.used || 0);
+        }
+
+        return;
+      }
+
+      setResult(data.result);
+
+      if (data.usage) {
+        setGenerationUsage(data.usage.used || 0);
       }
     } catch {
       alert("Failed to generate content.");
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   }
 
   async function rewriteSection(
@@ -186,6 +214,18 @@ export default function HomePage() {
     content: string,
     rewriteType: string
   ) {
+    if (rewriteUsage >= rewriteLimit) {
+      alert(`You reached your ${userPlan} plan rewrite limit.`);
+      return;
+    }
+
+    if (content.length > characterLimit) {
+      alert(
+        `Your ${userPlan} plan allows maximum ${characterLimit} characters for rewrite.`
+      );
+      return;
+    }
+
     try {
       setRewriteLoadingId(sectionId);
 
@@ -198,6 +238,7 @@ export default function HomePage() {
           content,
           rewriteType,
           template: selectedTemplate,
+          userEmail: userEmail || "anonymous",
         }),
       });
 
@@ -205,6 +246,11 @@ export default function HomePage() {
 
       if (!res.ok) {
         alert(data.error || "Rewrite failed.");
+
+        if (data.usage) {
+          setRewriteUsage(data.usage.used || 0);
+        }
+
         return;
       }
 
@@ -224,6 +270,10 @@ export default function HomePage() {
         .join("\n\n");
 
       setResult(rebuiltResult);
+
+      if (data.usage) {
+        setRewriteUsage(data.usage.used || 0);
+      }
     } catch {
       alert("Rewrite failed.");
     } finally {
@@ -234,6 +284,21 @@ export default function HomePage() {
   async function copyText(text: string) {
     await navigator.clipboard.writeText(text);
     alert("Copied.");
+  }
+
+  function exportTextFile(filename: string, content: string, type: string) {
+    const blob = new Blob([content], {
+      type,
+    });
+
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+
+    a.href = url;
+    a.download = filename;
+    a.click();
+
+    URL.revokeObjectURL(url);
   }
 
   async function logout() {
@@ -433,7 +498,45 @@ export default function HomePage() {
               />
             </div>
 
-            <p className="mt-2 text-sm text-zinc-500">
+            <div className="mt-5 grid gap-4 md:grid-cols-2">
+              <div className="rounded-2xl border border-zinc-800 bg-black p-4">
+                <div className="mb-2 flex items-center justify-between text-sm">
+                  <span className="text-zinc-500">Generations</span>
+                  <span className="font-semibold text-white">
+                    {generationUsage} / {generationLimit}
+                  </span>
+                </div>
+
+                <div className="h-2 overflow-hidden rounded-full bg-zinc-900">
+                  <div
+                    className="h-full rounded-full bg-white transition-all"
+                    style={{
+                      width: `${generationPercent}%`,
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div className="rounded-2xl border border-zinc-800 bg-black p-4">
+                <div className="mb-2 flex items-center justify-between text-sm">
+                  <span className="text-zinc-500">Rewrites</span>
+                  <span className="font-semibold text-white">
+                    {rewriteUsage} / {rewriteLimit}
+                  </span>
+                </div>
+
+                <div className="h-2 overflow-hidden rounded-full bg-zinc-900">
+                  <div
+                    className="h-full rounded-full bg-white transition-all"
+                    style={{
+                      width: `${rewritePercent}%`,
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <p className="mt-3 text-sm text-zinc-500">
               Current plan:{" "}
               <span className="font-semibold capitalize text-white">
                 {userPlan}
@@ -443,7 +546,11 @@ export default function HomePage() {
 
           <button
             onClick={generateContent}
-            disabled={loading || characterCount > characterLimit}
+            disabled={
+              loading ||
+              characterCount > characterLimit ||
+              generationUsage >= generationLimit
+            }
             className="rounded-2xl bg-white px-8 py-4 font-bold text-black disabled:opacity-60"
           >
             {loading ? "Generating..." : "Generate"}
@@ -464,7 +571,10 @@ export default function HomePage() {
                         onClick={() =>
                           rewriteSection(section.id, section.content, "default")
                         }
-                        disabled={rewriteLoadingId === section.id}
+                        disabled={
+                          rewriteLoadingId === section.id ||
+                          rewriteUsage >= rewriteLimit
+                        }
                         className="rounded-2xl border border-zinc-700 bg-zinc-950 px-4 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:border-zinc-500 hover:bg-zinc-900 disabled:opacity-60"
                       >
                         Regenerate
@@ -478,7 +588,10 @@ export default function HomePage() {
                             "more-viral"
                           )
                         }
-                        disabled={rewriteLoadingId === section.id}
+                        disabled={
+                          rewriteLoadingId === section.id ||
+                          rewriteUsage >= rewriteLimit
+                        }
                         className="rounded-2xl border border-zinc-700 bg-zinc-950 px-4 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:border-zinc-500 hover:bg-zinc-900 disabled:opacity-60"
                       >
                         More Viral
@@ -492,7 +605,10 @@ export default function HomePage() {
                             "more-professional"
                           )
                         }
-                        disabled={rewriteLoadingId === section.id}
+                        disabled={
+                          rewriteLoadingId === section.id ||
+                          rewriteUsage >= rewriteLimit
+                        }
                         className="rounded-2xl border border-zinc-700 bg-zinc-950 px-4 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:border-zinc-500 hover:bg-zinc-900 disabled:opacity-60"
                       >
                         More Professional
@@ -502,7 +618,10 @@ export default function HomePage() {
                         onClick={() =>
                           rewriteSection(section.id, section.content, "shorter")
                         }
-                        disabled={rewriteLoadingId === section.id}
+                        disabled={
+                          rewriteLoadingId === section.id ||
+                          rewriteUsage >= rewriteLimit
+                        }
                         className="rounded-2xl border border-zinc-700 bg-zinc-950 px-4 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:border-zinc-500 hover:bg-zinc-900 disabled:opacity-60"
                       >
                         Shorter
@@ -512,7 +631,10 @@ export default function HomePage() {
                         onClick={() =>
                           rewriteSection(section.id, section.content, "longer")
                         }
-                        disabled={rewriteLoadingId === section.id}
+                        disabled={
+                          rewriteLoadingId === section.id ||
+                          rewriteUsage >= rewriteLimit
+                        }
                         className="rounded-2xl border border-zinc-700 bg-zinc-950 px-4 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:border-zinc-500 hover:bg-zinc-900 disabled:opacity-60"
                       >
                         Longer
@@ -526,10 +648,39 @@ export default function HomePage() {
                             "more-emotional"
                           )
                         }
-                        disabled={rewriteLoadingId === section.id}
+                        disabled={
+                          rewriteLoadingId === section.id ||
+                          rewriteUsage >= rewriteLimit
+                        }
                         className="rounded-2xl border border-zinc-700 bg-zinc-950 px-4 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:border-zinc-500 hover:bg-zinc-900 disabled:opacity-60"
                       >
                         More Emotional
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          exportTextFile(
+                            `${section.id}.txt`,
+                            section.content,
+                            "text/plain;charset=utf-8"
+                          )
+                        }
+                        className="rounded-2xl border border-zinc-700 bg-zinc-950 px-5 py-2 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:border-zinc-500"
+                      >
+                        Export TXT
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          exportTextFile(
+                            `${section.id}.md`,
+                            `# ${section.title}\n\n${section.content}`,
+                            "text/markdown;charset=utf-8"
+                          )
+                        }
+                        className="rounded-2xl border border-zinc-700 bg-zinc-950 px-5 py-2 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:border-zinc-500"
+                      >
+                        Export MD
                       </button>
 
                       <button
@@ -544,6 +695,13 @@ export default function HomePage() {
                   {rewriteLoadingId === section.id && (
                     <div className="mb-5 rounded-2xl border border-zinc-800 bg-zinc-950 px-4 py-3 text-sm text-zinc-400">
                       Rewriting content...
+                    </div>
+                  )}
+
+                  {rewriteUsage >= rewriteLimit && (
+                    <div className="mb-5 rounded-2xl border border-red-900/60 bg-red-950/30 px-4 py-3 text-sm text-red-300">
+                      Rewrite limit reached. Upgrade your plan to continue
+                      rewriting.
                     </div>
                   )}
 
@@ -597,7 +755,9 @@ export default function HomePage() {
               </div>
 
               <ul className="mb-8 space-y-4 text-zinc-300">
-                <li>✓ 3 AI generations</li>
+                <li>✓ 3 AI generations / month</li>
+                <li>✓ 10 rewrites / month</li>
+                <li>✓ 1,000 characters</li>
                 <li>✓ 5 output formats</li>
                 <li>✓ Google login</li>
                 <li>✓ Dashboard history</li>
@@ -629,9 +789,11 @@ export default function HomePage() {
 
               <ul className="mb-8 space-y-4">
                 <li>✓ 300 AI generations / month</li>
+                <li>✓ 500 rewrites / month</li>
+                <li>✓ 5,000 characters</li>
                 <li>✓ Better output quality</li>
                 <li>✓ Saved content history</li>
-                <li>✓ Copy and delete outputs</li>
+                <li>✓ TXT and Markdown export</li>
                 <li>✓ Great for solo creators</li>
               </ul>
 
@@ -658,10 +820,12 @@ export default function HomePage() {
 
               <ul className="mb-8 space-y-4 text-zinc-300">
                 <li>✓ 1000 AI generations / month</li>
+                <li>✓ 2000 rewrites / month</li>
+                <li>✓ 10,000 characters</li>
                 <li>✓ Priority content workflows</li>
                 <li>✓ Advanced repurposing formats</li>
+                <li>✓ TXT and Markdown export</li>
                 <li>✓ Best for agencies and teams</li>
-                <li>✓ More room to scale</li>
               </ul>
 
               <a

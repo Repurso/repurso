@@ -6,6 +6,7 @@ import {
   isPromptTemplateId,
   PromptTemplateId,
 } from "@/lib/templates";
+import { getPlanLimits } from "@/lib/planLimits";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -15,12 +16,6 @@ const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
-
-function getPlanLimit(plan: string) {
-  if (plan === "creator") return 300;
-  if (plan === "pro") return 1000;
-  return 3;
-}
 
 function getTemplateInstructions(template: PromptTemplateId) {
   switch (template) {
@@ -89,7 +84,6 @@ export async function POST(req: Request) {
     const body = await req.json();
 
     const input = body.input;
-
     const userEmail = body.userEmail || "anonymous";
 
     const template = isPromptTemplateId(body.template)
@@ -105,12 +99,13 @@ export async function POST(req: Request) {
 
     let plan = "free";
     let generationCount = 0;
-    let limit = 3;
+    let generationLimit = getPlanLimits("free").generations;
+    let characterLimit = getPlanLimits("free").characters;
 
     if (userEmail !== "anonymous") {
       const { data: profile, error: profileError } = await supabaseAdmin
         .from("profiles")
-        .select("user_email, plan, generation_count")
+        .select("user_email, plan, generation_count, rewrite_count")
         .eq("user_email", userEmail)
         .maybeSingle();
 
@@ -129,6 +124,7 @@ export async function POST(req: Request) {
               user_email: userEmail,
               plan: "free",
               generation_count: 0,
+              rewrite_count: 0,
             })
             .select("user_email, plan, generation_count")
             .single();
@@ -142,24 +138,29 @@ export async function POST(req: Request) {
 
         plan = newProfile.plan || "free";
         generationCount = newProfile.generation_count || 0;
-        limit = getPlanLimit(plan);
       } else {
         plan = profile.plan || "free";
         generationCount = profile.generation_count || 0;
-        limit = getPlanLimit(plan);
       }
 
-      if (generationCount >= limit) {
+      const limits = getPlanLimits(plan);
+      generationLimit = limits.generations;
+      characterLimit = limits.characters;
+
+      if (generationCount >= generationLimit) {
         return NextResponse.json(
           {
             error: `You reached your ${plan} plan limit. Please upgrade your plan.`,
+            usage: {
+              plan,
+              used: generationCount,
+              limit: generationLimit,
+            },
           },
           { status: 429 }
         );
       }
-    }
-
-    if (userEmail === "anonymous") {
+    } else {
       const { data: usageData, error: usageError } = await supabaseAdmin
         .from("usage_limits")
         .select("user_email, generation_count")
@@ -173,16 +174,30 @@ export async function POST(req: Request) {
         );
       }
 
-      const anonymousCount = usageData?.generation_count || 0;
+      generationCount = usageData?.generation_count || 0;
 
-      if (anonymousCount >= 3) {
+      if (generationCount >= generationLimit) {
         return NextResponse.json(
           {
             error: "Free limit reached. Please login to continue.",
+            usage: {
+              plan,
+              used: generationCount,
+              limit: generationLimit,
+            },
           },
           { status: 429 }
         );
       }
+    }
+
+    if (input.length > characterLimit) {
+      return NextResponse.json(
+        {
+          error: `Your ${plan} plan allows maximum ${characterLimit} characters.`,
+        },
+        { status: 400 }
+      );
     }
 
     const templateInstructions = getTemplateInstructions(template);
@@ -312,9 +327,7 @@ ${input}
           { status: 500 }
         );
       }
-    }
-
-    if (userEmail === "anonymous") {
+    } else {
       const { data: usageData } = await supabaseAdmin
         .from("usage_limits")
         .select("user_email, generation_count")
@@ -357,7 +370,7 @@ ${input}
       usage: {
         plan,
         used: generationCount + 1,
-        limit,
+        limit: generationLimit,
       },
     });
   } catch (error: unknown) {

@@ -218,7 +218,6 @@ export async function POST(req: Request) {
     }
 
     const rewriteInstructions = getRewriteInstructions(rewriteType);
-
     const templateInstructions = getTemplateInstructions(template);
 
     const completion = await openai.chat.completions.create({

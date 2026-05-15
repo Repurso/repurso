@@ -16,10 +16,10 @@ export const PLAN_LIMITS = {
     rewrites: 2000,
     characters: 10000,
   },
-} as const
+} as const;
 
-export type PlanType = keyof typeof PLAN_LIMITS
+export type PlanType = keyof typeof PLAN_LIMITS;
 
 export function getPlanLimits(plan: string) {
-  return PLAN_LIMITS[plan as PlanType] || PLAN_LIMITS.free
+  return PLAN_LIMITS[plan as PlanType] || PLAN_LIMITS.free;
 }
