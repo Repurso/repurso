@@ -20,10 +20,11 @@ function getPlanLimit(plan: string) {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
+
     const input = body.input;
     const userEmail = body.userEmail || "anonymous";
 
-    if (!input) {
+    if (!input || !input.trim()) {
       return NextResponse.json(
         { error: "Input is required." },
         { status: 400 }
@@ -35,22 +36,45 @@ export async function POST(req: Request) {
     let limit = 3;
 
     if (userEmail !== "anonymous") {
-      const { data: profile } = await supabaseAdmin
+      const { data: profile, error: profileError } = await supabaseAdmin
         .from("profiles")
-        .select("*")
+        .select("user_email, plan, generation_count")
         .eq("user_email", userEmail)
-        .single();
+        .maybeSingle();
 
-      if (profile) {
+      if (profileError) {
+        return NextResponse.json(
+          { error: profileError.message },
+          { status: 500 }
+        );
+      }
+
+      if (!profile) {
+        const { data: newProfile, error: insertProfileError } =
+          await supabaseAdmin
+            .from("profiles")
+            .insert({
+              user_email: userEmail,
+              plan: "free",
+              generation_count: 0,
+            })
+            .select("user_email, plan, generation_count")
+            .single();
+
+        if (insertProfileError) {
+          return NextResponse.json(
+            { error: insertProfileError.message },
+            { status: 500 }
+          );
+        }
+
+        plan = newProfile.plan || "free";
+        generationCount = newProfile.generation_count || 0;
+        limit = getPlanLimit(plan);
+      } else {
         plan = profile.plan || "free";
         generationCount = profile.generation_count || 0;
         limit = getPlanLimit(plan);
-      } else {
-        await supabaseAdmin.from("profiles").insert({
-          user_email: userEmail,
-          plan: "free",
-          generation_count: 0,
-        });
       }
 
       if (generationCount >= limit) {
@@ -61,34 +85,31 @@ export async function POST(req: Request) {
           { status: 429 }
         );
       }
-    } else {
-      const { data: usageData } = await supabaseAdmin
-        .from("usage_limits")
-        .select("*")
-        .eq("user_email", "anonymous")
-        .single();
+    }
 
-      if (usageData && usageData.generation_count >= 3) {
+    if (userEmail === "anonymous") {
+      const { data: usageData, error: usageError } = await supabaseAdmin
+        .from("usage_limits")
+        .select("user_email, generation_count")
+        .eq("user_email", "anonymous")
+        .maybeSingle();
+
+      if (usageError) {
+        return NextResponse.json(
+          { error: usageError.message },
+          { status: 500 }
+        );
+      }
+
+      const anonymousCount = usageData?.generation_count || 0;
+
+      if (anonymousCount >= 3) {
         return NextResponse.json(
           {
             error: "Free limit reached. Please login to continue.",
           },
           { status: 429 }
         );
-      }
-
-      if (!usageData) {
-        await supabaseAdmin.from("usage_limits").insert({
-          user_email: "anonymous",
-          generation_count: 1,
-        });
-      } else {
-        await supabaseAdmin
-          .from("usage_limits")
-          .update({
-            generation_count: usageData.generation_count + 1,
-          })
-          .eq("user_email", "anonymous");
       }
     }
 
@@ -153,28 +174,91 @@ ${input}
 
     const result = completion.choices[0].message.content || "";
 
-    await supabaseAdmin.from("generations").insert({
-      user_email: userEmail,
-      input,
-      output: result,
-    });
+    const { error: generationInsertError } = await supabaseAdmin
+      .from("generations")
+      .insert({
+        user_email: userEmail,
+        input,
+        output: result,
+      });
+
+    if (generationInsertError) {
+      return NextResponse.json(
+        { error: generationInsertError.message },
+        { status: 500 }
+      );
+    }
 
     if (userEmail !== "anonymous") {
-      await supabaseAdmin
+      const { error: updateProfileError } = await supabaseAdmin
         .from("profiles")
         .update({
           generation_count: generationCount + 1,
         })
         .eq("user_email", userEmail);
+
+      if (updateProfileError) {
+        return NextResponse.json(
+          { error: updateProfileError.message },
+          { status: 500 }
+        );
+      }
     }
 
-    return NextResponse.json({ result });
-  } catch (error: any) {
+    if (userEmail === "anonymous") {
+      const { data: usageData } = await supabaseAdmin
+        .from("usage_limits")
+        .select("user_email, generation_count")
+        .eq("user_email", "anonymous")
+        .maybeSingle();
+
+      if (!usageData) {
+        const { error: insertUsageError } = await supabaseAdmin
+          .from("usage_limits")
+          .insert({
+            user_email: "anonymous",
+            generation_count: 1,
+          });
+
+        if (insertUsageError) {
+          return NextResponse.json(
+            { error: insertUsageError.message },
+            { status: 500 }
+          );
+        }
+      } else {
+        const { error: updateUsageError } = await supabaseAdmin
+          .from("usage_limits")
+          .update({
+            generation_count: usageData.generation_count + 1,
+          })
+          .eq("user_email", "anonymous");
+
+        if (updateUsageError) {
+          return NextResponse.json(
+            { error: updateUsageError.message },
+            { status: 500 }
+          );
+        }
+      }
+    }
+
+    return NextResponse.json({
+      result,
+      usage: {
+        plan,
+        used: generationCount + 1,
+        limit,
+      },
+    });
+  } catch (error: unknown) {
     console.error(error);
+
+    const message = error instanceof Error ? error.message : "Server error";
 
     return NextResponse.json(
       {
-        error: error.message || "Server error",
+        error: message,
       },
       { status: 500 }
     );
