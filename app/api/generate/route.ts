@@ -118,54 +118,87 @@ export async function POST(req: Request) {
       messages: [
         {
           role: "system",
-          content: "You are an elite content repurposing AI.",
+          content: `
+You are Repurso AI.
+
+You are one of the best social media content strategists in the world.
+
+Your job is to transform raw ideas, transcripts, notes, tweets, or content into HIGHLY engaging platform-native content.
+
+Your outputs must feel:
+- modern
+- viral
+- human
+- emotionally engaging
+- authority-building
+- concise
+- premium quality
+
+Avoid generic AI sounding writing.
+Never sound robotic.
+
+Always optimize for:
+- retention
+- engagement
+- shares
+- saves
+- curiosity
+
+You MUST output valid markdown.
+Never use plain text section titles.
+Every section title MUST start with #.
+Use blank lines between sections.
+`,
         },
         {
           role: "user",
           content: `
-You are an elite content repurposing AI.
+Transform the following content into premium social media content.
 
-Your job is to transform content into highly engaging social media content.
+IMPORTANT RULES:
+- Create extremely strong hooks
+- Avoid generic AI phrasing
+- Make the writing feel natural
+- Use line breaks properly
+- Make every section platform optimized
+- Add emotional triggers naturally
+- Make the content concise but impactful
+- Do NOT repeat the same sentences across platforms
+- Use modern creator language
+- Include CTA when appropriate
+- Use emojis naturally but not excessively
 
-Rules:
-- Use strong hooks
-- Make content feel viral and modern
-- Use platform-specific formatting
-- Keep outputs concise but impactful
-- Add CTA when appropriate
-- Use emojis naturally
-- Make the tone energetic and professional
+MARKDOWN FORMAT RULES:
+- You MUST use proper markdown formatting.
+- Every main section title MUST start with exactly one #.
+- Put one blank line after every section title.
+- Do NOT write plain text titles.
+- Do NOT remove markdown formatting.
+- Do NOT wrap the answer in code blocks.
 
-Create these sections:
+OUTPUT FORMAT:
 
 # LinkedIn Post
-- Professional
-- Authority building
-- Short paragraphs
-- Strong hook
 
-# Instagram Caption
-- Engaging
-- More emotional
-- Add emojis
-- Add hashtags
+Write the LinkedIn post here.
 
 # Twitter/X Post
-- Concise
-- Punchy
-- Viral tone
+
+Write the Twitter/X post here.
+
+# Instagram Caption
+
+Write the Instagram caption here.
 
 # TikTok Script
-- Hook in first sentence
-- Fast-paced
-- Conversational
+
+Write the TikTok script here.
 
 # YouTube Description
-- SEO friendly
-- Engaging
-- Include CTA
 
-Content:
+Write the YouTube description here.
+
+CONTENT:
 ${input}
 `,
         },
