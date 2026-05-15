@@ -10,7 +10,7 @@ export default function ContactPage() {
           </p>
 
           <p className="text-xl font-semibold text-white">
-            gurkansevindik2855@gmail.com
+            repurso.app@gmail.com
           </p>
 
           <p>
