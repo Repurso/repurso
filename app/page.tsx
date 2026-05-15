@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 
-const CREATOR_CHECKOUT =
-  "https://repursoapp.lemonsqueezy.com/checkout/buy/5f45028d-de97-458d-a827-64f8a7adc153";
+const CREATOR_CHECKOUT = (email: string) =>
+  `https://repursoapp.lemonsqueezy.com/checkout/buy/5f45028d-de97-458d-a827-64f8a7adc153?checkout[email]=${encodeURIComponent(email)}&checkout[custom][user_email]=${encodeURIComponent(email)}`;
 
-const PRO_CHECKOUT =
-  "https://repursoapp.lemonsqueezy.com/checkout/buy/548cbc91-792f-4fae-b6a5-569f95c119c3";
+const PRO_CHECKOUT = (email: string) =>
+  `https://repursoapp.lemonsqueezy.com/checkout/buy/548cbc91-792f-4fae-b6a5-569f95c119c3?checkout[email]=${encodeURIComponent(email)}&checkout[custom][user_email]=${encodeURIComponent(email)}`;
 
 export default function HomePage() {
   const [input, setInput] = useState("");
@@ -292,7 +292,7 @@ export default function HomePage() {
               </ul>
 
               <a
-                href={CREATOR_CHECKOUT}
+                href={CREATOR_CHECKOUT(userEmail)}
                 target="_blank"
                 className="block rounded-2xl bg-black px-6 py-4 text-center font-bold text-white"
               >
@@ -321,7 +321,7 @@ export default function HomePage() {
               </ul>
 
               <a
-                href={PRO_CHECKOUT}
+                href={PRO_CHECKOUT(userEmail)}
                 target="_blank"
                 className="block rounded-2xl border border-zinc-700 px-6 py-4 text-center font-bold"
               >
