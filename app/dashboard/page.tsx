@@ -71,7 +71,6 @@ function splitOutput(raw: string): OutputSection[] {
     if (start === -1) return;
 
     const contentStart = start + currentMarker.length;
-
     const end = nextMarker ? formatted.indexOf(nextMarker, contentStart) : -1;
 
     const content =
@@ -97,11 +96,22 @@ function splitOutput(raw: string): OutputSection[] {
   return sections;
 }
 
+function getRemaining(limit: number, used: number) {
+  return Math.max(limit - used, 0);
+}
+
+function getPercent(used: number, limit: number) {
+  if (limit <= 0) return 0;
+
+  return Math.min((used / limit) * 100, 100);
+}
+
 export default function DashboardPage() {
   const [generations, setGenerations] = useState<Generation[]>([]);
   const [loading, setLoading] = useState(true);
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     async function loadDashboard() {
@@ -175,33 +185,30 @@ export default function DashboardPage() {
     });
 
     const url = URL.createObjectURL(blob);
-
     const a = document.createElement("a");
 
     a.href = url;
     a.download = filename;
-
     a.click();
 
     URL.revokeObjectURL(url);
   }
 
   const currentPlan = profile?.plan || "free";
-
   const limits = getPlanLimits(currentPlan);
 
   const generationUsage = profile?.generation_count || 0;
   const rewriteUsage = profile?.rewrite_count || 0;
 
-  const generationPercent = Math.min(
-    (generationUsage / limits.generations) * 100,
-    100
+  const generationRemaining = getRemaining(
+    limits.generations,
+    generationUsage
   );
 
-  const rewritePercent = Math.min(
-    (rewriteUsage / limits.rewrites) * 100,
-    100
-  );
+  const rewriteRemaining = getRemaining(limits.rewrites, rewriteUsage);
+
+  const generationPercent = getPercent(generationUsage, limits.generations);
+  const rewritePercent = getPercent(rewriteUsage, limits.rewrites);
 
   const creatorUrl = userEmail
     ? getCheckoutUrl(CREATOR_CHECKOUT, userEmail)
@@ -211,6 +218,20 @@ export default function DashboardPage() {
     ? getCheckoutUrl(PRO_CHECKOUT, userEmail)
     : "/login";
 
+  const filteredGenerations = useMemo(() => {
+    const query = searchQuery.toLowerCase().trim();
+
+    if (!query) return generations;
+
+    return generations.filter((item) => {
+      return (
+        item.input.toLowerCase().includes(query) ||
+        item.output.toLowerCase().includes(query) ||
+        new Date(item.created_at).toLocaleString().toLowerCase().includes(query)
+      );
+    });
+  }, [generations, searchQuery]);
+
   const analytics = useMemo(() => {
     const totalCharacters = generations.reduce((acc, item) => {
       return acc + item.input.length;
@@ -218,10 +239,20 @@ export default function DashboardPage() {
 
     const thisWeek = generations.filter((item) => {
       const created = new Date(item.created_at).getTime();
-
       const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
 
       return created >= weekAgo;
+    });
+
+    const today = generations.filter((item) => {
+      const created = new Date(item.created_at);
+      const now = new Date();
+
+      return (
+        created.getFullYear() === now.getFullYear() &&
+        created.getMonth() === now.getMonth() &&
+        created.getDate() === now.getDate()
+      );
     });
 
     const averageCharacters =
@@ -232,34 +263,42 @@ export default function DashboardPage() {
     return {
       totalGenerations: generations.length,
       thisWeek: thisWeek.length,
+      today: today.length,
       totalCharacters,
       averageCharacters,
     };
   }, [generations]);
 
   return (
-    <main className="min-h-screen bg-black px-6 py-10 text-white">
+    <main className="min-h-screen bg-black px-4 py-8 text-white sm:px-6 sm:py-10">
       <div className="mx-auto max-w-7xl">
         <div className="mb-10 flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
           <div>
-            <h1 className="text-5xl font-bold">Dashboard</h1>
+            <p className="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-zinc-500">
+              Repurso Dashboard
+            </p>
 
-            <p className="mt-3 text-zinc-400">
-              Analytics, usage insights and content history.
+            <h1 className="text-4xl font-bold sm:text-5xl">
+              Analytics & History
+            </h1>
+
+            <p className="mt-3 max-w-2xl text-zinc-400">
+              Track your AI usage, monitor remaining credits, and search your
+              generated content history.
             </p>
           </div>
 
-          <div className="flex gap-3">
+          <div className="flex flex-col gap-3 sm:flex-row">
             <a
               href="/#generator"
-              className="rounded-xl border border-zinc-700 px-5 py-3 font-semibold"
+              className="rounded-xl border border-zinc-700 px-5 py-3 text-center font-semibold"
             >
               Generate
             </a>
 
             <a
               href="/"
-              className="rounded-xl bg-white px-5 py-3 font-semibold text-black"
+              className="rounded-xl bg-white px-5 py-3 text-center font-semibold text-black"
             >
               Back home
             </a>
@@ -285,28 +324,42 @@ export default function DashboardPage() {
           </div>
         ) : (
           <>
-            <div className="mb-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            <div className="mb-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
               <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
                 <p className="text-sm text-zinc-500">Current plan</p>
 
                 <p className="mt-3 text-3xl font-bold capitalize">
                   {currentPlan}
                 </p>
-              </div>
 
-              <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
-                <p className="text-sm text-zinc-500">Total generations</p>
-
-                <p className="mt-3 text-3xl font-bold">
-                  {analytics.totalGenerations}
+                <p className="mt-2 truncate text-sm text-zinc-500">
+                  {userEmail}
                 </p>
               </div>
 
               <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
-                <p className="text-sm text-zinc-500">Rewrites used</p>
+                <p className="text-sm text-zinc-500">
+                  Generations remaining
+                </p>
 
                 <p className="mt-3 text-3xl font-bold">
-                  {rewriteUsage}
+                  {generationRemaining}
+                </p>
+
+                <p className="mt-2 text-sm text-zinc-500">
+                  {generationUsage} used of {limits.generations}
+                </p>
+              </div>
+
+              <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
+                <p className="text-sm text-zinc-500">Rewrites remaining</p>
+
+                <p className="mt-3 text-3xl font-bold">
+                  {rewriteRemaining}
+                </p>
+
+                <p className="mt-2 text-sm text-zinc-500">
+                  {rewriteUsage} used of {limits.rewrites}
                 </p>
               </div>
 
@@ -316,23 +369,25 @@ export default function DashboardPage() {
                 <p className="mt-3 text-3xl font-bold">
                   {analytics.thisWeek}
                 </p>
+
+                <p className="mt-2 text-sm text-zinc-500">
+                  {analytics.today} generated today
+                </p>
               </div>
             </div>
 
             <div className="mb-8 grid gap-4 xl:grid-cols-2">
               <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
-                <div className="mb-5 flex items-center justify-between">
+                <div className="mb-5 flex items-center justify-between gap-4">
                   <div>
-                    <h2 className="text-2xl font-bold">
-                      Generation usage
-                    </h2>
+                    <h2 className="text-2xl font-bold">Generation usage</h2>
 
                     <p className="mt-1 text-zinc-400">
                       Monthly AI generation usage.
                     </p>
                   </div>
 
-                  <p className="text-lg font-bold">
+                  <p className="shrink-0 text-lg font-bold">
                     {generationUsage} / {limits.generations}
                   </p>
                 </div>
@@ -348,18 +403,16 @@ export default function DashboardPage() {
               </div>
 
               <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
-                <div className="mb-5 flex items-center justify-between">
+                <div className="mb-5 flex items-center justify-between gap-4">
                   <div>
-                    <h2 className="text-2xl font-bold">
-                      Rewrite usage
-                    </h2>
+                    <h2 className="text-2xl font-bold">Rewrite usage</h2>
 
                     <p className="mt-1 text-zinc-400">
                       Monthly rewrite usage.
                     </p>
                   </div>
 
-                  <p className="text-lg font-bold">
+                  <p className="shrink-0 text-lg font-bold">
                     {rewriteUsage} / {limits.rewrites}
                   </p>
                 </div>
@@ -375,7 +428,15 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            <div className="mb-8 grid gap-4 xl:grid-cols-3">
+            <div className="mb-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+              <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
+                <p className="text-sm text-zinc-500">Total saved history</p>
+
+                <p className="mt-3 text-3xl font-bold">
+                  {analytics.totalGenerations}
+                </p>
+              </div>
+
               <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
                 <p className="text-sm text-zinc-500">
                   Total input characters
@@ -387,9 +448,7 @@ export default function DashboardPage() {
               </div>
 
               <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
-                <p className="text-sm text-zinc-500">
-                  Average input size
-                </p>
+                <p className="text-sm text-zinc-500">Average input size</p>
 
                 <p className="mt-3 text-3xl font-bold">
                   {analytics.averageCharacters}
@@ -397,9 +456,7 @@ export default function DashboardPage() {
               </div>
 
               <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
-                <p className="text-sm text-zinc-500">
-                  Account status
-                </p>
+                <p className="text-sm text-zinc-500">Account status</p>
 
                 <p className="mt-3 text-3xl font-bold text-green-400">
                   Active
@@ -417,13 +474,13 @@ export default function DashboardPage() {
                   </p>
                 </div>
 
-                <div className="flex flex-wrap gap-3">
+                <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                   {currentPlan === "free" && (
                     <>
                       <a
                         href={creatorUrl}
                         target="_blank"
-                        className="rounded-xl bg-white px-5 py-3 font-semibold text-black"
+                        className="rounded-xl bg-white px-5 py-3 text-center font-semibold text-black"
                       >
                         Upgrade to Creator
                       </a>
@@ -431,7 +488,7 @@ export default function DashboardPage() {
                       <a
                         href={proUrl}
                         target="_blank"
-                        className="rounded-xl border border-zinc-700 px-5 py-3 font-semibold"
+                        className="rounded-xl border border-zinc-700 px-5 py-3 text-center font-semibold"
                       >
                         Upgrade to Pro
                       </a>
@@ -442,18 +499,38 @@ export default function DashboardPage() {
                     <a
                       href={proUrl}
                       target="_blank"
-                      className="rounded-xl bg-white px-5 py-3 font-semibold text-black"
+                      className="rounded-xl bg-white px-5 py-3 text-center font-semibold text-black"
                     >
                       Upgrade to Pro
                     </a>
                   )}
 
                   {currentPlan === "pro" && (
-                    <div className="rounded-xl border border-green-500 px-5 py-3 font-semibold text-green-400">
+                    <div className="rounded-xl border border-green-500 px-5 py-3 text-center font-semibold text-green-400">
                       Highest plan active
                     </div>
                   )}
                 </div>
+              </div>
+            </div>
+
+            <div className="mb-6 rounded-3xl border border-zinc-800 bg-zinc-950 p-5">
+              <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                <div>
+                  <h2 className="text-2xl font-bold">Content history</h2>
+
+                  <p className="mt-1 text-sm text-zinc-500">
+                    Search by input, output, or date.
+                  </p>
+                </div>
+
+                <input
+                  type="text"
+                  placeholder="Search history..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="h-12 w-full rounded-2xl border border-zinc-800 bg-black px-5 text-white outline-none placeholder:text-zinc-600 md:max-w-sm"
+                />
               </div>
             </div>
 
@@ -474,26 +551,32 @@ export default function DashboardPage() {
                   Generate content
                 </a>
               </div>
+            ) : filteredGenerations.length === 0 ? (
+              <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-8 text-center">
+                <h2 className="mb-3 text-2xl font-bold">No results found</h2>
+
+                <p className="text-zinc-400">
+                  Try a different search term.
+                </p>
+              </div>
             ) : (
               <div className="space-y-5">
-                {generations.map((item) => {
+                {filteredGenerations.map((item) => {
                   const outputSections = splitOutput(item.output);
 
                   return (
                     <div
                       key={item.id}
-                      className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6"
+                      className="rounded-3xl border border-zinc-800 bg-zinc-950 p-5 sm:p-6"
                     >
                       <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                         <div className="text-sm text-zinc-500">
-                          <p>
-                            {new Date(item.created_at).toLocaleString()}
-                          </p>
+                          <p>{new Date(item.created_at).toLocaleString()}</p>
 
                           <p>{item.user_email}</p>
                         </div>
 
-                        <div className="flex flex-wrap gap-3">
+                        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                           <button
                             onClick={() =>
                               exportFile(
@@ -543,12 +626,12 @@ export default function DashboardPage() {
                             key={`${item.id}-${section.title}`}
                             className="rounded-2xl border border-zinc-800 bg-black p-5"
                           >
-                            <div className="mb-4 flex items-center justify-between gap-4">
+                            <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                               <h2 className="text-xl font-bold">
                                 {section.title}
                               </h2>
 
-                              <div className="flex gap-3">
+                              <div className="flex flex-col gap-3 sm:flex-row">
                                 <button
                                   onClick={() =>
                                     exportFile(
@@ -576,9 +659,7 @@ export default function DashboardPage() {
                                 </button>
 
                                 <button
-                                  onClick={() =>
-                                    copyText(section.content)
-                                  }
+                                  onClick={() => copyText(section.content)}
                                   className="rounded-xl bg-white px-4 py-2 font-semibold text-black"
                                 >
                                   Copy
@@ -595,9 +676,7 @@ export default function DashboardPage() {
                                     </p>
                                   ),
                                   li: ({ children }) => (
-                                    <li className="mb-2">
-                                      {children}
-                                    </li>
+                                    <li className="mb-2">{children}</li>
                                   ),
                                 }}
                               >
