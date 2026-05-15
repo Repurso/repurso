@@ -875,6 +875,133 @@ export default function HomePage() {
           </section>
         </section>
 
+        <section className="mb-20">
+  <div className="mb-14 text-center">
+    <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-zinc-500">
+      How it works
+    </p>
+
+    <h2 className="mb-4 text-4xl font-bold sm:text-5xl">
+      Create once. Publish everywhere.
+    </h2>
+
+    <p className="mx-auto max-w-2xl text-lg leading-8 text-zinc-400">
+      Repurso transforms one idea into platform-specific content optimized for
+      creators, founders and marketers.
+    </p>
+  </div>
+
+  <div className="grid gap-6 lg:grid-cols-3">
+    <div className="rounded-[28px] border border-zinc-800 bg-zinc-950 p-6">
+      <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-2xl font-bold text-black">
+        1
+      </div>
+
+      <h3 className="mb-3 text-2xl font-bold">Paste your content</h3>
+
+      <p className="leading-7 text-zinc-400">
+        Add an idea, thread, article, script or raw thoughts into the generator.
+      </p>
+    </div>
+
+    <div className="rounded-[28px] border border-zinc-800 bg-zinc-950 p-6">
+      <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-2xl font-bold text-black">
+        2
+      </div>
+
+      <h3 className="mb-3 text-2xl font-bold">Generate instantly</h3>
+
+      <p className="leading-7 text-zinc-400">
+        AI rewrites your content into LinkedIn posts, captions, scripts and
+        platform-ready formats.
+      </p>
+    </div>
+
+    <div className="rounded-[28px] border border-zinc-800 bg-zinc-950 p-6">
+      <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-2xl font-bold text-black">
+        3
+      </div>
+
+      <h3 className="mb-3 text-2xl font-bold">Export and publish</h3>
+
+      <p className="leading-7 text-zinc-400">
+        Copy, rewrite, improve or export your content and publish faster across
+        every platform.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section className="mb-20">
+  <div className="mb-14 text-center">
+    <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-zinc-500">
+      Built for
+    </p>
+
+    <h2 className="mb-4 text-4xl font-bold sm:text-5xl">
+      Made for modern creators.
+    </h2>
+  </div>
+
+  <div className="grid gap-6 lg:grid-cols-3">
+    <div className="rounded-[28px] border border-zinc-800 bg-zinc-950 p-6">
+      <h3 className="mb-4 text-2xl font-bold">Creators</h3>
+
+      <p className="leading-7 text-zinc-400">
+        Turn one content idea into posts for every social platform in minutes.
+      </p>
+    </div>
+
+    <div className="rounded-[28px] border border-zinc-800 bg-zinc-950 p-6">
+      <h3 className="mb-4 text-2xl font-bold">Founders</h3>
+
+      <p className="leading-7 text-zinc-400">
+        Build audience consistently without spending hours rewriting content.
+      </p>
+    </div>
+
+    <div className="rounded-[28px] border border-zinc-800 bg-zinc-950 p-6">
+      <h3 className="mb-4 text-2xl font-bold">Marketing teams</h3>
+
+      <p className="leading-7 text-zinc-400">
+        Speed up social workflows and generate multiple content angles faster.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section className="mb-20 rounded-[32px] border border-zinc-800 bg-zinc-950 p-8 sm:p-12">
+  <div className="mx-auto max-w-3xl text-center">
+    <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-zinc-500">
+      Start creating
+    </p>
+
+    <h2 className="mb-5 text-4xl font-bold sm:text-5xl">
+      Turn your ideas into content faster.
+    </h2>
+
+    <p className="mb-8 text-lg leading-8 text-zinc-400">
+      No complicated workflow. Paste your content, generate instantly and
+      publish everywhere.
+    </p>
+
+    <div className="flex flex-col justify-center gap-4 sm:flex-row">
+      <a
+        href="#generator"
+        className="rounded-2xl bg-white px-8 py-4 text-center font-bold text-black"
+      >
+        Try Repurso Free
+      </a>
+
+      <a
+        href="#pricing"
+        className="rounded-2xl border border-zinc-700 px-8 py-4 text-center font-bold"
+      >
+        View Pricing
+      </a>
+    </div>
+  </div>
+</section>
         <section id="pricing" className="py-12 sm:py-16">
           <div className="mb-12 text-center">
             <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-zinc-500">
