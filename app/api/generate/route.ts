@@ -1,6 +1,11 @@
 import OpenAI from "openai";
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import {
+  DEFAULT_PROMPT_TEMPLATE_ID,
+  isPromptTemplateId,
+  PromptTemplateId,
+} from "@/lib/templates";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -17,12 +22,79 @@ function getPlanLimit(plan: string) {
   return 3;
 }
 
+function getTemplateInstructions(template: PromptTemplateId) {
+  switch (template) {
+    case "linkedin-authority":
+      return `
+STYLE DIRECTION:
+- Sound like a respected industry expert
+- Focus on authority and credibility
+- Use sharp professional insights
+- Prioritize trust and thought leadership
+- Make the writing polished and intelligent
+- Use strong LinkedIn style hooks
+- Encourage comments and discussion
+`;
+
+    case "viral-short-form":
+      return `
+STYLE DIRECTION:
+- Make the content fast-paced and highly engaging
+- Prioritize virality and retention
+- Use punchy short sentences
+- Create curiosity loops
+- Use strong hooks immediately
+- Make every line highly scroll-stopping
+- Optimize heavily for shares and attention
+`;
+
+    case "product-launch":
+      return `
+STYLE DIRECTION:
+- Position the product clearly
+- Focus on benefits and transformation
+- Create excitement naturally
+- Increase desire and curiosity
+- Highlight pain points and outcomes
+- Use persuasive marketing language
+- Add CTA naturally
+`;
+
+    case "educational-content":
+      return `
+STYLE DIRECTION:
+- Make the content highly educational
+- Explain concepts clearly
+- Focus on actionable insights
+- Make the writing easy to understand
+- Teach step-by-step when relevant
+- Optimize for saves and shares
+- Sound smart but accessible
+`;
+
+    case "general":
+    default:
+      return `
+STYLE DIRECTION:
+- Create balanced high-quality social content
+- Make the writing modern and engaging
+- Focus on clarity and platform optimization
+- Keep the tone premium and human
+`;
+  }
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
 
     const input = body.input;
+
     const userEmail = body.userEmail || "anonymous";
+
+    const template = isPromptTemplateId(body.template)
+      ? body.template
+      : DEFAULT_PROMPT_TEMPLATE_ID;
 
     if (!input || !input.trim()) {
       return NextResponse.json(
@@ -113,6 +185,8 @@ export async function POST(req: Request) {
       }
     }
 
+    const templateInstructions = getTemplateInstructions(template);
+
     const completion = await openai.chat.completions.create({
       model: "gpt-4.1-mini",
       messages: [
@@ -148,6 +222,8 @@ You MUST output valid markdown.
 Never use plain text section titles.
 Every section title MUST start with #.
 Use blank lines between sections.
+
+${templateInstructions}
 `,
         },
         {
