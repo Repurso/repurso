@@ -1,16 +1,21 @@
 import OpenAI from "openai";
 import { NextResponse } from "next/server";
+import { createClient } from "@supabase/supabase-js";
 import {
   DEFAULT_PROMPT_TEMPLATE_ID,
   isPromptTemplateId,
   PromptTemplateId,
 } from "@/lib/templates";
+import { getPlanLimits } from "@/lib/planLimits";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-const MAX_REWRITE_CHARACTERS = 5000;
+const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
 function getRewriteInstructions(type: string) {
   switch (type) {
@@ -122,6 +127,7 @@ export async function POST(req: Request) {
 
     const content = body.content;
     const rewriteType = body.rewriteType || "default";
+    const userEmail = body.userEmail || "anonymous";
 
     const template = isPromptTemplateId(body.template)
       ? body.template
@@ -136,10 +142,76 @@ export async function POST(req: Request) {
       );
     }
 
-    if (content.length > MAX_REWRITE_CHARACTERS) {
+    let plan = "free";
+    let rewriteCount = 0;
+    let rewriteLimit = getPlanLimits("free").rewrites;
+    let characterLimit = getPlanLimits("free").characters;
+
+    if (userEmail !== "anonymous") {
+      const { data: profile, error: profileError } = await supabaseAdmin
+        .from("profiles")
+        .select("user_email, plan, rewrite_count")
+        .eq("user_email", userEmail)
+        .maybeSingle();
+
+      if (profileError) {
+        return NextResponse.json(
+          { error: profileError.message },
+          { status: 500 }
+        );
+      }
+
+      if (!profile) {
+        const { data: newProfile, error: insertProfileError } =
+          await supabaseAdmin
+            .from("profiles")
+            .insert({
+              user_email: userEmail,
+              plan: "free",
+              generation_count: 0,
+              rewrite_count: 0,
+            })
+            .select("user_email, plan, rewrite_count")
+            .single();
+
+        if (insertProfileError) {
+          return NextResponse.json(
+            { error: insertProfileError.message },
+            { status: 500 }
+          );
+        }
+
+        plan = newProfile.plan || "free";
+        rewriteCount = newProfile.rewrite_count || 0;
+      } else {
+        plan = profile.plan || "free";
+        rewriteCount = profile.rewrite_count || 0;
+      }
+
+      const limits = getPlanLimits(plan);
+
+      rewriteLimit = limits.rewrites;
+      characterLimit = limits.characters;
+
+      if (rewriteCount >= rewriteLimit) {
+        return NextResponse.json(
+          {
+            error: `You reached your ${plan} plan rewrite limit. Please upgrade your plan.`,
+            usage: {
+              plan,
+              used: rewriteCount,
+              limit: rewriteLimit,
+            },
+          },
+          { status: 429 }
+        );
+      }
+    }
+
+    if (content.length > characterLimit) {
       return NextResponse.json(
         {
-          error: `Rewrite content is too long. Maximum ${MAX_REWRITE_CHARACTERS} characters allowed.`,
+          error: `Your ${plan} plan allows maximum ${characterLimit} characters for rewrite.`,
         },
         { status: 400 }
       );
@@ -189,8 +261,47 @@ ${content}
 
     const result = completion.choices[0].message.content || "";
 
+    if (!result.trim()) {
+      return NextResponse.json(
+        {
+          error: "Rewrite failed. Please try again.",
+        },
+        { status: 500 }
+      );
+    }
+
+    if (userEmail !== "anonymous") {
+      const { error: updateProfileError } = await supabaseAdmin
+        .from("profiles")
+        .update({
+          rewrite_count: rewriteCount + 1,
+        })
+        .eq("user_email", userEmail);
+
+      if (updateProfileError) {
+        return NextResponse.json(
+          { error: updateProfileError.message },
+          { status: 500 }
+        );
+      }
+
+      return NextResponse.json({
+        result,
+        usage: {
+          plan,
+          used: rewriteCount + 1,
+          limit: rewriteLimit,
+        },
+      });
+    }
+
     return NextResponse.json({
       result,
+      usage: {
+        plan,
+        used: 0,
+        limit: rewriteLimit,
+      },
     });
   } catch (error: unknown) {
     console.error(error);
