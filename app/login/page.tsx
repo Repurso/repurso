@@ -10,8 +10,8 @@ export default function LoginPage() {
 
   const redirectUrl =
     typeof window !== "undefined"
-      ? `${window.location.origin}/dashboard`
-      : "https://repurso.vercel.app/dashboard";
+      ? window.location.origin
+      : "https://repurso.vercel.app";
 
   async function signInWithGoogle() {
     setGoogleLoading(true);
