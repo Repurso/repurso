@@ -116,7 +116,7 @@ export async function POST(request: NextRequest) {
       eventName === "subscription_updated" ||
       eventName === "subscription_resumed"
     ) {
-      console.log("WEBHOOK UPSERT START");
+      console.log("WEBHOOK PLAN UPSERT START");
 
       const { data, error } = await supabaseAdmin
         .from("profiles")
@@ -131,10 +131,30 @@ export async function POST(request: NextRequest) {
         )
         .select();
 
-      console.log("WEBHOOK UPSERT DATA:", data);
+      console.log("WEBHOOK PLAN UPSERT DATA:", data);
 
       if (error) {
         console.error("WEBHOOK SUPABASE UPSERT ERROR:", error);
+        return NextResponse.json({ error: error.message }, { status: 500 });
+      }
+    }
+
+    if (eventName === "subscription_payment_success") {
+      console.log("WEBHOOK MONTHLY RESET START");
+
+      const { data, error } = await supabaseAdmin
+        .from("profiles")
+        .update({
+          generation_count: 0,
+          plan,
+        })
+        .eq("user_email", userEmail)
+        .select();
+
+      console.log("WEBHOOK MONTHLY RESET DATA:", data);
+
+      if (error) {
+        console.error("WEBHOOK MONTHLY RESET ERROR:", error);
         return NextResponse.json({ error: error.message }, { status: 500 });
       }
     }
