@@ -396,32 +396,43 @@ export default function HomePage() {
   }
 
   return (
-    <main className="min-h-screen bg-black px-6 py-10 text-white">
+    <main className="min-h-screen bg-black px-4 py-6 text-white sm:px-6 sm:py-10">
       <div className="mx-auto max-w-6xl">
-        <nav className="mb-16 flex items-center justify-between">
-          <h1 className="text-3xl font-bold">Repurso</h1>
+        <nav className="mb-12 flex flex-col gap-5 sm:mb-16 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center justify-between">
+            <h1 className="text-3xl font-bold">Repurso</h1>
 
-          <div className="flex items-center gap-4">
+            {!userEmail && (
+              <Link
+                href="/login"
+                className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-black sm:hidden"
+              >
+                Login
+              </Link>
+            )}
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3">
             <a href="#pricing" className="text-sm text-zinc-400">
               Pricing
             </a>
 
             {userEmail ? (
               <>
-                <span className="hidden text-sm text-zinc-400 md:block">
+                <span className="w-full truncate text-sm text-zinc-400 sm:w-auto">
                   {userEmail}
                 </span>
 
                 <Link
                   href="/dashboard"
-                  className="rounded-xl border border-zinc-700 px-4 py-2"
+                  className="rounded-xl border border-zinc-700 px-4 py-2 text-sm sm:text-base"
                 >
                   Dashboard
                 </Link>
 
                 <button
                   onClick={logout}
-                  className="rounded-xl bg-white px-4 py-2 font-semibold text-black"
+                  className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-black sm:text-base"
                 >
                   Logout
                 </button>
@@ -429,7 +440,7 @@ export default function HomePage() {
             ) : (
               <Link
                 href="/login"
-                className="rounded-xl bg-white px-4 py-2 font-semibold text-black"
+                className="hidden rounded-xl bg-white px-4 py-2 font-semibold text-black sm:block"
               >
                 Login
               </Link>
@@ -437,50 +448,50 @@ export default function HomePage() {
           </div>
         </nav>
 
-        <section className="mb-24 grid gap-16 lg:grid-cols-2">
+        <section className="mb-20 grid gap-10 sm:mb-24 lg:grid-cols-2 lg:gap-16">
           <div>
-            <div className="mb-6 inline-flex rounded-full border border-zinc-800 px-4 py-2 text-sm text-zinc-400">
+            <div className="mb-5 inline-flex rounded-full border border-zinc-800 px-4 py-2 text-sm text-zinc-400">
               AI content repurposing tool
             </div>
 
-            <h2 className="mb-6 text-6xl font-bold leading-tight">
+            <h2 className="mb-6 text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl">
               Turn one idea into content for every platform.
             </h2>
 
-            <p className="mb-8 text-xl leading-9 text-zinc-400">
+            <p className="mb-8 text-lg leading-8 text-zinc-400 sm:text-xl sm:leading-9">
               Repurso helps creators, founders and marketers transform one piece
               of content into LinkedIn posts, Instagram captions, X posts,
               TikTok scripts and YouTube descriptions.
             </p>
 
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <a
                 href="#generator"
-                className="rounded-2xl bg-white px-8 py-4 font-bold text-black"
+                className="rounded-2xl bg-white px-8 py-4 text-center font-bold text-black"
               >
                 Try it free
               </a>
 
               <a
                 href="#pricing"
-                className="rounded-2xl border border-zinc-700 px-8 py-4 font-bold"
+                className="rounded-2xl border border-zinc-700 px-8 py-4 text-center font-bold"
               >
                 View pricing
               </a>
             </div>
           </div>
 
-          <div className="rounded-[32px] border border-zinc-800 bg-zinc-950 p-8">
+          <div className="rounded-[28px] border border-zinc-800 bg-zinc-950 p-5 sm:rounded-[32px] sm:p-8">
             <div className="mb-6 flex gap-2">
               <div className="h-3 w-3 rounded-full bg-zinc-700" />
               <div className="h-3 w-3 rounded-full bg-zinc-700" />
               <div className="h-3 w-3 rounded-full bg-zinc-700" />
             </div>
 
-            <div className="rounded-3xl bg-black p-6">
+            <div className="rounded-3xl bg-black p-5 sm:p-6">
               <p className="mb-3 text-zinc-500">Input</p>
 
-              <p className="mb-8 text-xl leading-9">
+              <p className="mb-8 text-lg leading-8 sm:text-xl sm:leading-9">
                 AI tools help creators save time by turning one piece of content
                 into many different formats.
               </p>
@@ -506,11 +517,13 @@ export default function HomePage() {
 
         <section
           id="generator"
-          className="mb-24 rounded-[32px] border border-zinc-800 bg-zinc-950 p-8"
+          className="mb-20 rounded-[28px] border border-zinc-800 bg-zinc-950 p-5 sm:mb-24 sm:rounded-[32px] sm:p-8"
         >
-          <h3 className="mb-2 text-5xl font-bold">Generate content</h3>
+          <h3 className="mb-2 text-3xl font-bold sm:text-5xl">
+            Generate content
+          </h3>
 
-          <p className="mb-8 text-xl text-zinc-400">
+          <p className="mb-8 text-lg text-zinc-400 sm:text-xl">
             Paste your content and let Repurso turn it into multiple formats.
           </p>
 
@@ -519,7 +532,7 @@ export default function HomePage() {
               Quality Mode
             </p>
 
-            <div className="grid gap-4 md:grid-cols-3">
+            <div className="grid gap-4 sm:grid-cols-3">
               {QUALITY_MODES.map((mode) => {
                 const isSelected = qualityMode === mode.id;
 
@@ -554,7 +567,7 @@ export default function HomePage() {
               Template
             </p>
 
-            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
+            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
               {PROMPT_TEMPLATES.map((template) => {
                 const isSelected = selectedTemplate === template.id;
 
@@ -586,7 +599,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="mb-3 flex items-center justify-between">
+          <div className="mb-3 flex items-center justify-between gap-4">
             <p className="text-sm text-zinc-500">Character usage</p>
 
             <p
@@ -602,7 +615,7 @@ export default function HomePage() {
 
           <textarea
             placeholder="Paste your content here..."
-            className="mb-3 h-56 w-full rounded-3xl border border-zinc-800 bg-black p-6 text-lg text-white outline-none placeholder:text-zinc-600"
+            className="mb-3 h-52 w-full rounded-3xl border border-zinc-800 bg-black p-5 text-base text-white outline-none placeholder:text-zinc-600 sm:h-56 sm:p-6 sm:text-lg"
             value={input}
             onChange={(e) => setInput(e.target.value)}
           />
@@ -622,7 +635,7 @@ export default function HomePage() {
               />
             </div>
 
-            <div className="mt-5 grid gap-4 md:grid-cols-2">
+            <div className="mt-5 grid gap-4 sm:grid-cols-2">
               <div className="rounded-2xl border border-zinc-800 bg-black p-4">
                 <div className="mb-2 flex items-center justify-between text-sm">
                   <span className="text-zinc-500">Generations</span>
@@ -668,7 +681,7 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="mb-5 flex flex-col gap-3 md:flex-row">
+          <div className="mb-5 flex flex-col gap-3 lg:flex-row">
             <input
               type="text"
               placeholder="Prompt title..."
@@ -700,15 +713,15 @@ export default function HomePage() {
               characterCount > characterLimit ||
               generationUsage >= generationLimit
             }
-            className="rounded-2xl bg-white px-8 py-4 font-bold text-black disabled:opacity-60"
+            className="w-full rounded-2xl bg-white px-8 py-4 font-bold text-black disabled:opacity-60 sm:w-auto"
           >
             {loading ? "Generating..." : "Generate"}
           </button>
 
           {showPromptLibrary && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-6">
-              <div className="max-h-[80vh] w-full max-w-3xl overflow-y-auto rounded-[32px] border border-zinc-800 bg-zinc-950 p-8">
-                <div className="mb-6 flex items-center justify-between">
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 sm:p-6">
+              <div className="max-h-[85vh] w-full max-w-3xl overflow-y-auto rounded-[28px] border border-zinc-800 bg-zinc-950 p-5 sm:rounded-[32px] sm:p-8">
+                <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                   <div>
                     <h2 className="text-3xl font-bold">Prompt Library</h2>
 
@@ -736,7 +749,7 @@ export default function HomePage() {
                         key={prompt.id}
                         className="rounded-3xl border border-zinc-800 bg-black p-5"
                       >
-                        <div className="mb-4 flex items-start justify-between gap-4">
+                        <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                           <div>
                             <h3 className="text-xl font-bold">
                               {prompt.title}
@@ -747,7 +760,7 @@ export default function HomePage() {
                             </p>
                           </div>
 
-                          <div className="flex gap-3">
+                          <div className="flex flex-col gap-3 sm:flex-row">
                             <button
                               onClick={() => {
                                 setInput(prompt.prompt);
@@ -783,12 +796,12 @@ export default function HomePage() {
               {outputSections.map((section) => (
                 <div
                   key={section.id}
-                  className="rounded-3xl border border-zinc-800 bg-black p-6"
+                  className="rounded-3xl border border-zinc-800 bg-black p-5 sm:p-6"
                 >
-                  <div className="mb-5 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                  <div className="mb-5 flex flex-col gap-4">
                     <h4 className="text-2xl font-bold">{section.title}</h4>
 
-                    <div className="flex flex-wrap items-center gap-3">
+                    <div className="grid gap-3 sm:grid-cols-2 lg:flex lg:flex-wrap lg:items-center">
                       <button
                         onClick={() =>
                           rewriteSection(section.id, section.content, "default")
@@ -907,7 +920,7 @@ export default function HomePage() {
 
                       <button
                         onClick={() => copyText(section.content)}
-                        className="rounded-2xl bg-white px-5 py-2 text-sm font-bold text-black transition hover:-translate-y-0.5 hover:bg-zinc-200"
+                        className="rounded-2xl bg-white px-5 py-2 text-sm font-bold text-black transition hover:-translate-y-0.5 hover:bg-zinc-200 sm:col-span-2 lg:col-span-1"
                       >
                         Copy
                       </button>
@@ -949,13 +962,13 @@ export default function HomePage() {
           )}
         </section>
 
-        <section id="pricing" className="py-16">
+        <section id="pricing" className="py-12 sm:py-16">
           <div className="mb-12 text-center">
             <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-zinc-500">
               Pricing
             </p>
 
-            <h2 className="mb-4 text-5xl font-bold">
+            <h2 className="mb-4 text-4xl font-bold sm:text-5xl">
               Choose your content engine.
             </h2>
 
@@ -966,7 +979,7 @@ export default function HomePage() {
           </div>
 
           <div className="grid gap-6 lg:grid-cols-3">
-            <div className="rounded-[32px] border border-zinc-800 bg-zinc-950 p-8">
+            <div className="rounded-[28px] border border-zinc-800 bg-zinc-950 p-6 sm:rounded-[32px] sm:p-8">
               <h3 className="mb-2 text-2xl font-bold">Free</h3>
 
               <p className="mb-6 text-zinc-400">For testing the product.</p>
@@ -993,8 +1006,8 @@ export default function HomePage() {
               </a>
             </div>
 
-            <div className="relative rounded-[32px] border border-white bg-white p-8 text-black">
-              <div className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-black px-4 py-2 text-sm font-bold text-white">
+            <div className="relative rounded-[28px] border border-white bg-white p-6 text-black sm:rounded-[32px] sm:p-8">
+              <div className="mb-5 inline-flex rounded-full bg-black px-4 py-2 text-sm font-bold text-white lg:absolute lg:-top-4 lg:left-1/2 lg:mb-0 lg:-translate-x-1/2">
                 Most popular
               </div>
 
@@ -1027,7 +1040,7 @@ export default function HomePage() {
               </a>
             </div>
 
-            <div className="rounded-[32px] border border-zinc-800 bg-zinc-950 p-8">
+            <div className="rounded-[28px] border border-zinc-800 bg-zinc-950 p-6 sm:rounded-[32px] sm:p-8">
               <h3 className="mb-2 text-2xl font-bold">Pro</h3>
 
               <p className="mb-6 text-zinc-400">
