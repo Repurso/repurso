@@ -222,8 +222,39 @@ export default function HomePage() {
 
           {result && (
             <div className="mt-10 rounded-3xl border border-zinc-800 bg-black p-8">
-              <div className="prose prose-invert max-w-none">
-                <ReactMarkdown>{result}</ReactMarkdown>
+              <div className="max-w-none">
+                <ReactMarkdown
+                  components={{
+                    h1: ({ children }) => (
+                      <h1 className="mb-6 mt-12 text-4xl font-bold text-white first:mt-0">
+                        {children}
+                      </h1>
+                    ),
+                    h2: ({ children }) => (
+                      <h2 className="mb-4 mt-10 text-3xl font-semibold text-white">
+                        {children}
+                      </h2>
+                    ),
+                    p: ({ children }) => (
+                      <p className="mb-5 whitespace-pre-wrap leading-8 text-zinc-200">
+                        {children}
+                      </p>
+                    ),
+                    li: ({ children }) => (
+                      <li className="mb-2 text-zinc-200">{children}</li>
+                    ),
+                  }}
+                >
+                  {result
+                    .replace(/LinkedIn Post/g, "# LinkedIn Post")
+                    .replace(/Twitter\/X Post/g, "# Twitter/X Post")
+                    .replace(/Instagram Caption/g, "# Instagram Caption")
+                    .replace(/TikTok Script/g, "# TikTok Script")
+                    .replace(
+                      /YouTube Description/g,
+                      "# YouTube Description"
+                    )}
+                </ReactMarkdown>
               </div>
             </div>
           )}
