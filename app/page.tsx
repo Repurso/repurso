@@ -1111,6 +1111,36 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+
+        <footer className="border-t border-zinc-800 py-10">
+          <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h3 className="text-2xl font-bold">Repurso</h3>
+
+              <p className="mt-2 text-sm text-zinc-500">
+                AI-powered content repurposing platform.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap gap-5 text-sm text-zinc-400">
+              <Link href="/privacy" className="hover:text-white">
+                Privacy Policy
+              </Link>
+
+              <Link href="/terms" className="hover:text-white">
+                Terms
+              </Link>
+
+              <Link href="/contact" className="hover:text-white">
+                Contact
+              </Link>
+            </div>
+          </div>
+
+          <div className="mt-8 border-t border-zinc-900 pt-6 text-sm text-zinc-600">
+            © 2026 Repurso. All rights reserved.
+          </div>
+        </footer>
       </div>
     </main>
   );
