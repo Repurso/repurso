@@ -12,10 +12,23 @@ type Generation = {
   output: string;
 };
 
+type Profile = {
+  plan: string;
+  generation_count: number;
+};
+
+function getPlanLimit(plan: string) {
+  if (plan === "creator") return 300;
+  if (plan === "pro") return 1000;
+  return 3;
+}
+
 export default function DashboardPage() {
   const [generations, setGenerations] = useState<Generation[]>([]);
   const [loading, setLoading] = useState(true);
   const [userEmail, setUserEmail] = useState<string | null>(null);
+
+  const [profile, setProfile] = useState<Profile | null>(null);
 
   useEffect(() => {
     async function loadDashboard() {
@@ -24,11 +37,22 @@ export default function DashboardPage() {
       } = await supabase.auth.getSession();
 
       const email = session?.user?.email ?? null;
+
       setUserEmail(email);
 
       if (!email) {
         setLoading(false);
         return;
+      }
+
+      const { data: profileData } = await supabase
+        .from("profiles")
+        .select("plan, generation_count")
+        .eq("user_email", email)
+        .single();
+
+      if (profileData) {
+        setProfile(profileData);
       }
 
       const { data, error } = await supabase
@@ -74,12 +98,17 @@ export default function DashboardPage() {
     );
   }
 
+  const currentPlan = profile?.plan || "free";
+  const currentUsage = profile?.generation_count || 0;
+  const currentLimit = getPlanLimit(currentPlan);
+
   return (
     <main className="min-h-screen bg-black px-6 py-10 text-white">
       <div className="mx-auto max-w-6xl">
         <div className="mb-10 flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
           <div>
             <h1 className="text-5xl font-bold">Dashboard</h1>
+
             <p className="mt-3 text-zinc-400">
               Your generated content history.
             </p>
@@ -103,20 +132,37 @@ export default function DashboardPage() {
         </div>
 
         {userEmail && (
-          <div className="mb-8 grid gap-4 md:grid-cols-3">
+          <div className="mb-8 grid gap-4 md:grid-cols-4">
             <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
               <p className="text-sm text-zinc-500">Account</p>
-              <p className="mt-2 truncate font-semibold">{userEmail}</p>
+
+              <p className="mt-2 truncate font-semibold">
+                {userEmail}
+              </p>
             </div>
 
             <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
-              <p className="text-sm text-zinc-500">Generations</p>
-              <p className="mt-2 text-3xl font-bold">{generations.length}</p>
+              <p className="text-sm text-zinc-500">Plan</p>
+
+              <p className="mt-2 text-3xl font-bold capitalize">
+                {currentPlan}
+              </p>
+            </div>
+
+            <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
+              <p className="text-sm text-zinc-500">Usage</p>
+
+              <p className="mt-2 text-3xl font-bold">
+                {currentUsage} / {currentLimit}
+              </p>
             </div>
 
             <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
               <p className="text-sm text-zinc-500">Status</p>
-              <p className="mt-2 font-semibold text-green-400">Active</p>
+
+              <p className="mt-2 font-semibold text-green-400">
+                Active
+              </p>
             </div>
           </div>
         )}
@@ -125,7 +171,10 @@ export default function DashboardPage() {
           <p className="text-zinc-400">Loading...</p>
         ) : !userEmail ? (
           <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-8">
-            <h2 className="mb-3 text-2xl font-bold">Login required</h2>
+            <h2 className="mb-3 text-2xl font-bold">
+              Login required
+            </h2>
+
             <p className="mb-6 text-zinc-400">
               Please login to view your generation history.
             </p>
@@ -139,7 +188,10 @@ export default function DashboardPage() {
           </div>
         ) : generations.length === 0 ? (
           <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-8">
-            <h2 className="mb-3 text-2xl font-bold">No generations yet</h2>
+            <h2 className="mb-3 text-2xl font-bold">
+              No generations yet
+            </h2>
+
             <p className="mb-6 text-zinc-400">
               Generate your first content to see it here.
             </p>
@@ -160,7 +212,10 @@ export default function DashboardPage() {
               >
                 <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                   <div className="text-sm text-zinc-500">
-                    <p>{new Date(item.created_at).toLocaleString()}</p>
+                    <p>
+                      {new Date(item.created_at).toLocaleString()}
+                    </p>
+
                     <p>{item.user_email}</p>
                   </div>
 
@@ -183,6 +238,7 @@ export default function DashboardPage() {
 
                 <div className="mb-5 rounded-2xl border border-zinc-800 bg-black p-5">
                   <h2 className="mb-2 font-bold">Input</h2>
+
                   <p className="whitespace-pre-wrap text-zinc-300">
                     {item.input}
                   </p>
