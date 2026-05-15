@@ -430,7 +430,9 @@ export default function HomePage() {
             {userEmail ? (
               <>
                 <span className="w-full truncate text-sm text-zinc-400 sm:w-auto">
-                  {userEmail}
+                  {userEmail.length > 18
+                    ? `${userEmail.slice(0, 6)}...@${userEmail.split("@")[1]}`
+                    : userEmail}
                 </span>
 
                 <Link
@@ -702,7 +704,7 @@ export default function HomePage() {
                 characterCount > characterLimit ||
                 generationUsage >= generationLimit
               }
-              className="w-full rounded-2xl bg-white px-8 py-4 font-bold text-black disabled:opacity-60 sm:w-auto"
+              className="w-full rounded-2xl bg-white px-10 py-5 text-lg font-bold text-black transition hover:bg-zinc-200 disabled:opacity-60 sm:w-auto"
             >
               {loading ? "Generating..." : "Generate"}
             </button>
