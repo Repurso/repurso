@@ -8,13 +8,18 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
 
+  const redirectUrl =
+    typeof window !== "undefined"
+      ? `${window.location.origin}/dashboard`
+      : "https://repurso.vercel.app/dashboard";
+
   async function signInWithGoogle() {
     setGoogleLoading(true);
 
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: "http://localhost:3000",
+        redirectTo: redirectUrl,
       },
     });
 
@@ -35,7 +40,7 @@ export default function LoginPage() {
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: {
-        emailRedirectTo: "http://localhost:3000",
+        emailRedirectTo: redirectUrl,
       },
     });
 
