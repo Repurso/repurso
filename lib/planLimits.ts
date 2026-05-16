@@ -1,8 +1,8 @@
 export const PLAN_LIMITS = {
   free: {
-    generations: 3,
-    rewrites: 10,
-    characters: 1000,
+    generations: 20,
+    rewrites: 20,
+    characters: 2000,
   },
 
   creator: {

@@ -516,9 +516,9 @@ export default function HomePage() {
             </h2>
 
             <p className="mb-6 text-base leading-7 text-zinc-400 sm:text-lg sm:leading-8">
-              Repurso helps creators, founders and marketers transform one piece
-              of content into LinkedIn posts, Instagram captions, X posts,
-              TikTok scripts and YouTube descriptions.
+              Repurso helps creators, founders and marketers transform one idea
+              into platform-ready content for LinkedIn, X, Instagram, TikTok,
+              YouTube, Facebook, Threads, Snapchat and Pinterest.
             </p>
 
             <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
@@ -1117,7 +1117,7 @@ export default function HomePage() {
               </div>
 
               <ul className="mb-8 space-y-4 text-zinc-300">
-                <li>✓ 3 AI generations / month</li>
+                <li>✓ 20 AI generations / month</li>
                 <li>✓ 10 rewrites / month</li>
                 <li>✓ 1,000 characters</li>
                 <li>✓ 9 output formats</li>
