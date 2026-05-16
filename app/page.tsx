@@ -404,12 +404,20 @@ export default function HomePage() {
       <div className="mx-auto max-w-7xl">
         <nav className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold">Repurso</h1>
+            <Link href="/" className="flex items-center gap-3">
+              <img
+                src="/logo-icon.png"
+                alt="Repurso"
+                className="h-9 w-9 rounded-xl object-contain"
+              />
+
+              <span className="text-3xl font-bold tracking-tight">Repurso</span>
+            </Link>
 
             {!userEmail && (
               <Link
                 href="/login"
-                className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-black sm:hidden"
+                className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-black transition hover:bg-zinc-200 sm:hidden"
               >
                 Login
               </Link>
@@ -417,7 +425,10 @@ export default function HomePage() {
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
-            <a href="#pricing" className="text-sm text-zinc-400">
+            <a
+              href="#pricing"
+              className="text-sm text-zinc-400 transition hover:text-white"
+            >
               Pricing
             </a>
 
@@ -433,22 +444,16 @@ export default function HomePage() {
 
             {userEmail ? (
               <>
-                <span className="w-full truncate text-sm text-zinc-400 sm:w-auto">
-                  {userEmail.length > 18
-                    ? `${userEmail.slice(0, 6)}...@${userEmail.split("@")[1]}`
-                    : userEmail}
-                </span>
-
                 <Link
                   href="/dashboard"
-                  className="rounded-xl border border-zinc-700 px-4 py-2 text-sm sm:text-base"
+                  className="rounded-xl border border-zinc-700 px-4 py-2 text-sm transition hover:border-zinc-500 hover:bg-zinc-900 sm:text-base"
                 >
                   Dashboard
                 </Link>
 
                 <button
                   onClick={logout}
-                  className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-black sm:text-base"
+                  className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-black transition hover:bg-zinc-200 sm:text-base"
                 >
                   Logout
                 </button>
@@ -456,7 +461,7 @@ export default function HomePage() {
             ) : (
               <Link
                 href="/login"
-                className="hidden rounded-xl bg-white px-4 py-2 font-semibold text-black sm:block"
+                className="hidden rounded-xl bg-white px-4 py-2 font-semibold text-black transition hover:bg-zinc-200 sm:block"
               >
                 Login
               </Link>
