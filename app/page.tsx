@@ -162,14 +162,14 @@ export default function HomePage() {
   const rewritePercent = Math.min((rewriteUsage / rewriteLimit) * 100, 100);
 
   useEffect(() => {
-    if (typeof window !== "undefined" && window.location.hash.includes("access_token")) {
-      window.history.replaceState({}, document.title, window.location.pathname);
-    }
-
     async function getUser() {
       const {
         data: { session },
       } = await supabase.auth.getSession();
+
+      if (typeof window !== "undefined" && window.location.hash.includes("access_token")) {
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
 
       if (session?.user?.email) {
         const email = session.user.email;
