@@ -178,6 +178,7 @@ export default function HomePage() {
   const [savingPrompt, setSavingPrompt] = useState(false);
   const [loadingStep, setLoadingStep] = useState(0);
   const [toast, setToast] = useState("");
+  const [copiedSection, setCopiedSection] = useState<string | null>(null);
 
   const outputSections = result ? splitOutput(result) : [];
   const characterCount = input.length;
@@ -458,9 +459,15 @@ export default function HomePage() {
     setSavedPrompts((prev) => prev.filter((item) => item.id !== id));
   }
 
-  async function copyText(text: string) {
+  async function copyText(text: string, sectionId: string) {
     await navigator.clipboard.writeText(text);
+
+    setCopiedSection(sectionId);
     setToast("Copied to clipboard");
+
+    window.setTimeout(() => {
+      setCopiedSection(null);
+    }, 1800);
   }
 
   function exportTextFile(filename: string, content: string, type: string) {
@@ -490,7 +497,7 @@ export default function HomePage() {
   }
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-black px-3 py-3 text-white sm:px-6 sm:py-6">
+    <main className="relative min-h-screen overflow-hidden bg-black px-2 py-2 text-white sm:px-6 sm:py-6">
       <div className="pointer-events-none fixed inset-0 -z-10">
         <div className="absolute left-1/2 top-0 h-[320px] w-[320px] -translate-x-1/2 rounded-full bg-purple-700/20 blur-[100px] sm:h-[520px] sm:w-[520px] sm:blur-[140px]" />
         <div className="absolute right-[-120px] top-[220px] h-[280px] w-[280px] rounded-full bg-fuchsia-600/10 blur-[100px] sm:h-[420px] sm:w-[420px] sm:blur-[130px]" />
@@ -567,13 +574,13 @@ export default function HomePage() {
           </div>
         </nav>
 
-        <section className="mb-12 grid items-start gap-5 lg:mb-16 lg:grid-cols-[0.8fr_1.2fr] lg:gap-8">
+        <section className="mb-10 grid items-start gap-4 lg:mb-16 lg:grid-cols-[0.8fr_1.2fr] lg:gap-8">
           <div className="pt-2 lg:sticky lg:top-6">
             <div className="mb-4 inline-flex rounded-full border border-purple-400/20 bg-purple-500/10 px-4 py-2 text-sm text-purple-100 shadow-lg shadow-purple-950/20">
               AI content repurposing tool
             </div>
 
-            <h2 className="mb-4 bg-gradient-to-br from-white via-white to-purple-200 bg-clip-text text-3xl font-bold leading-tight text-transparent sm:mb-5 sm:text-5xl">
+            <h2 className="mb-4 bg-gradient-to-br from-white via-white to-purple-200 bg-clip-text text-[2rem] font-bold leading-tight text-transparent sm:mb-5 sm:text-5xl">
               Turn one idea into content for every platform.
             </h2>
 
@@ -583,7 +590,7 @@ export default function HomePage() {
               YouTube, Facebook, Threads, Snapchat and Pinterest.
             </p>
 
-            <div className="mb-5 grid grid-cols-3 gap-2 sm:mb-6 sm:gap-3">
+            <div className="mb-5 grid grid-cols-3 gap-1.5 sm:mb-6 sm:gap-3">
               <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
                 <p className="text-lg font-bold text-white sm:text-xl">9</p>
                 <p className="text-xs text-zinc-500">Formats</p>
@@ -628,7 +635,7 @@ export default function HomePage() {
                 {SECTION_TITLES.map((title) => (
                   <div
                     key={title}
-                    className="flex items-center gap-3 rounded-2xl border border-white/10 bg-black/70 p-3 text-sm text-zinc-300 transition hover:border-purple-400/30 hover:bg-purple-500/10"
+                    className="flex items-center gap-3 rounded-2xl border border-white/10 bg-black/70 p-2.5 text-xs sm:p-3 sm:text-sm text-zinc-300 transition hover:border-purple-400/30 hover:bg-purple-500/10"
                   >
                     <span className="text-lg">
                       {SECTION_ICONS[title]}
@@ -652,7 +659,7 @@ export default function HomePage() {
 
           <section
             id="generator"
-            className="rounded-[24px] border border-white/10 bg-zinc-950/70 p-4 shadow-2xl shadow-purple-950/20 backdrop-blur sm:rounded-[32px] sm:p-7"
+            className="rounded-[20px] border border-white/10 bg-zinc-950/70 p-4 shadow-2xl shadow-purple-950/20 backdrop-blur sm:rounded-[32px] sm:p-7"
           >
             <h3 className="mb-2 text-2xl font-bold sm:text-4xl">
               Generate content
@@ -749,7 +756,7 @@ export default function HomePage() {
 
             <textarea
               placeholder="Paste your idea, tweet, article, video script or raw thoughts here..."
-              className="mb-3 h-32 w-full rounded-3xl border border-white/10 bg-black/70 p-4 text-sm text-white outline-none transition placeholder:text-zinc-600 focus:border-purple-400/50 focus:ring-4 focus:ring-purple-500/10 sm:h-44 sm:p-5 sm:text-base"
+              className="mb-3 h-28 w-full rounded-3xl border border-white/10 bg-black/70 p-3.5 text-sm text-white outline-none transition placeholder:text-zinc-600 focus:border-purple-400/50 focus:ring-4 focus:ring-purple-500/10 sm:h-44 sm:p-5 sm:text-base"
               value={input}
               onChange={(e) => setInput(e.target.value)}
             />
@@ -899,7 +906,7 @@ export default function HomePage() {
                 <div className="max-h-[85vh] w-full max-w-3xl overflow-y-auto rounded-[28px] border border-zinc-800 bg-zinc-950 p-5 sm:rounded-[32px] sm:p-8">
                   <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div>
-                      <h2 className="text-3xl font-bold">Prompt Library</h2>
+                      <h2 className="text-[2rem] font-bold">Prompt Library</h2>
 
                       <p className="mt-2 text-zinc-400">
                         Reuse your saved prompts instantly.
@@ -919,7 +926,7 @@ export default function HomePage() {
                       <p className="text-zinc-400">No saved prompts yet.</p>
                     </div>
                   ) : (
-                    <div className="space-y-4">
+                    <div className="space-y-3 sm:space-y-4">
                       {savedPrompts.map((prompt) => (
                         <div
                           key={prompt.id}
@@ -991,7 +998,7 @@ export default function HomePage() {
                         {section.title}
                       </h4>
 
-                      <div className="space-y-4">
+                      <div className="space-y-3 sm:space-y-4">
                         <div className="grid gap-3 sm:grid-cols-2 lg:flex lg:flex-wrap lg:items-center">
                           {[
                             ["Regenerate", "default"],
@@ -1010,7 +1017,7 @@ export default function HomePage() {
                                 rewriteLoadingId === section.id ||
                                 rewriteUsage >= rewriteLimit
                               }
-                              className="rounded-2xl border border-zinc-700 bg-zinc-950 px-4 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:border-zinc-500 hover:bg-zinc-900 disabled:opacity-60"
+                              className="rounded-xl border border-zinc-700 bg-zinc-950 px-3 py-2 text-xs sm:rounded-2xl sm:px-4 sm:text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:border-zinc-500 hover:bg-zinc-900 disabled:opacity-60"
                             >
                               {label}
                             </button>
@@ -1030,7 +1037,7 @@ export default function HomePage() {
                                 "text/plain;charset=utf-8"
                               )
                             }
-                            className="rounded-2xl border border-zinc-700 bg-zinc-950 px-5 py-2 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:border-zinc-500"
+                            className="rounded-xl border border-zinc-700 bg-zinc-950 px-3 py-2 text-xs font-bold sm:rounded-2xl sm:px-5 sm:text-sm text-white transition hover:-translate-y-0.5 hover:border-zinc-500"
                           >
                             Export TXT
                           </button>
@@ -1043,14 +1050,14 @@ export default function HomePage() {
                                 "text/markdown;charset=utf-8"
                               )
                             }
-                            className="rounded-2xl border border-zinc-700 bg-zinc-950 px-5 py-2 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:border-zinc-500"
+                            className="rounded-xl border border-zinc-700 bg-zinc-950 px-3 py-2 text-xs font-bold sm:rounded-2xl sm:px-5 sm:text-sm text-white transition hover:-translate-y-0.5 hover:border-zinc-500"
                           >
                             Export MD
                           </button>
 
                           <button
                             onClick={() => copyText(section.content)}
-                            className="rounded-2xl bg-white px-5 py-2 text-sm font-bold text-black transition hover:-translate-y-0.5 hover:bg-zinc-200"
+                            className="rounded-xl bg-white px-3 py-2 text-xs font-bold sm:rounded-2xl sm:px-5 sm:text-sm text-black transition hover:-translate-y-0.5 hover:bg-zinc-200"
                           >
                             Copy
                           </button>
@@ -1100,7 +1107,7 @@ export default function HomePage() {
       How it works
     </p>
 
-    <h2 className="mb-4 text-3xl font-bold sm:text-5xl">
+    <h2 className="mb-4 text-[2rem] font-bold sm:text-5xl">
       Create once. Publish everywhere.
     </h2>
 
@@ -1157,7 +1164,7 @@ export default function HomePage() {
       Built for
     </p>
 
-    <h2 className="mb-4 text-3xl font-bold sm:text-5xl">
+    <h2 className="mb-4 text-[2rem] font-bold sm:text-5xl">
       Made for modern creators.
     </h2>
   </div>
@@ -1227,7 +1234,7 @@ export default function HomePage() {
               Why Repurso
             </p>
 
-            <h2 className="mb-4 text-3xl font-bold sm:text-5xl">
+            <h2 className="mb-4 text-[2rem] font-bold sm:text-5xl">
               Built for faster content workflows.
             </h2>
 
@@ -1269,7 +1276,7 @@ export default function HomePage() {
               FAQ
             </p>
 
-            <h2 className="text-3xl font-bold sm:text-5xl">
+            <h2 className="text-[2rem] font-bold sm:text-5xl">
               Questions before you start?
             </h2>
           </div>
@@ -1278,7 +1285,7 @@ export default function HomePage() {
             {FAQ_ITEMS.map((item) => (
               <div
                 key={item.question}
-                className="rounded-3xl border border-white/10 bg-zinc-950/70 p-6"
+                className="rounded-2xl border border-white/10 bg-zinc-950/70 p-4 sm:rounded-3xl sm:p-6"
               >
                 <h3 className="mb-2 text-xl font-bold">{item.question}</h3>
                 <p className="leading-7 text-zinc-400">{item.answer}</p>
@@ -1293,7 +1300,7 @@ export default function HomePage() {
               Pricing
             </p>
 
-            <h2 className="mb-4 text-3xl font-bold sm:text-5xl">
+            <h2 className="mb-4 text-[2rem] font-bold sm:text-5xl">
               Choose your content engine.
             </h2>
 
