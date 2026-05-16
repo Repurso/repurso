@@ -463,8 +463,6 @@ export default function HomePage() {
     await navigator.clipboard.writeText(text);
 
     setCopiedSection(sectionId);
-    setToast("Copied to clipboard");
-
     window.setTimeout(() => {
       setCopiedSection(null);
     }, 1800);
@@ -589,25 +587,7 @@ export default function HomePage() {
               into platform-ready content for LinkedIn, X, Instagram, TikTok,
               YouTube, Facebook, Threads, Snapchat and Pinterest.
             </p>
-
-            <div className="mb-5 grid grid-cols-3 gap-1.5 sm:mb-6 sm:gap-3">
-              <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
-                <p className="text-lg font-bold text-white sm:text-xl">9</p>
-                <p className="text-xs text-zinc-500">Formats</p>
-              </div>
-
-              <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
-                <p className="text-lg font-bold text-white sm:text-xl">20</p>
-                <p className="text-xs text-zinc-500">Free generations</p>
-              </div>
-
-              <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
-                <p className="text-lg font-bold text-white sm:text-xl">3d</p>
-                <p className="text-xs text-zinc-500">Trial</p>
-              </div>
-            </div>
-
-            <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+<div className="mb-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <a
                 href="#generator"
                 className="rounded-2xl bg-white px-6 py-3.5 text-center text-sm font-bold text-black shadow-lg shadow-purple-950/30 transition hover:-translate-y-0.5 hover:bg-zinc-200 sm:px-8 sm:py-4 sm:text-base"
@@ -990,13 +970,50 @@ export default function HomePage() {
                     className="rounded-3xl border border-white/10 bg-black/80 p-5 shadow-xl shadow-purple-950/10 transition hover:border-purple-400/30 sm:p-6"
                   >
                     <div className="mb-5 flex flex-col gap-4">
-                      <h4 className="flex items-center gap-3 text-2xl font-bold">
-                        <span className="text-2xl">
-                          {SECTION_ICONS[section.title]}
-                        </span>
+                      <div className="flex items-start justify-between gap-3">
+                        <h4 className="flex min-w-0 items-center gap-3 text-2xl font-bold">
+                          <span className="text-2xl">
+                            {SECTION_ICONS[section.title]}
+                          </span>
 
-                        {section.title}
-                      </h4>
+                          <span className="truncate">{section.title}</span>
+                        </h4>
+
+                        <div className="flex shrink-0 items-center gap-2">
+                          <button
+                            onClick={() =>
+                              exportTextFile(
+                                `${section.id}.txt`,
+                                section.content,
+                                "text/plain;charset=utf-8"
+                              )
+                            }
+                            className="rounded-xl border border-zinc-700 bg-zinc-950 px-3 py-2 text-[11px] font-bold text-white transition hover:border-zinc-500 sm:px-4 sm:text-xs"
+                          >
+                            TXT
+                          </button>
+
+                          <button
+                            onClick={() =>
+                              exportTextFile(
+                                `${section.id}.md`,
+                                `# ${section.title}\n\n${section.content}`,
+                                "text/markdown;charset=utf-8"
+                              )
+                            }
+                            className="rounded-xl border border-zinc-700 bg-zinc-950 px-3 py-2 text-[11px] font-bold text-white transition hover:border-zinc-500 sm:px-4 sm:text-xs"
+                          >
+                            MD
+                          </button>
+
+                          <button
+                            onClick={() => copyText(section.content, section.id)}
+                            className="rounded-xl bg-purple-600 px-3 py-2 text-[11px] font-bold text-white shadow-lg shadow-purple-950/30 transition hover:bg-purple-500 sm:px-4 sm:text-xs"
+                          >
+                            {copiedSection === section.id ? "Copied" : "Copy"}
+                          </button>
+                        </div>
+                      </div>
 
                       <div className="space-y-3 sm:space-y-4">
                         <div className="grid gap-3 sm:grid-cols-2 lg:flex lg:flex-wrap lg:items-center">
@@ -1022,45 +1039,6 @@ export default function HomePage() {
                               {label}
                             </button>
                           ))}
-                        </div>
-
-                        <div className="flex flex-wrap items-center gap-3 border-t border-white/10 pt-4">
-                          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-zinc-500">
-                            Export & Copy
-                          </span>
-
-                          <button
-                            onClick={() =>
-                              exportTextFile(
-                                `${section.id}.txt`,
-                                section.content,
-                                "text/plain;charset=utf-8"
-                              )
-                            }
-                            className="rounded-xl border border-zinc-700 bg-zinc-950 px-3 py-2 text-xs font-bold sm:rounded-2xl sm:px-5 sm:text-sm text-white transition hover:-translate-y-0.5 hover:border-zinc-500"
-                          >
-                            Export TXT
-                          </button>
-
-                          <button
-                            onClick={() =>
-                              exportTextFile(
-                                `${section.id}.md`,
-                                `# ${section.title}\n\n${section.content}`,
-                                "text/markdown;charset=utf-8"
-                              )
-                            }
-                            className="rounded-xl border border-zinc-700 bg-zinc-950 px-3 py-2 text-xs font-bold sm:rounded-2xl sm:px-5 sm:text-sm text-white transition hover:-translate-y-0.5 hover:border-zinc-500"
-                          >
-                            Export MD
-                          </button>
-
-                          <button
-                            onClick={() => copyText(section.content, section.id)}
-                            className="rounded-xl bg-white px-3 py-2 text-xs font-bold sm:rounded-2xl sm:px-5 sm:text-sm text-black transition hover:-translate-y-0.5 hover:bg-zinc-200"
-                          >
-                            Copy
-                          </button>
                         </div>
                       </div>
                     </div>
@@ -1468,12 +1446,6 @@ export default function HomePage() {
           </div>
         </footer>
       </div>
-
-      {toast && (
-        <div className="fixed bottom-5 right-5 z-50 rounded-2xl border border-emerald-400/20 bg-emerald-500/10 px-5 py-3 shadow-2xl backdrop-blur">
-          <p className="font-semibold text-emerald-100">{toast}</p>
-        </div>
-      )}
-    </main>
+</main>
   );
 }
