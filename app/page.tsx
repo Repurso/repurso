@@ -65,9 +65,11 @@ const SECTION_ICONS: Record<string, React.ReactElement> = {
 
 const LOADING_STEPS = [
   "Analyzing your idea",
-  "Creating platform-specific hooks",
-  "Optimizing tone for each channel",
-  "Preparing publish-ready outputs",
+  "Generating platform-specific hooks",
+  "Optimizing tone and engagement",
+  "Building publish-ready outputs",
+  "Refining platform-native wording",
+  "Finalizing content variations",
 ];
 
 
@@ -177,6 +179,7 @@ export default function HomePage() {
   const [showPromptLibrary, setShowPromptLibrary] = useState(false);
   const [savingPrompt, setSavingPrompt] = useState(false);
   const [loadingStep, setLoadingStep] = useState(0);
+  const [toast, setToast] = useState("");
 
   const outputSections = result ? splitOutput(result) : [];
   const characterCount = input.length;
@@ -256,6 +259,16 @@ export default function HomePage() {
 
     return () => window.clearInterval(interval);
   }, [loading]);
+
+  useEffect(() => {
+    if (!toast) return;
+
+    const timeout = window.setTimeout(() => {
+      setToast("");
+    }, 2200);
+
+    return () => window.clearTimeout(timeout);
+  }, [toast]);
 
   async function generateContent() {
     if (!input.trim()) {
