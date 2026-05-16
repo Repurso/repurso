@@ -1145,7 +1145,7 @@ export default function HomePage() {
               </p>
 
               <div className="mb-8">
-                <span className="text-5xl font-bold">₺299</span>
+                <span className="text-5xl font-bold">$9</span>
                 <span className="text-zinc-600"> / month</span>
               </div>
 
@@ -1175,7 +1175,7 @@ export default function HomePage() {
               </p>
 
               <div className="mb-8">
-                <span className="text-5xl font-bold">₺599</span>
+                <span className="text-5xl font-bold">$19</span>
                 <span className="text-zinc-500"> / month</span>
               </div>
 
