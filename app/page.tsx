@@ -65,11 +65,9 @@ const SECTION_ICONS: Record<string, React.ReactElement> = {
 
 const LOADING_STEPS = [
   "Analyzing your idea",
-  "Generating platform-specific hooks",
-  "Optimizing tone and engagement",
-  "Building publish-ready outputs",
-  "Refining platform-native wording",
-  "Finalizing content variations",
+  "Creating platform-specific hooks",
+  "Optimizing tone for each channel",
+  "Preparing publish-ready outputs",
 ];
 
 
@@ -462,7 +460,7 @@ export default function HomePage() {
 
   async function copyText(text: string) {
     await navigator.clipboard.writeText(text);
-    alert("Copied.");
+    setToast("Copied to clipboard");
   }
 
   function exportTextFile(filename: string, content: string, type: string) {
@@ -478,6 +476,12 @@ export default function HomePage() {
     a.click();
 
     URL.revokeObjectURL(url);
+
+    if (filename.endsWith(".md")) {
+      setToast("Markdown exported");
+    } else {
+      setToast("TXT exported");
+    }
   }
 
   async function logout() {
@@ -987,62 +991,70 @@ export default function HomePage() {
                         {section.title}
                       </h4>
 
-                      <div className="grid gap-3 sm:grid-cols-2 lg:flex lg:flex-wrap lg:items-center">
-                        {[
-                          ["Regenerate", "default"],
-                          ["More Viral", "more-viral"],
-                          ["More Professional", "more-professional"],
-                          ["Shorter", "shorter"],
-                          ["Longer", "longer"],
-                          ["More Emotional", "more-emotional"],
-                        ].map(([label, type]) => (
+                      <div className="space-y-4">
+                        <div className="grid gap-3 sm:grid-cols-2 lg:flex lg:flex-wrap lg:items-center">
+                          {[
+                            ["Regenerate", "default"],
+                            ["More Viral", "more-viral"],
+                            ["More Professional", "more-professional"],
+                            ["Shorter", "shorter"],
+                            ["Longer", "longer"],
+                            ["More Emotional", "more-emotional"],
+                          ].map(([label, type]) => (
+                            <button
+                              key={type}
+                              onClick={() =>
+                                rewriteSection(section.id, section.content, type)
+                              }
+                              disabled={
+                                rewriteLoadingId === section.id ||
+                                rewriteUsage >= rewriteLimit
+                              }
+                              className="rounded-2xl border border-zinc-700 bg-zinc-950 px-4 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:border-zinc-500 hover:bg-zinc-900 disabled:opacity-60"
+                            >
+                              {label}
+                            </button>
+                          ))}
+                        </div>
+
+                        <div className="flex flex-wrap items-center gap-3 border-t border-white/10 pt-4">
+                          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-zinc-500">
+                            Export & Copy
+                          </span>
+
                           <button
-                            key={type}
                             onClick={() =>
-                              rewriteSection(section.id, section.content, type)
+                              exportTextFile(
+                                `${section.id}.txt`,
+                                section.content,
+                                "text/plain;charset=utf-8"
+                              )
                             }
-                            disabled={
-                              rewriteLoadingId === section.id ||
-                              rewriteUsage >= rewriteLimit
-                            }
-                            className="rounded-2xl border border-zinc-700 bg-zinc-950 px-4 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:border-zinc-500 hover:bg-zinc-900 disabled:opacity-60"
+                            className="rounded-2xl border border-zinc-700 bg-zinc-950 px-5 py-2 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:border-zinc-500"
                           >
-                            {label}
+                            Export TXT
                           </button>
-                        ))}
 
-                        <button
-                          onClick={() =>
-                            exportTextFile(
-                              `${section.id}.txt`,
-                              section.content,
-                              "text/plain;charset=utf-8"
-                            )
-                          }
-                          className="rounded-2xl border border-zinc-700 bg-zinc-950 px-5 py-2 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:border-zinc-500"
-                        >
-                          Export TXT
-                        </button>
+                          <button
+                            onClick={() =>
+                              exportTextFile(
+                                `${section.id}.md`,
+                                `# ${section.title}\n\n${section.content}`,
+                                "text/markdown;charset=utf-8"
+                              )
+                            }
+                            className="rounded-2xl border border-zinc-700 bg-zinc-950 px-5 py-2 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:border-zinc-500"
+                          >
+                            Export MD
+                          </button>
 
-                        <button
-                          onClick={() =>
-                            exportTextFile(
-                              `${section.id}.md`,
-                              `# ${section.title}\n\n${section.content}`,
-                              "text/markdown;charset=utf-8"
-                            )
-                          }
-                          className="rounded-2xl border border-zinc-700 bg-zinc-950 px-5 py-2 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:border-zinc-500"
-                        >
-                          Export MD
-                        </button>
-
-                        <button
-                          onClick={() => copyText(section.content)}
-                          className="rounded-2xl bg-white px-5 py-2 text-sm font-bold text-black transition hover:-translate-y-0.5 hover:bg-zinc-200 sm:col-span-2 lg:col-span-1"
-                        >
-                          Copy
-                        </button>
+                          <button
+                            onClick={() => copyText(section.content)}
+                            className="rounded-2xl bg-white px-5 py-2 text-sm font-bold text-black transition hover:-translate-y-0.5 hover:bg-zinc-200"
+                          >
+                            Copy
+                          </button>
+                        </div>
                       </div>
                     </div>
 
@@ -1449,6 +1461,12 @@ export default function HomePage() {
           </div>
         </footer>
       </div>
+
+      {toast && (
+        <div className="fixed bottom-5 right-5 z-50 rounded-2xl border border-emerald-400/20 bg-emerald-500/10 px-5 py-3 shadow-2xl backdrop-blur">
+          <p className="font-semibold text-emerald-100">{toast}</p>
+        </div>
+      )}
     </main>
   );
 }
