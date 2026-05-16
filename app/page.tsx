@@ -1056,7 +1056,7 @@ export default function HomePage() {
                           </button>
 
                           <button
-                            onClick={() => copyText(section.content)}
+                            onClick={() => copyText(section.content, section.id)}
                             className="rounded-xl bg-white px-3 py-2 text-xs font-bold sm:rounded-2xl sm:px-5 sm:text-sm text-black transition hover:-translate-y-0.5 hover:bg-zinc-200"
                           >
                             Copy
