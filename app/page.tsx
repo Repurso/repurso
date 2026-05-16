@@ -63,6 +63,51 @@ const SECTION_ICONS: Record<string, React.ReactElement> = {
   "Pinterest Pin Description": <FaPinterest className="text-red-600" />,
 };
 
+const LOADING_STEPS = [
+  "Analyzing your idea",
+  "Creating platform-specific hooks",
+  "Optimizing tone for each channel",
+  "Preparing publish-ready outputs",
+];
+
+const PREVIEW_CARDS = [
+  {
+    title: "LinkedIn",
+    text: "A polished authority post with a strong opening hook and clear CTA.",
+  },
+  {
+    title: "X",
+    text: "A short, punchy post designed to spark replies and shares.",
+  },
+  {
+    title: "TikTok",
+    text: "A fast-paced short-form script with a scroll-stopping intro.",
+  },
+];
+
+const FAQ_ITEMS = [
+  {
+    question: "What does Repurso do?",
+    answer:
+      "Repurso turns one idea into platform-ready content for LinkedIn, X, Instagram, TikTok, YouTube, Facebook, Threads, Snapchat and Pinterest.",
+  },
+  {
+    question: "Can I rewrite generated content?",
+    answer:
+      "Yes. Each output can be rewritten to be more viral, more professional, shorter, longer or more emotional.",
+  },
+  {
+    question: "Is there a free plan?",
+    answer:
+      "Yes. The free plan includes 20 generations so you can test the workflow before upgrading.",
+  },
+  {
+    question: "Can I cancel paid plans?",
+    answer:
+      "Yes. Paid plans include a 3-day free trial and can be cancelled anytime.",
+  },
+];
+
 type OutputSection = {
   id: string;
   title: string;
@@ -145,6 +190,7 @@ export default function HomePage() {
   const [promptTitle, setPromptTitle] = useState("");
   const [showPromptLibrary, setShowPromptLibrary] = useState(false);
   const [savingPrompt, setSavingPrompt] = useState(false);
+  const [loadingStep, setLoadingStep] = useState(0);
 
   const outputSections = result ? splitOutput(result) : [];
   const characterCount = input.length;
@@ -211,6 +257,19 @@ export default function HomePage() {
 
     getUser();
   }, []);
+
+  useEffect(() => {
+    if (!loading) {
+      setLoadingStep(0);
+      return;
+    }
+
+    const interval = window.setInterval(() => {
+      setLoadingStep((current) => (current + 1) % LOADING_STEPS.length);
+    }, 1400);
+
+    return () => window.clearInterval(interval);
+  }, [loading]);
 
   async function generateContent() {
     if (!input.trim()) {
@@ -521,6 +580,23 @@ export default function HomePage() {
               YouTube, Facebook, Threads, Snapchat and Pinterest.
             </p>
 
+            <div className="mb-6 grid grid-cols-3 gap-3">
+              <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
+                <p className="text-xl font-bold text-white">9</p>
+                <p className="text-xs text-zinc-500">Formats</p>
+              </div>
+
+              <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
+                <p className="text-xl font-bold text-white">20</p>
+                <p className="text-xs text-zinc-500">Free generations</p>
+              </div>
+
+              <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
+                <p className="text-xl font-bold text-white">3d</p>
+                <p className="text-xs text-zinc-500">Trial</p>
+              </div>
+            </div>
+
             <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <a
                 href="#generator"
@@ -537,14 +613,19 @@ export default function HomePage() {
               </a>
             </div>
 
-            <div className="hidden rounded-[28px] border border-zinc-800 bg-zinc-950 p-5 lg:block">
-              <p className="mb-3 text-sm text-zinc-500">Output formats</p>
+            <div className="hidden rounded-[28px] border border-white/10 bg-zinc-950/70 p-5 shadow-2xl shadow-purple-950/10 backdrop-blur lg:block">
+              <div className="mb-4 flex items-center justify-between">
+                <p className="text-sm text-zinc-500">Output formats</p>
+                <span className="rounded-full bg-purple-500/10 px-3 py-1 text-xs font-semibold text-purple-200">
+                  Platform-native
+                </span>
+              </div>
 
               <div className="grid gap-3">
                 {SECTION_TITLES.map((title) => (
                   <div
                     key={title}
-                    className="flex items-center gap-3 rounded-2xl border border-zinc-800 bg-black p-3 text-sm text-zinc-300"
+                    className="flex items-center gap-3 rounded-2xl border border-white/10 bg-black/70 p-3 text-sm text-zinc-300 transition hover:border-purple-400/30 hover:bg-purple-500/10"
                   >
                     <span className="text-lg">
                       {SECTION_ICONS[title]}
@@ -553,6 +634,15 @@ export default function HomePage() {
                     {title}
                   </div>
                 ))}
+              </div>
+
+              <div className="mt-5 rounded-3xl border border-purple-400/20 bg-purple-500/10 p-4">
+                <p className="mb-2 text-sm font-semibold text-purple-100">
+                  Example workflow
+                </p>
+                <p className="text-sm leading-6 text-zinc-400">
+                  Paste one raw idea and get publish-ready versions for every major social channel.
+                </p>
               </div>
             </div>
           </div>
@@ -568,6 +658,23 @@ export default function HomePage() {
             <p className="mb-6 text-base text-zinc-400 sm:text-lg">
               Paste your content and let Repurso turn it into multiple formats.
             </p>
+
+            <div className="mb-6 grid gap-3 md:grid-cols-3">
+              {PREVIEW_CARDS.map((card) => (
+                <div
+                  key={card.title}
+                  className="rounded-2xl border border-white/10 bg-black/40 p-4"
+                >
+                  <p className="mb-2 text-sm font-bold text-white">
+                    {card.title}
+                  </p>
+
+                  <p className="text-xs leading-5 text-zinc-500">
+                    {card.text}
+                  </p>
+                </div>
+              ))}
+            </div>
 
             <div className="mb-6">
               <p className="mb-3 text-sm font-semibold uppercase tracking-[0.25em] text-zinc-500">
@@ -654,7 +761,7 @@ export default function HomePage() {
             </div>
 
             <textarea
-              placeholder="Paste your content here..."
+              placeholder="Paste your idea, tweet, article, video script or raw thoughts here..."
               className="mb-3 h-40 w-full rounded-3xl border border-white/10 bg-black/70 p-5 text-base text-white outline-none transition placeholder:text-zinc-600 focus:border-purple-400/50 focus:ring-4 focus:ring-purple-500/10 sm:h-44"
               value={input}
               onChange={(e) => setInput(e.target.value)}
@@ -762,6 +869,28 @@ export default function HomePage() {
               {loading ? "Generating..." : "Generate"}
             </button>
 
+            {loading && (
+              <div className="mt-6 rounded-3xl border border-purple-400/20 bg-purple-500/10 p-5">
+                <div className="mb-4 flex items-center gap-3">
+                  <span className="h-3 w-3 animate-pulse rounded-full bg-purple-400" />
+                  <p className="font-semibold text-purple-100">
+                    {LOADING_STEPS[loadingStep]}...
+                  </p>
+                </div>
+
+                <div className="grid gap-2 sm:grid-cols-4">
+                  {LOADING_STEPS.map((step, index) => (
+                    <div
+                      key={step}
+                      className={`h-1.5 rounded-full transition ${
+                        index <= loadingStep ? "bg-purple-400" : "bg-white/10"
+                      }`}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+
             {!result && !loading && (
               <div className="mt-6 rounded-3xl border border-dashed border-white/10 bg-black/40 p-6 text-center">
                 <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-purple-500/10 text-xl">
@@ -853,6 +982,14 @@ export default function HomePage() {
 
             {result && (
               <div className="mt-8 space-y-5">
+                <div className="rounded-3xl border border-emerald-400/20 bg-emerald-500/10 p-5">
+                  <p className="font-bold text-emerald-100">
+                    Your platform-ready content is ready.
+                  </p>
+                  <p className="mt-1 text-sm text-emerald-100/70">
+                    Rewrite, copy or export each version below.
+                  </p>
+                </div>
                 {outputSections.map((section) => (
                   <div
                     key={section.id}
@@ -1057,7 +1194,7 @@ export default function HomePage() {
   </div>
 </section>
 
-<section className="mb-20 rounded-[32px] border border-zinc-800 bg-zinc-950 p-8 sm:p-12">
+<section className="mb-20 rounded-[32px] border border-purple-400/20 bg-gradient-to-br from-purple-950/35 via-zinc-950 to-black p-8 shadow-2xl shadow-purple-950/20 sm:p-12">
   <div className="mx-auto max-w-3xl text-center">
     <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-zinc-500">
       Start creating
@@ -1089,6 +1226,72 @@ export default function HomePage() {
     </div>
   </div>
 </section>
+        <section className="mb-20">
+          <div className="mb-12 text-center">
+            <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-zinc-500">
+              Why Repurso
+            </p>
+
+            <h2 className="mb-4 text-4xl font-bold sm:text-5xl">
+              Built for faster content workflows.
+            </h2>
+
+            <p className="mx-auto max-w-2xl text-lg leading-8 text-zinc-400">
+              Stop rewriting the same idea manually. Generate, improve and export content from one focused workspace.
+            </p>
+          </div>
+
+          <div className="grid gap-6 lg:grid-cols-3">
+            <div className="rounded-[28px] border border-white/10 bg-zinc-950/70 p-6 shadow-xl shadow-purple-950/10">
+              <div className="mb-4 text-3xl">⚡</div>
+              <h3 className="mb-3 text-2xl font-bold">Save hours every week</h3>
+              <p className="leading-7 text-zinc-400">
+                Turn a raw idea into multiple platform-ready outputs without rebuilding the same post again and again.
+              </p>
+            </div>
+
+            <div className="rounded-[28px] border border-white/10 bg-zinc-950/70 p-6 shadow-xl shadow-purple-950/10">
+              <div className="mb-4 text-3xl">✦</div>
+              <h3 className="mb-3 text-2xl font-bold">Improve every output</h3>
+              <p className="leading-7 text-zinc-400">
+                Rewrite each version to be more viral, more professional, shorter, longer or more emotional.
+              </p>
+            </div>
+
+            <div className="rounded-[28px] border border-white/10 bg-zinc-950/70 p-6 shadow-xl shadow-purple-950/10">
+              <div className="mb-4 text-3xl">↗</div>
+              <h3 className="mb-3 text-2xl font-bold">Publish everywhere</h3>
+              <p className="leading-7 text-zinc-400">
+                Create native content for the platforms your audience already uses.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section className="mb-20">
+          <div className="mb-12 text-center">
+            <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-zinc-500">
+              FAQ
+            </p>
+
+            <h2 className="text-4xl font-bold sm:text-5xl">
+              Questions before you start?
+            </h2>
+          </div>
+
+          <div className="mx-auto grid max-w-4xl gap-4">
+            {FAQ_ITEMS.map((item) => (
+              <div
+                key={item.question}
+                className="rounded-3xl border border-white/10 bg-zinc-950/70 p-6"
+              >
+                <h3 className="mb-2 text-xl font-bold">{item.question}</h3>
+                <p className="leading-7 text-zinc-400">{item.answer}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
         <section id="pricing" className="py-12 sm:py-16">
           <div className="mb-12 text-center">
             <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-zinc-500">
@@ -1106,7 +1309,7 @@ export default function HomePage() {
           </div>
 
           <div className="grid gap-6 lg:grid-cols-3">
-            <div className="rounded-[28px] border border-zinc-800 bg-zinc-950 p-6 sm:rounded-[32px] sm:p-8">
+            <div className="rounded-[28px] border border-white/10 bg-zinc-950/70 p-6 shadow-xl shadow-purple-950/10 transition hover:-translate-y-1 hover:border-purple-400/30 sm:rounded-[32px] sm:p-8">
               <h3 className="mb-2 text-2xl font-bold">Free</h3>
 
               <p className="mb-6 text-zinc-400">For testing the product.</p>
@@ -1133,7 +1336,7 @@ export default function HomePage() {
               </a>
             </div>
 
-            <div className="relative rounded-[28px] border border-white bg-white p-6 text-black sm:rounded-[32px] sm:p-8">
+            <div className="relative rounded-[28px] border border-white bg-white p-6 text-black shadow-2xl shadow-purple-950/30 transition hover:-translate-y-1 sm:rounded-[32px] sm:p-8">
               <div className="mb-5 inline-flex rounded-full bg-black px-4 py-2 text-sm font-bold text-white lg:absolute lg:-top-4 lg:left-1/2 lg:mb-0 lg:-translate-x-1/2">
                 Most popular
               </div>
@@ -1178,7 +1381,7 @@ export default function HomePage() {
               </a>
             </div>
 
-            <div className="rounded-[28px] border border-zinc-800 bg-zinc-950 p-6 sm:rounded-[32px] sm:p-8">
+            <div className="rounded-[28px] border border-white/10 bg-zinc-950/70 p-6 shadow-xl shadow-purple-950/10 transition hover:-translate-y-1 hover:border-purple-400/30 sm:rounded-[32px] sm:p-8">
               <h3 className="mb-2 text-2xl font-bold">Pro</h3>
 
               <p className="mb-4 text-zinc-400">
