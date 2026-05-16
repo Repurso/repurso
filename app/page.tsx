@@ -29,12 +29,12 @@ import {
 } from "@/lib/qualityModes";
 
 const CREATOR_CHECKOUT = (email: string) =>
-  `https://repursoapp.lemonsqueezy.com/checkout/buy/5f45028d-de97-458d-a827-64f8a7adc153?checkout[email]=${encodeURIComponent(
+  `https://repursoapp.lemonsqueezy.com/checkout/buy/f331a19b-e62f-4587-b9a8-19b4dad91db3?checkout[email]=${encodeURIComponent(
     email
   )}&checkout[custom][user_email]=${encodeURIComponent(email)}`;
 
 const PRO_CHECKOUT = (email: string) =>
-  `https://repursoapp.lemonsqueezy.com/checkout/buy/548cbc91-792f-4fae-b6a5-569f95c119c3?checkout[email]=${encodeURIComponent(
+  `https://repursoapp.lemonsqueezy.com/checkout/buy/41ceda2d-d556-493f-b3f1-777150658c65?checkout[email]=${encodeURIComponent(
     email
   )}&checkout[custom][user_email]=${encodeURIComponent(email)}`;
 
@@ -1112,7 +1112,7 @@ export default function HomePage() {
               <p className="mb-6 text-zinc-400">For testing the product.</p>
 
               <div className="mb-8">
-                <span className="text-5xl font-bold">₺0</span>
+                <span className="text-5xl font-bold">$0</span>
                 <span className="text-zinc-500"> / forever</span>
               </div>
 
@@ -1120,7 +1120,7 @@ export default function HomePage() {
                 <li>✓ 3 AI generations / month</li>
                 <li>✓ 10 rewrites / month</li>
                 <li>✓ 1,000 characters</li>
-                <li>✓ 5 output formats</li>
+                <li>✓ 9 output formats</li>
                 <li>✓ AI quality modes</li>
                 <li>✓ Saved prompt library</li>
               </ul>
@@ -1145,7 +1145,7 @@ export default function HomePage() {
               </p>
 
               <div className="mb-8">
-                <span className="text-5xl font-bold">$9</span>
+                <span className="text-5xl font-bold">$9.99</span>
                 <span className="text-zinc-600"> / month</span>
               </div>
 
@@ -1175,7 +1175,7 @@ export default function HomePage() {
               </p>
 
               <div className="mb-8">
-                <span className="text-5xl font-bold">$19</span>
+                <span className="text-5xl font-bold">$19.99</span>
                 <span className="text-zinc-500"> / month</span>
               </div>
 
