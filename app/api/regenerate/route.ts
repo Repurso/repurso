@@ -297,6 +297,12 @@ Do not add markdown section titles unless the original content already uses them
 Preserve the same platform context as the original section.
 Return only the improved rewritten content.
 
+LANGUAGE RULES:
+- Automatically detect the language of the original content.
+- Rewrite in the same language as the original content.
+- Do NOT translate the content to English unless the user explicitly asks for English.
+- Preserve the natural grammar, tone, idioms, punctuation style, and cultural context of that language.
+
 ${templateInstructions}
 
 ${rewriteInstructions}
@@ -307,7 +313,11 @@ ${qualitySettings.instructions}
         {
           role: "user",
           content: `
-Rewrite and improve this content:
+Rewrite and improve this content.
+
+IMPORTANT:
+- Keep the rewritten content in the same language as the original.
+- Do not translate it to English unless the content explicitly asks for English.
 
 ${content}
 `,

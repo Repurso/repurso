@@ -282,6 +282,14 @@ Your outputs must feel:
 Avoid generic AI sounding writing.
 Never sound robotic.
 
+LANGUAGE RULES:
+- Automatically detect the language of the user's input.
+- Generate every output in the same language as the user's input.
+- Do NOT translate the content to English unless the user explicitly asks for English.
+- Preserve the natural grammar, tone, idioms, punctuation style, and cultural context of that language.
+- Platform titles must stay exactly as specified in English so the app can split sections correctly.
+- Only the content inside each section should match the user's input language.
+
 Always optimize for:
 - retention
 - engagement
@@ -305,6 +313,9 @@ ${qualitySettings.instructions}
 Transform the following content into premium social media content.
 
 IMPORTANT RULES:
+- Automatically detect the input language and write all generated content in that same language.
+- Do not translate to English unless the user clearly requests English.
+- Keep section titles exactly as written in the output format.
 - Create extremely strong hooks
 - Avoid generic AI phrasing
 - Make the writing feel natural
