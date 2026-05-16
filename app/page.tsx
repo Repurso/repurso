@@ -5,6 +5,17 @@ import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import ReactMarkdown from "react-markdown";
 import {
+  FaLinkedin,
+  FaInstagram,
+  FaYoutube,
+  FaFacebook,
+  FaPinterest,
+} from "react-icons/fa";
+
+import { BsThreads } from "react-icons/bs";
+
+import { SiTiktok, SiSnapchat, SiX } from "react-icons/si";
+import {
   DEFAULT_PROMPT_TEMPLATE_ID,
   PROMPT_TEMPLATES,
   PromptTemplateId,
@@ -38,6 +49,19 @@ const SECTION_TITLES = [
   "Snapchat Caption",
   "Pinterest Pin Description",
 ];
+
+
+const SECTION_ICONS: Record<string, JSX.Element> = {
+  "LinkedIn Post": <FaLinkedin className="text-[#0A66C2]" />,
+  "Twitter/X Post": <SiX className="text-white" />,
+  "Instagram Caption": <FaInstagram className="text-pink-500" />,
+  "TikTok Script": <SiTiktok className="text-white" />,
+  "YouTube Description": <FaYoutube className="text-red-500" />,
+  "Facebook Post": <FaFacebook className="text-blue-500" />,
+  "Threads Post": <BsThreads className="text-white" />,
+  "Snapchat Caption": <SiSnapchat className="text-yellow-400" />,
+  "Pinterest Pin Description": <FaPinterest className="text-red-600" />,
+};
 
 type OutputSection = {
   id: string;
@@ -404,20 +428,12 @@ export default function HomePage() {
       <div className="mx-auto max-w-7xl">
         <nav className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-3">
-              <img
-                src="/logo-icon.png"
-                alt="Repurso"
-                className="h-9 w-9 rounded-xl object-contain"
-              />
-
-              <span className="text-3xl font-bold tracking-tight">Repurso</span>
-            </Link>
+            <h1 className="text-3xl font-bold">Repurso</h1>
 
             {!userEmail && (
               <Link
                 href="/login"
-                className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-black transition hover:bg-zinc-200 sm:hidden"
+                className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-black sm:hidden"
               >
                 Login
               </Link>
@@ -425,10 +441,7 @@ export default function HomePage() {
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
-            <a
-              href="#pricing"
-              className="text-sm text-zinc-400 transition hover:text-white"
-            >
+            <a href="#pricing" className="text-sm text-zinc-400">
               Pricing
             </a>
 
@@ -444,16 +457,22 @@ export default function HomePage() {
 
             {userEmail ? (
               <>
+                <span className="w-full truncate text-sm text-zinc-400 sm:w-auto">
+                  {userEmail.length > 18
+                    ? `${userEmail.slice(0, 6)}...@${userEmail.split("@")[1]}`
+                    : userEmail}
+                </span>
+
                 <Link
                   href="/dashboard"
-                  className="rounded-xl border border-zinc-700 px-4 py-2 text-sm transition hover:border-zinc-500 hover:bg-zinc-900 sm:text-base"
+                  className="rounded-xl border border-zinc-700 px-4 py-2 text-sm sm:text-base"
                 >
                   Dashboard
                 </Link>
 
                 <button
                   onClick={logout}
-                  className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-black transition hover:bg-zinc-200 sm:text-base"
+                  className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-black sm:text-base"
                 >
                   Logout
                 </button>
@@ -461,7 +480,7 @@ export default function HomePage() {
             ) : (
               <Link
                 href="/login"
-                className="hidden rounded-xl bg-white px-4 py-2 font-semibold text-black transition hover:bg-zinc-200 sm:block"
+                className="hidden rounded-xl bg-white px-4 py-2 font-semibold text-black sm:block"
               >
                 Login
               </Link>
@@ -508,8 +527,12 @@ export default function HomePage() {
                 {SECTION_TITLES.map((title) => (
                   <div
                     key={title}
-                    className="rounded-2xl border border-zinc-800 bg-black p-3 text-sm text-zinc-300"
+                    className="flex items-center gap-3 rounded-2xl border border-zinc-800 bg-black p-3 text-sm text-zinc-300"
                   >
+                    <span className="text-lg">
+                      {SECTION_ICONS[title]}
+                    </span>
+
                     {title}
                   </div>
                 ))}
@@ -799,7 +822,13 @@ export default function HomePage() {
                     className="rounded-3xl border border-zinc-800 bg-black p-5 sm:p-6"
                   >
                     <div className="mb-5 flex flex-col gap-4">
-                      <h4 className="text-2xl font-bold">{section.title}</h4>
+                      <h4 className="flex items-center gap-3 text-2xl font-bold">
+                        <span className="text-2xl">
+                          {SECTION_ICONS[section.title]}
+                        </span>
+
+                        {section.title}
+                      </h4>
 
                       <div className="grid gap-3 sm:grid-cols-2 lg:flex lg:flex-wrap lg:items-center">
                         {[
