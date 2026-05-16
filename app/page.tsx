@@ -51,7 +51,7 @@ const SECTION_TITLES = [
 ];
 
 
-const SECTION_ICONS: Record<string, JSX.Element> = {
+const SECTION_ICONS: Record<string, React.ReactElement> = {
   "LinkedIn Post": <FaLinkedin className="text-[#0A66C2]" />,
   "Twitter/X Post": <SiX className="text-white" />,
   "Instagram Caption": <FaInstagram className="text-pink-500" />,
