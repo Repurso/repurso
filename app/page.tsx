@@ -1144,12 +1144,17 @@ export default function HomePage() {
                 For creators posting every week.
               </p>
 
-              <div className="mb-6 inline-flex rounded-full bg-black px-4 py-2 text-sm font-bold text-white">
-                3-day free trial
-              </div>
+
 
               <div className="mb-8">
-                <span className="text-5xl font-bold">$9.99</span>
+                <div className="flex items-center gap-3">
+                  <span className="text-5xl font-bold">$9.99</span>
+
+                  <span className="rounded-full bg-black px-3 py-1 text-xs font-bold uppercase tracking-wide text-white">
+                    3-day free trial
+                  </span>
+                </div>
+
                 <span className="text-zinc-600"> / month</span>
               </div>
 
@@ -1180,12 +1185,17 @@ export default function HomePage() {
                 For power users and small teams.
               </p>
 
-              <div className="mb-6 inline-flex rounded-full border border-purple-400/30 bg-purple-500/10 px-4 py-2 text-sm font-bold text-purple-100">
-                3-day free trial
-              </div>
+
 
               <div className="mb-8">
-                <span className="text-5xl font-bold">$19.99</span>
+                <div className="flex items-center gap-3">
+                  <span className="text-5xl font-bold">$19.99</span>
+
+                  <span className="rounded-full border border-purple-400/30 bg-purple-500/10 px-3 py-1 text-xs font-bold uppercase tracking-wide text-purple-100">
+                    3-day free trial
+                  </span>
+                </div>
+
                 <span className="text-zinc-500"> / month</span>
               </div>
 
