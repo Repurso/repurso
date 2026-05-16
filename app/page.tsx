@@ -162,6 +162,10 @@ export default function HomePage() {
   const rewritePercent = Math.min((rewriteUsage / rewriteLimit) * 100, 100);
 
   useEffect(() => {
+    if (typeof window !== "undefined" && window.location.hash.includes("access_token")) {
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
     async function getUser() {
       const {
         data: { session },
@@ -424,16 +428,32 @@ export default function HomePage() {
   }
 
   return (
-    <main className="min-h-screen bg-black px-4 py-5 text-white sm:px-6 sm:py-6">
+    <main className="relative min-h-screen overflow-hidden bg-black px-4 py-5 text-white sm:px-6 sm:py-6">
+      <div className="pointer-events-none fixed inset-0 -z-10">
+        <div className="absolute left-1/2 top-0 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-purple-700/20 blur-[140px]" />
+        <div className="absolute right-[-120px] top-[220px] h-[420px] w-[420px] rounded-full bg-fuchsia-600/10 blur-[130px]" />
+        <div className="absolute bottom-[-160px] left-[-120px] h-[420px] w-[420px] rounded-full bg-violet-700/10 blur-[130px]" />
+      </div>
+
       <div className="mx-auto max-w-7xl">
-        <nav className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <nav className="sticky top-4 z-40 mb-8 flex flex-col gap-4 rounded-3xl border border-white/10 bg-black/55 px-4 py-3 shadow-2xl shadow-purple-950/20 backdrop-blur-xl sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold">Repurso</h1>
+            <Link href="/" className="group flex items-center gap-3">
+              <img
+                src="/logo-icon.png"
+                alt="Repurso"
+                className="h-9 w-9 rounded-xl object-cover shadow-lg shadow-purple-700/20 transition group-hover:scale-105"
+              />
+
+              <span className="text-2xl font-bold tracking-tight sm:text-3xl">
+                Repurso
+              </span>
+            </Link>
 
             {!userEmail && (
               <Link
                 href="/login"
-                className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-black sm:hidden"
+                className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-black transition hover:-translate-y-0.5 hover:bg-zinc-200 sm:hidden"
               >
                 Login
               </Link>
@@ -441,7 +461,10 @@ export default function HomePage() {
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
-            <a href="#pricing" className="text-sm text-zinc-400">
+            <a
+              href="#pricing"
+              className="text-sm text-zinc-400 transition hover:text-white"
+            >
               Pricing
             </a>
 
@@ -450,29 +473,23 @@ export default function HomePage() {
                 (window.location.href =
                   "mailto:repurso.app@gmail.com?subject=Repurso Feedback")
               }
-              className="rounded-xl border border-zinc-700 bg-zinc-950 px-4 py-2 text-sm font-semibold text-white transition hover:border-zinc-500 hover:bg-zinc-900 sm:text-base"
+              className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:border-purple-400/40 hover:bg-purple-500/10 sm:text-base"
             >
               Feedback
             </button>
 
             {userEmail ? (
               <>
-                <span className="w-full truncate text-sm text-zinc-400 sm:w-auto">
-                  {userEmail.length > 18
-                    ? `${userEmail.slice(0, 6)}...@${userEmail.split("@")[1]}`
-                    : userEmail}
-                </span>
-
                 <Link
                   href="/dashboard"
-                  className="rounded-xl border border-zinc-700 px-4 py-2 text-sm sm:text-base"
+                  className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2 text-sm transition hover:-translate-y-0.5 hover:border-purple-400/40 hover:bg-purple-500/10 sm:text-base"
                 >
                   Dashboard
                 </Link>
 
                 <button
                   onClick={logout}
-                  className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-black sm:text-base"
+                  className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-black transition hover:-translate-y-0.5 hover:bg-zinc-200 sm:text-base"
                 >
                   Logout
                 </button>
@@ -480,7 +497,7 @@ export default function HomePage() {
             ) : (
               <Link
                 href="/login"
-                className="hidden rounded-xl bg-white px-4 py-2 font-semibold text-black sm:block"
+                className="hidden rounded-xl bg-white px-4 py-2 font-semibold text-black transition hover:-translate-y-0.5 hover:bg-zinc-200 sm:block"
               >
                 Login
               </Link>
@@ -490,11 +507,11 @@ export default function HomePage() {
 
         <section className="mb-16 grid items-start gap-6 lg:grid-cols-[0.8fr_1.2fr] lg:gap-8">
           <div className="pt-2 lg:sticky lg:top-6">
-            <div className="mb-4 inline-flex rounded-full border border-zinc-800 px-4 py-2 text-sm text-zinc-400">
+            <div className="mb-4 inline-flex rounded-full border border-purple-400/20 bg-purple-500/10 px-4 py-2 text-sm text-purple-100 shadow-lg shadow-purple-950/20">
               AI content repurposing tool
             </div>
 
-            <h2 className="mb-5 text-4xl font-bold leading-tight sm:text-5xl">
+            <h2 className="mb-5 bg-gradient-to-br from-white via-white to-purple-200 bg-clip-text text-4xl font-bold leading-tight text-transparent sm:text-5xl">
               Turn one idea into content for every platform.
             </h2>
 
@@ -507,14 +524,14 @@ export default function HomePage() {
             <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <a
                 href="#generator"
-                className="rounded-2xl bg-white px-8 py-4 text-center font-bold text-black"
+                className="rounded-2xl bg-white px-8 py-4 text-center font-bold text-black shadow-lg shadow-purple-950/30 transition hover:-translate-y-0.5 hover:bg-zinc-200"
               >
                 Try it free
               </a>
 
               <a
                 href="#pricing"
-                className="rounded-2xl border border-zinc-700 px-8 py-4 text-center font-bold"
+                className="rounded-2xl border border-white/10 bg-white/[0.03] px-8 py-4 text-center font-bold transition hover:-translate-y-0.5 hover:border-purple-400/40 hover:bg-purple-500/10"
               >
                 View pricing
               </a>
@@ -542,7 +559,7 @@ export default function HomePage() {
 
           <section
             id="generator"
-            className="rounded-[28px] border border-zinc-800 bg-zinc-950 p-5 sm:rounded-[32px] sm:p-7"
+            className="rounded-[28px] border border-white/10 bg-zinc-950/70 p-5 shadow-2xl shadow-purple-950/20 backdrop-blur sm:rounded-[32px] sm:p-7"
           >
             <h3 className="mb-2 text-3xl font-bold sm:text-4xl">
               Generate content
@@ -568,8 +585,8 @@ export default function HomePage() {
                       onClick={() => setQualityMode(mode.id)}
                       className={`rounded-2xl border p-4 text-left transition ${
                         isSelected
-                          ? "border-white bg-white text-black"
-                          : "border-zinc-800 bg-black text-white hover:border-zinc-600"
+                          ? "border-white bg-white text-black shadow-lg shadow-purple-950/20"
+                          : "border-white/10 bg-black/70 text-white hover:-translate-y-0.5 hover:border-purple-400/40 hover:bg-purple-500/10"
                       }`}
                     >
                       <h4 className="mb-1 font-bold">{mode.name}</h4>
@@ -603,8 +620,8 @@ export default function HomePage() {
                       onClick={() => setSelectedTemplate(template.id)}
                       className={`rounded-2xl border p-4 text-left transition ${
                         isSelected
-                          ? "border-white bg-white text-black"
-                          : "border-zinc-800 bg-black text-white hover:border-zinc-600"
+                          ? "border-white bg-white text-black shadow-lg shadow-purple-950/20"
+                          : "border-white/10 bg-black/70 text-white hover:-translate-y-0.5 hover:border-purple-400/40 hover:bg-purple-500/10"
                       }`}
                     >
                       <h4 className="mb-1 font-bold">{template.name}</h4>
@@ -638,7 +655,7 @@ export default function HomePage() {
 
             <textarea
               placeholder="Paste your content here..."
-              className="mb-3 h-40 w-full rounded-3xl border border-zinc-800 bg-black p-5 text-base text-white outline-none placeholder:text-zinc-600 sm:h-44"
+              className="mb-3 h-40 w-full rounded-3xl border border-white/10 bg-black/70 p-5 text-base text-white outline-none transition placeholder:text-zinc-600 focus:border-purple-400/50 focus:ring-4 focus:ring-purple-500/10 sm:h-44"
               value={input}
               onChange={(e) => setInput(e.target.value)}
             />
@@ -736,10 +753,30 @@ export default function HomePage() {
                 characterCount > characterLimit ||
                 generationUsage >= generationLimit
               }
-              className="w-full rounded-2xl bg-white px-10 py-5 text-lg font-bold text-black transition hover:bg-zinc-200 disabled:opacity-60 sm:w-auto"
+              className="group inline-flex w-full items-center justify-center gap-3 rounded-2xl bg-white px-10 py-5 text-lg font-bold text-black shadow-xl shadow-purple-950/30 transition hover:-translate-y-0.5 hover:bg-zinc-200 disabled:translate-y-0 disabled:opacity-60 sm:w-auto"
             >
+              {loading && (
+                <span className="h-5 w-5 animate-spin rounded-full border-2 border-black/20 border-t-black" />
+              )}
+
               {loading ? "Generating..." : "Generate"}
             </button>
+
+            {!result && !loading && (
+              <div className="mt-6 rounded-3xl border border-dashed border-white/10 bg-black/40 p-6 text-center">
+                <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-purple-500/10 text-xl">
+                  ✦
+                </div>
+
+                <p className="font-semibold text-white">
+                  Paste one idea and Repurso will turn it into platform-ready content.
+                </p>
+
+                <p className="mt-2 text-sm text-zinc-500">
+                  LinkedIn, X, Instagram, TikTok, YouTube, Facebook, Threads, Snapchat and Pinterest.
+                </p>
+              </div>
+            )}
 
             {showPromptLibrary && (
               <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 sm:p-6">
@@ -819,7 +856,7 @@ export default function HomePage() {
                 {outputSections.map((section) => (
                   <div
                     key={section.id}
-                    className="rounded-3xl border border-zinc-800 bg-black p-5 sm:p-6"
+                    className="rounded-3xl border border-white/10 bg-black/80 p-5 shadow-xl shadow-purple-950/10 transition hover:border-purple-400/30 sm:p-6"
                   >
                     <div className="mb-5 flex flex-col gap-4">
                       <h4 className="flex items-center gap-3 text-2xl font-bold">
@@ -891,7 +928,7 @@ export default function HomePage() {
 
                     {rewriteLoadingId === section.id && (
                       <div className="mb-5 rounded-2xl border border-zinc-800 bg-zinc-950 px-4 py-3 text-sm text-zinc-400">
-                        Rewriting content...
+                        Rewriting content with AI...
                       </div>
                     )}
 
@@ -942,7 +979,7 @@ export default function HomePage() {
   </div>
 
   <div className="grid gap-6 lg:grid-cols-3">
-    <div className="rounded-[28px] border border-zinc-800 bg-zinc-950 p-6">
+    <div className="rounded-[28px] border border-white/10 bg-zinc-950/70 p-6 shadow-xl shadow-purple-950/10 transition hover:-translate-y-1 hover:border-purple-400/30 hover:bg-zinc-900/70">
       <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-2xl font-bold text-black">
         1
       </div>
@@ -954,7 +991,7 @@ export default function HomePage() {
       </p>
     </div>
 
-    <div className="rounded-[28px] border border-zinc-800 bg-zinc-950 p-6">
+    <div className="rounded-[28px] border border-white/10 bg-zinc-950/70 p-6 shadow-xl shadow-purple-950/10 transition hover:-translate-y-1 hover:border-purple-400/30 hover:bg-zinc-900/70">
       <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-2xl font-bold text-black">
         2
       </div>
@@ -967,7 +1004,7 @@ export default function HomePage() {
       </p>
     </div>
 
-    <div className="rounded-[28px] border border-zinc-800 bg-zinc-950 p-6">
+    <div className="rounded-[28px] border border-white/10 bg-zinc-950/70 p-6 shadow-xl shadow-purple-950/10 transition hover:-translate-y-1 hover:border-purple-400/30 hover:bg-zinc-900/70">
       <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-2xl font-bold text-black">
         3
       </div>
@@ -994,7 +1031,7 @@ export default function HomePage() {
   </div>
 
   <div className="grid gap-6 lg:grid-cols-3">
-    <div className="rounded-[28px] border border-zinc-800 bg-zinc-950 p-6">
+    <div className="rounded-[28px] border border-white/10 bg-zinc-950/70 p-6 shadow-xl shadow-purple-950/10 transition hover:-translate-y-1 hover:border-purple-400/30 hover:bg-zinc-900/70">
       <h3 className="mb-4 text-2xl font-bold">Creators</h3>
 
       <p className="leading-7 text-zinc-400">
@@ -1002,7 +1039,7 @@ export default function HomePage() {
       </p>
     </div>
 
-    <div className="rounded-[28px] border border-zinc-800 bg-zinc-950 p-6">
+    <div className="rounded-[28px] border border-white/10 bg-zinc-950/70 p-6 shadow-xl shadow-purple-950/10 transition hover:-translate-y-1 hover:border-purple-400/30 hover:bg-zinc-900/70">
       <h3 className="mb-4 text-2xl font-bold">Founders</h3>
 
       <p className="leading-7 text-zinc-400">
@@ -1010,7 +1047,7 @@ export default function HomePage() {
       </p>
     </div>
 
-    <div className="rounded-[28px] border border-zinc-800 bg-zinc-950 p-6">
+    <div className="rounded-[28px] border border-white/10 bg-zinc-950/70 p-6 shadow-xl shadow-purple-950/10 transition hover:-translate-y-1 hover:border-purple-400/30 hover:bg-zinc-900/70">
       <h3 className="mb-4 text-2xl font-bold">Marketing teams</h3>
 
       <p className="leading-7 text-zinc-400">
@@ -1038,14 +1075,14 @@ export default function HomePage() {
     <div className="flex flex-col justify-center gap-4 sm:flex-row">
       <a
         href="#generator"
-        className="rounded-2xl bg-white px-8 py-4 text-center font-bold text-black"
+        className="rounded-2xl bg-white px-8 py-4 text-center font-bold text-black shadow-lg shadow-purple-950/30 transition hover:-translate-y-0.5 hover:bg-zinc-200"
       >
         Try Repurso Free
       </a>
 
       <a
         href="#pricing"
-        className="rounded-2xl border border-zinc-700 px-8 py-4 text-center font-bold"
+        className="rounded-2xl border border-white/10 bg-white/[0.03] px-8 py-4 text-center font-bold transition hover:-translate-y-0.5 hover:border-purple-400/40 hover:bg-purple-500/10"
       >
         View Pricing
       </a>
@@ -1165,7 +1202,15 @@ export default function HomePage() {
         <footer className="border-t border-zinc-800 py-10">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h3 className="text-2xl font-bold">Repurso</h3>
+              <div className="flex items-center gap-3">
+                <img
+                  src="/logo-icon.png"
+                  alt="Repurso"
+                  className="h-8 w-8 rounded-lg object-cover"
+                />
+
+                <h3 className="text-2xl font-bold">Repurso</h3>
+              </div>
 
               <p className="mt-2 text-sm text-zinc-500">
                 AI-powered content repurposing platform.
