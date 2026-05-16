@@ -70,20 +70,6 @@ const LOADING_STEPS = [
   "Preparing publish-ready outputs",
 ];
 
-const PREVIEW_CARDS = [
-  {
-    title: "LinkedIn",
-    text: "A polished authority post with a strong opening hook and clear CTA.",
-  },
-  {
-    title: "X",
-    text: "A short, punchy post designed to spark replies and shares.",
-  },
-  {
-    title: "TikTok",
-    text: "A fast-paced short-form script with a scroll-stopping intro.",
-  },
-];
 
 const FAQ_ITEMS = [
   {
@@ -487,24 +473,24 @@ export default function HomePage() {
   }
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-black px-4 py-5 text-white sm:px-6 sm:py-6">
+    <main className="relative min-h-screen overflow-hidden bg-black px-3 py-3 text-white sm:px-6 sm:py-6">
       <div className="pointer-events-none fixed inset-0 -z-10">
-        <div className="absolute left-1/2 top-0 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-purple-700/20 blur-[140px]" />
-        <div className="absolute right-[-120px] top-[220px] h-[420px] w-[420px] rounded-full bg-fuchsia-600/10 blur-[130px]" />
-        <div className="absolute bottom-[-160px] left-[-120px] h-[420px] w-[420px] rounded-full bg-violet-700/10 blur-[130px]" />
+        <div className="absolute left-1/2 top-0 h-[320px] w-[320px] -translate-x-1/2 rounded-full bg-purple-700/20 blur-[100px] sm:h-[520px] sm:w-[520px] sm:blur-[140px]" />
+        <div className="absolute right-[-120px] top-[220px] h-[280px] w-[280px] rounded-full bg-fuchsia-600/10 blur-[100px] sm:h-[420px] sm:w-[420px] sm:blur-[130px]" />
+        <div className="absolute bottom-[-160px] left-[-120px] h-[280px] w-[280px] rounded-full bg-violet-700/10 blur-[100px] sm:h-[420px] sm:w-[420px] sm:blur-[130px]" />
       </div>
 
       <div className="mx-auto max-w-7xl">
-        <nav className="sticky top-4 z-40 mb-8 flex flex-col gap-4 rounded-3xl border border-white/10 bg-black/55 px-4 py-3 shadow-2xl shadow-purple-950/20 backdrop-blur-xl sm:flex-row sm:items-center sm:justify-between">
+        <nav className="sticky top-2 z-40 mb-6 flex flex-col gap-3 rounded-2xl border border-white/10 bg-black/55 px-3 py-2.5 shadow-2xl shadow-purple-950/20 backdrop-blur-xl sm:top-4 sm:mb-8 sm:flex-row sm:items-center sm:justify-between sm:rounded-3xl sm:px-4 sm:py-3">
           <div className="flex items-center justify-between">
             <Link href="/" className="group flex items-center gap-3">
               <img
                 src="/logo-icon.png"
                 alt="Repurso"
-                className="h-9 w-9 rounded-xl object-cover shadow-lg shadow-purple-700/20 transition group-hover:scale-105"
+                className="h-8 w-8 rounded-xl object-cover shadow-lg shadow-purple-700/20 transition group-hover:scale-105 sm:h-9 sm:w-9"
               />
 
-              <span className="text-2xl font-bold tracking-tight sm:text-3xl">
+              <span className="text-xl font-bold tracking-tight sm:text-3xl">
                 Repurso
               </span>
             </Link>
@@ -564,35 +550,35 @@ export default function HomePage() {
           </div>
         </nav>
 
-        <section className="mb-16 grid items-start gap-6 lg:grid-cols-[0.8fr_1.2fr] lg:gap-8">
+        <section className="mb-12 grid items-start gap-5 lg:mb-16 lg:grid-cols-[0.8fr_1.2fr] lg:gap-8">
           <div className="pt-2 lg:sticky lg:top-6">
             <div className="mb-4 inline-flex rounded-full border border-purple-400/20 bg-purple-500/10 px-4 py-2 text-sm text-purple-100 shadow-lg shadow-purple-950/20">
               AI content repurposing tool
             </div>
 
-            <h2 className="mb-5 bg-gradient-to-br from-white via-white to-purple-200 bg-clip-text text-4xl font-bold leading-tight text-transparent sm:text-5xl">
+            <h2 className="mb-4 bg-gradient-to-br from-white via-white to-purple-200 bg-clip-text text-3xl font-bold leading-tight text-transparent sm:mb-5 sm:text-5xl">
               Turn one idea into content for every platform.
             </h2>
 
-            <p className="mb-6 text-base leading-7 text-zinc-400 sm:text-lg sm:leading-8">
+            <p className="mb-5 text-sm leading-6 text-zinc-400 sm:mb-6 sm:text-lg sm:leading-8">
               Repurso helps creators, founders and marketers transform one idea
               into platform-ready content for LinkedIn, X, Instagram, TikTok,
               YouTube, Facebook, Threads, Snapchat and Pinterest.
             </p>
 
-            <div className="mb-6 grid grid-cols-3 gap-3">
+            <div className="mb-5 grid grid-cols-3 gap-2 sm:mb-6 sm:gap-3">
               <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
-                <p className="text-xl font-bold text-white">9</p>
+                <p className="text-lg font-bold text-white sm:text-xl">9</p>
                 <p className="text-xs text-zinc-500">Formats</p>
               </div>
 
               <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
-                <p className="text-xl font-bold text-white">20</p>
+                <p className="text-lg font-bold text-white sm:text-xl">20</p>
                 <p className="text-xs text-zinc-500">Free generations</p>
               </div>
 
               <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
-                <p className="text-xl font-bold text-white">3d</p>
+                <p className="text-lg font-bold text-white sm:text-xl">3d</p>
                 <p className="text-xs text-zinc-500">Trial</p>
               </div>
             </div>
@@ -600,14 +586,14 @@ export default function HomePage() {
             <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <a
                 href="#generator"
-                className="rounded-2xl bg-white px-8 py-4 text-center font-bold text-black shadow-lg shadow-purple-950/30 transition hover:-translate-y-0.5 hover:bg-zinc-200"
+                className="rounded-2xl bg-white px-6 py-3.5 text-center text-sm font-bold text-black shadow-lg shadow-purple-950/30 transition hover:-translate-y-0.5 hover:bg-zinc-200 sm:px-8 sm:py-4 sm:text-base"
               >
                 Try it free
               </a>
 
               <a
                 href="#pricing"
-                className="rounded-2xl border border-white/10 bg-white/[0.03] px-8 py-4 text-center font-bold transition hover:-translate-y-0.5 hover:border-purple-400/40 hover:bg-purple-500/10"
+                className="rounded-2xl border border-white/10 bg-white/[0.03] px-6 py-3.5 text-center text-sm font-bold transition hover:-translate-y-0.5 hover:border-purple-400/40 hover:bg-purple-500/10 sm:px-8 sm:py-4 sm:text-base"
               >
                 View pricing
               </a>
@@ -649,32 +635,16 @@ export default function HomePage() {
 
           <section
             id="generator"
-            className="rounded-[28px] border border-white/10 bg-zinc-950/70 p-5 shadow-2xl shadow-purple-950/20 backdrop-blur sm:rounded-[32px] sm:p-7"
+            className="rounded-[24px] border border-white/10 bg-zinc-950/70 p-4 shadow-2xl shadow-purple-950/20 backdrop-blur sm:rounded-[32px] sm:p-7"
           >
-            <h3 className="mb-2 text-3xl font-bold sm:text-4xl">
+            <h3 className="mb-2 text-2xl font-bold sm:text-4xl">
               Generate content
             </h3>
 
-            <p className="mb-6 text-base text-zinc-400 sm:text-lg">
+            <p className="mb-5 text-sm text-zinc-400 sm:mb-6 sm:text-lg">
               Paste your content and let Repurso turn it into multiple formats.
             </p>
 
-            <div className="mb-6 grid gap-3 md:grid-cols-3">
-              {PREVIEW_CARDS.map((card) => (
-                <div
-                  key={card.title}
-                  className="rounded-2xl border border-white/10 bg-black/40 p-4"
-                >
-                  <p className="mb-2 text-sm font-bold text-white">
-                    {card.title}
-                  </p>
-
-                  <p className="text-xs leading-5 text-zinc-500">
-                    {card.text}
-                  </p>
-                </div>
-              ))}
-            </div>
 
             <div className="mb-6">
               <p className="mb-3 text-sm font-semibold uppercase tracking-[0.25em] text-zinc-500">
@@ -690,7 +660,7 @@ export default function HomePage() {
                       key={mode.id}
                       type="button"
                       onClick={() => setQualityMode(mode.id)}
-                      className={`rounded-2xl border p-4 text-left transition ${
+                      className={`rounded-2xl border p-3 text-left transition sm:p-4 ${
                         isSelected
                           ? "border-white bg-white text-black shadow-lg shadow-purple-950/20"
                           : "border-white/10 bg-black/70 text-white hover:-translate-y-0.5 hover:border-purple-400/40 hover:bg-purple-500/10"
@@ -725,7 +695,7 @@ export default function HomePage() {
                       key={template.id}
                       type="button"
                       onClick={() => setSelectedTemplate(template.id)}
-                      className={`rounded-2xl border p-4 text-left transition ${
+                      className={`rounded-2xl border p-3 text-left transition sm:p-4 ${
                         isSelected
                           ? "border-white bg-white text-black shadow-lg shadow-purple-950/20"
                           : "border-white/10 bg-black/70 text-white hover:-translate-y-0.5 hover:border-purple-400/40 hover:bg-purple-500/10"
@@ -762,7 +732,7 @@ export default function HomePage() {
 
             <textarea
               placeholder="Paste your idea, tweet, article, video script or raw thoughts here..."
-              className="mb-3 h-40 w-full rounded-3xl border border-white/10 bg-black/70 p-5 text-base text-white outline-none transition placeholder:text-zinc-600 focus:border-purple-400/50 focus:ring-4 focus:ring-purple-500/10 sm:h-44"
+              className="mb-3 h-32 w-full rounded-3xl border border-white/10 bg-black/70 p-4 text-sm text-white outline-none transition placeholder:text-zinc-600 focus:border-purple-400/50 focus:ring-4 focus:ring-purple-500/10 sm:h-44 sm:p-5 sm:text-base"
               value={input}
               onChange={(e) => setInput(e.target.value)}
             />
@@ -860,7 +830,7 @@ export default function HomePage() {
                 characterCount > characterLimit ||
                 generationUsage >= generationLimit
               }
-              className="group inline-flex w-full items-center justify-center gap-3 rounded-2xl bg-white px-10 py-5 text-lg font-bold text-black shadow-xl shadow-purple-950/30 transition hover:-translate-y-0.5 hover:bg-zinc-200 disabled:translate-y-0 disabled:opacity-60 sm:w-auto"
+              className="group inline-flex w-full items-center justify-center gap-3 rounded-2xl bg-white px-8 py-4 text-base font-bold text-black shadow-xl shadow-purple-950/30 transition hover:-translate-y-0.5 hover:bg-zinc-200 disabled:translate-y-0 disabled:opacity-60 sm:w-auto sm:px-10 sm:py-5 sm:text-lg"
             >
               {loading && (
                 <span className="h-5 w-5 animate-spin rounded-full border-2 border-black/20 border-t-black" />
@@ -892,7 +862,7 @@ export default function HomePage() {
             )}
 
             {!result && !loading && (
-              <div className="mt-6 rounded-3xl border border-dashed border-white/10 bg-black/40 p-6 text-center">
+              <div className="mt-5 rounded-3xl border border-dashed border-white/10 bg-black/40 p-4 text-center sm:mt-6 sm:p-6">
                 <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-purple-500/10 text-xl">
                   ✦
                 </div>
@@ -1099,17 +1069,17 @@ export default function HomePage() {
           </section>
         </section>
 
-        <section className="mb-20">
-  <div className="mb-14 text-center">
+        <section className="mb-14 sm:mb-20">
+  <div className="mb-10 text-center sm:mb-14">
     <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-zinc-500">
       How it works
     </p>
 
-    <h2 className="mb-4 text-4xl font-bold sm:text-5xl">
+    <h2 className="mb-4 text-3xl font-bold sm:text-5xl">
       Create once. Publish everywhere.
     </h2>
 
-    <p className="mx-auto max-w-2xl text-lg leading-8 text-zinc-400">
+    <p className="mx-auto max-w-2xl text-base leading-7 text-zinc-400 sm:text-lg sm:leading-8">
       Repurso transforms one idea into platform-specific content optimized for
       creators, founders and marketers.
     </p>
@@ -1156,13 +1126,13 @@ export default function HomePage() {
   </div>
 </section>
 
-<section className="mb-20">
-  <div className="mb-14 text-center">
+<section className="mb-14 sm:mb-20">
+  <div className="mb-10 text-center sm:mb-14">
     <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-zinc-500">
       Built for
     </p>
 
-    <h2 className="mb-4 text-4xl font-bold sm:text-5xl">
+    <h2 className="mb-4 text-3xl font-bold sm:text-5xl">
       Made for modern creators.
     </h2>
   </div>
@@ -1212,31 +1182,31 @@ export default function HomePage() {
     <div className="flex flex-col justify-center gap-4 sm:flex-row">
       <a
         href="#generator"
-        className="rounded-2xl bg-white px-8 py-4 text-center font-bold text-black shadow-lg shadow-purple-950/30 transition hover:-translate-y-0.5 hover:bg-zinc-200"
+        className="rounded-2xl bg-white px-6 py-3.5 text-center text-sm font-bold text-black shadow-lg shadow-purple-950/30 transition hover:-translate-y-0.5 hover:bg-zinc-200 sm:px-8 sm:py-4 sm:text-base"
       >
         Try Repurso Free
       </a>
 
       <a
         href="#pricing"
-        className="rounded-2xl border border-white/10 bg-white/[0.03] px-8 py-4 text-center font-bold transition hover:-translate-y-0.5 hover:border-purple-400/40 hover:bg-purple-500/10"
+        className="rounded-2xl border border-white/10 bg-white/[0.03] px-6 py-3.5 text-center text-sm font-bold transition hover:-translate-y-0.5 hover:border-purple-400/40 hover:bg-purple-500/10 sm:px-8 sm:py-4 sm:text-base"
       >
         View Pricing
       </a>
     </div>
   </div>
 </section>
-        <section className="mb-20">
+        <section className="mb-14 sm:mb-20">
           <div className="mb-12 text-center">
             <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-zinc-500">
               Why Repurso
             </p>
 
-            <h2 className="mb-4 text-4xl font-bold sm:text-5xl">
+            <h2 className="mb-4 text-3xl font-bold sm:text-5xl">
               Built for faster content workflows.
             </h2>
 
-            <p className="mx-auto max-w-2xl text-lg leading-8 text-zinc-400">
+            <p className="mx-auto max-w-2xl text-base leading-7 text-zinc-400 sm:text-lg sm:leading-8">
               Stop rewriting the same idea manually. Generate, improve and export content from one focused workspace.
             </p>
           </div>
@@ -1268,13 +1238,13 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="mb-20">
+        <section className="mb-14 sm:mb-20">
           <div className="mb-12 text-center">
             <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-zinc-500">
               FAQ
             </p>
 
-            <h2 className="text-4xl font-bold sm:text-5xl">
+            <h2 className="text-3xl font-bold sm:text-5xl">
               Questions before you start?
             </h2>
           </div>
@@ -1298,11 +1268,11 @@ export default function HomePage() {
               Pricing
             </p>
 
-            <h2 className="mb-4 text-4xl font-bold sm:text-5xl">
+            <h2 className="mb-4 text-3xl font-bold sm:text-5xl">
               Choose your content engine.
             </h2>
 
-            <p className="mx-auto max-w-2xl text-lg leading-8 text-zinc-400">
+            <p className="mx-auto max-w-2xl text-base leading-7 text-zinc-400 sm:text-lg sm:leading-8">
               Start free, then upgrade when Repurso becomes part of your content
               workflow.
             </p>
@@ -1315,7 +1285,7 @@ export default function HomePage() {
               <p className="mb-6 text-zinc-400">For testing the product.</p>
 
               <div className="mb-8">
-                <span className="text-5xl font-bold">$0</span>
+                <span className="text-4xl font-bold sm:text-5xl">$0</span>
                 <span className="text-zinc-500"> / forever</span>
               </div>
 
@@ -1351,7 +1321,7 @@ export default function HomePage() {
 
               <div className="mb-8">
                 <div className="flex items-center gap-3">
-                  <span className="text-5xl font-bold">$9.99</span>
+                  <span className="text-4xl font-bold sm:text-5xl">$9.99</span>
 
                   <span className="rounded-full bg-black px-3 py-1 text-xs font-bold uppercase tracking-wide text-white">
                     3-day free trial
@@ -1392,7 +1362,7 @@ export default function HomePage() {
 
               <div className="mb-8">
                 <div className="flex items-center gap-3">
-                  <span className="text-5xl font-bold">$19.99</span>
+                  <span className="text-4xl font-bold sm:text-5xl">$19.99</span>
 
                   <span className="rounded-full border border-purple-400/30 bg-purple-500/10 px-3 py-1 text-xs font-bold uppercase tracking-wide text-purple-100">
                     3-day free trial
