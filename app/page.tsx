@@ -1140,9 +1140,13 @@ export default function HomePage() {
 
               <h3 className="mb-2 text-2xl font-bold">Creator</h3>
 
-              <p className="mb-6 text-zinc-600">
+              <p className="mb-4 text-zinc-600">
                 For creators posting every week.
               </p>
+
+              <div className="mb-6 inline-flex rounded-full bg-black px-4 py-2 text-sm font-bold text-white">
+                3-day free trial
+              </div>
 
               <div className="mb-8">
                 <span className="text-5xl font-bold">$9.99</span>
@@ -1156,6 +1160,8 @@ export default function HomePage() {
                 <li>✓ AI quality modes</li>
                 <li>✓ Saved prompt library</li>
                 <li>✓ TXT and Markdown export</li>
+                <li>✓ 3-day free trial</li>
+                <li>✓ Cancel anytime</li>
               </ul>
 
               <a
@@ -1170,9 +1176,13 @@ export default function HomePage() {
             <div className="rounded-[28px] border border-zinc-800 bg-zinc-950 p-6 sm:rounded-[32px] sm:p-8">
               <h3 className="mb-2 text-2xl font-bold">Pro</h3>
 
-              <p className="mb-6 text-zinc-400">
+              <p className="mb-4 text-zinc-400">
                 For power users and small teams.
               </p>
+
+              <div className="mb-6 inline-flex rounded-full border border-purple-400/30 bg-purple-500/10 px-4 py-2 text-sm font-bold text-purple-100">
+                3-day free trial
+              </div>
 
               <div className="mb-8">
                 <span className="text-5xl font-bold">$19.99</span>
@@ -1186,6 +1196,8 @@ export default function HomePage() {
                 <li>✓ AI quality modes</li>
                 <li>✓ Saved prompt library</li>
                 <li>✓ Priority content workflows</li>
+                <li>✓ 3-day free trial</li>
+                <li>✓ Cancel anytime</li>
               </ul>
 
               <a
@@ -1197,6 +1209,10 @@ export default function HomePage() {
               </a>
             </div>
           </div>
+
+          <p className="mt-8 text-center text-sm text-zinc-500">
+            Paid plans include a 3-day free trial. Cancel anytime before the trial ends.
+          </p>
         </section>
 
         <footer className="border-t border-zinc-800 py-10">
