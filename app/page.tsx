@@ -1580,6 +1580,167 @@ export default function HomePage() {
           </div>
         </section>
 
+
+        <section id="carousel-generator" className="mb-10 rounded-[24px] border border-white/10 bg-zinc-950/70 p-4 shadow-2xl shadow-purple-950/20 sm:mb-20 sm:rounded-[32px] sm:p-8">
+          <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-purple-300">
+                Carousel Generator
+              </p>
+
+              <h2 className="text-[2rem] font-bold sm:text-5xl">
+                Turn ideas into carousel slides.
+              </h2>
+
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-zinc-400 sm:text-base sm:leading-7">
+                Generate a ready-to-use LinkedIn, Instagram or TikTok slideshow structure with strong slide copy.
+              </p>
+            </div>
+
+            <span className="rounded-full border border-purple-400/30 bg-purple-500/10 px-4 py-2 text-xs font-bold uppercase tracking-wide text-purple-100">
+              LinkedIn + Instagram
+            </span>
+          </div>
+
+          <div className="grid gap-4 lg:grid-cols-[1fr_auto]">
+            <input
+              type="text"
+              placeholder="Example: 7 lessons from building an AI SaaS..."
+              value={carouselInput}
+              onChange={(e) => setCarouselInput(e.target.value)}
+              className="rounded-2xl border border-white/10 bg-black/70 px-5 py-4 text-sm text-white outline-none transition placeholder:text-zinc-600 focus:border-purple-400/50 focus:ring-4 focus:ring-purple-500/10"
+            />
+
+            <button
+              onClick={generateCarousel}
+              disabled={carouselLoading}
+              className="inline-flex items-center justify-center gap-3 rounded-2xl bg-white px-8 py-4 text-sm font-bold text-black shadow-xl shadow-purple-950/30 transition hover:-translate-y-0.5 hover:bg-zinc-200 disabled:opacity-60"
+            >
+              {carouselLoading && (
+                <span className="h-4 w-4 animate-spin rounded-full border-2 border-black/20 border-t-black" />
+              )}
+
+              {carouselLoading ? "Generating..." : "Generate Carousel"}
+            </button>
+          </div>
+
+          {carouselSlides.length > 0 ? (
+            <div className="mt-6 grid gap-3 md:grid-cols-2">
+              {carouselSlides.map((slide, index) => (
+                <div
+                  key={`${slide}-${index}`}
+                  className="rounded-2xl border border-white/10 bg-black/60 p-4 transition hover:border-purple-400/40 hover:bg-purple-500/10"
+                >
+                  <div className="mb-3 flex items-start justify-between gap-3">
+                    <span className="rounded-full bg-purple-500/10 px-3 py-1 text-xs font-bold text-purple-200">
+                      Slide {index + 1}
+                    </span>
+
+                    <button
+                      onClick={() => copySlide(slide, index)}
+                      className="rounded-xl bg-purple-600 px-3 py-1.5 text-xs font-bold text-white transition hover:bg-purple-500"
+                    >
+                      {copiedSlideIndex === index ? "Copied" : "Copy"}
+                    </button>
+                  </div>
+
+                  <p className="whitespace-pre-wrap leading-7 text-zinc-100">{slide}</p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="mt-6 rounded-3xl border border-dashed border-white/10 bg-black/40 p-5 text-center">
+              <p className="font-semibold text-white">
+                Try: “7 lessons from building a SaaS”
+              </p>
+
+              <p className="mt-2 text-sm text-zinc-500">
+                Output appears here as slide-by-slide copy.
+              </p>
+            </div>
+          )}
+        </section>
+
+        <section id="calendar-generator" className="mb-10 rounded-[24px] border border-purple-400/20 bg-gradient-to-br from-purple-950/30 via-zinc-950 to-black p-4 shadow-2xl shadow-purple-950/20 sm:mb-20 sm:rounded-[32px] sm:p-8">
+          <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-purple-300">
+                Content Calendar
+              </p>
+
+              <h2 className="text-[2rem] font-bold sm:text-5xl">
+                Plan your next 7 posts.
+              </h2>
+
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-zinc-400 sm:text-base sm:leading-7">
+                Enter your niche, product, or audience. Repurso will create a weekly content plan with platform-ready angles.
+              </p>
+            </div>
+
+            <span className="rounded-full border border-purple-400/30 bg-purple-500/10 px-4 py-2 text-xs font-bold uppercase tracking-wide text-purple-100">
+              7-day plan
+            </span>
+          </div>
+
+          <div className="grid gap-4 lg:grid-cols-[1fr_auto]">
+            <input
+              type="text"
+              placeholder="Example: AI tools for creators..."
+              value={calendarInput}
+              onChange={(e) => setCalendarInput(e.target.value)}
+              className="rounded-2xl border border-white/10 bg-black/70 px-5 py-4 text-sm text-white outline-none transition placeholder:text-zinc-600 focus:border-purple-400/50 focus:ring-4 focus:ring-purple-500/10"
+            />
+
+            <button
+              onClick={generateCalendar}
+              disabled={calendarLoading}
+              className="inline-flex items-center justify-center gap-3 rounded-2xl bg-white px-8 py-4 text-sm font-bold text-black shadow-xl shadow-purple-950/30 transition hover:-translate-y-0.5 hover:bg-zinc-200 disabled:opacity-60"
+            >
+              {calendarLoading && (
+                <span className="h-4 w-4 animate-spin rounded-full border-2 border-black/20 border-t-black" />
+              )}
+
+              {calendarLoading ? "Generating..." : "Generate Calendar"}
+            </button>
+          </div>
+
+          {calendarItems.length > 0 ? (
+            <div className="mt-6 grid gap-3">
+              {calendarItems.map((item, index) => (
+                <div
+                  key={`${item}-${index}`}
+                  className="rounded-2xl border border-white/10 bg-black/60 p-4 transition hover:border-purple-400/40 hover:bg-purple-500/10"
+                >
+                  <div className="mb-3 flex items-start justify-between gap-3">
+                    <span className="rounded-full bg-purple-500/10 px-3 py-1 text-xs font-bold text-purple-200">
+                      Day {index + 1}
+                    </span>
+
+                    <button
+                      onClick={() => copyCalendarItem(item, index)}
+                      className="rounded-xl bg-purple-600 px-3 py-1.5 text-xs font-bold text-white transition hover:bg-purple-500"
+                    >
+                      {copiedCalendarIndex === index ? "Copied" : "Copy"}
+                    </button>
+                  </div>
+
+                  <p className="whitespace-pre-wrap leading-7 text-zinc-100">{item}</p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="mt-6 rounded-3xl border border-dashed border-white/10 bg-black/40 p-5 text-center">
+              <p className="font-semibold text-white">
+                Try: “AI SaaS for creators”
+              </p>
+
+              <p className="mt-2 text-sm text-zinc-500">
+                Output appears here as a 7-day content plan.
+              </p>
+            </div>
+          )}
+        </section>
+
         <section id="pricing" className="py-12 sm:py-16">
           <div className="mb-12 text-center">
             <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-zinc-500">
