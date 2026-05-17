@@ -55,6 +55,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
 
     {
+      url: `${siteUrl}/tiktok-hook-generator`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+
+    {
       url: `${siteUrl}/privacy`,
       lastModified: new Date(),
       changeFrequency: "monthly",
