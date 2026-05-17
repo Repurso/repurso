@@ -686,6 +686,15 @@ export default function HomePage() {
     }
   }
 
+  function handleCheckout(url: string) {
+    if (!userEmail) {
+      window.location.href = "/login";
+      return;
+    }
+
+    window.open(url, "_blank", "noopener,noreferrer");
+  }
+
   async function logout() {
     await supabase.auth.signOut();
     location.reload();
@@ -1819,13 +1828,13 @@ export default function HomePage() {
                 <li>✓ Cancel anytime</li>
               </ul>
 
-              <a
-                href={CREATOR_CHECKOUT(userEmail)}
-                target="_blank"
-                className="block rounded-2xl bg-black px-6 py-4 text-center font-bold text-white"
+              <button
+                type="button"
+                onClick={() => handleCheckout(CREATOR_CHECKOUT(userEmail))}
+                className="block w-full rounded-2xl bg-black px-6 py-4 text-center font-bold text-white transition hover:bg-zinc-900"
               >
-                Upgrade to Creator
-              </a>
+                {userEmail ? "Upgrade to Creator" : "Login to upgrade"}
+              </button>
             </div>
 
             <div className="rounded-[28px] border border-white/10 bg-zinc-950/70 p-6 shadow-xl shadow-purple-950/10 transition hover:-translate-y-1 hover:border-purple-400/30 sm:rounded-[32px] sm:p-8">
@@ -1858,18 +1867,18 @@ export default function HomePage() {
                 <li>✓ Cancel anytime</li>
               </ul>
 
-              <a
-                href={PRO_CHECKOUT(userEmail)}
-                target="_blank"
-                className="block rounded-2xl border border-zinc-700 px-6 py-4 text-center font-bold"
+              <button
+                type="button"
+                onClick={() => handleCheckout(PRO_CHECKOUT(userEmail))}
+                className="block w-full rounded-2xl border border-white/10 px-6 py-4 text-center font-bold transition hover:border-purple-400/40 hover:bg-purple-500/10"
               >
-                Upgrade to Pro
-              </a>
+                {userEmail ? "Upgrade to Pro" : "Login to upgrade"}
+              </button>
             </div>
           </div>
 
           <p className="mt-8 text-center text-sm text-zinc-500">
-            Paid plans include a 3-day free trial. Cancel anytime before the trial ends.
+            Paid plans include a 3-day free trial. Login is required before checkout so your plan can be activated correctly.
           </p>
         </section>
 
