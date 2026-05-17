@@ -227,10 +227,12 @@ export default function HomePage() {
   const [loadingStep, setLoadingStep] = useState(0);
   const [toast, setToast] = useState("");
   const [copiedSection, setCopiedSection] = useState<string | null>(null);
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
   const [hookInput, setHookInput] = useState("");
   const [hooks, setHooks] = useState<string[]>([]);
   const [hookLoading, setHookLoading] = useState(false);
   const [copiedHookIndex, setCopiedHookIndex] = useState<number | null>(null);
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
 
   const outputSections = result ? splitOutput(result) : [];
   const characterCount = input.length;
@@ -752,35 +754,6 @@ export default function HomePage() {
             <p className="mb-5 text-sm text-zinc-400 sm:mb-6 sm:text-lg">
               Paste your content and let Repurso turn it into multiple formats.
             </p>
-
-            <div className="mb-5">
-              <div className="mb-3 flex items-center justify-between gap-3">
-                <p className="text-sm font-semibold uppercase tracking-[0.25em] text-zinc-500">
-                  Quick Start
-                </p>
-
-                <span className="text-xs text-zinc-600">
-                  Click to fill
-                </span>
-              </div>
-
-              <div className="grid gap-3 sm:grid-cols-3">
-                {QUICK_START_PROMPTS.map((preset) => (
-                  <button
-                    key={preset.title}
-                    type="button"
-                    onClick={() => setInput(preset.prompt)}
-                    className="rounded-2xl border border-white/10 bg-black/60 p-3 text-left transition hover:-translate-y-0.5 hover:border-purple-400/40 hover:bg-purple-500/10 sm:p-4"
-                  >
-                    <p className="mb-1 font-bold text-white">{preset.title}</p>
-                    <p className="text-xs leading-5 text-zinc-500">
-                      {preset.description}
-                    </p>
-                  </button>
-                ))}
-              </div>
-            </div>
-
             <div className="mb-6">
               <p className="mb-3 text-sm font-semibold uppercase tracking-[0.25em] text-zinc-500">
                 Quality Mode
@@ -996,22 +969,6 @@ export default function HomePage() {
               </div>
             )}
 
-            {!result && !loading && (
-              <div className="mt-5 rounded-3xl border border-dashed border-white/10 bg-black/40 p-4 text-center sm:mt-6 sm:p-6">
-                <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-purple-500/10 text-xl">
-                  ✦
-                </div>
-
-                <p className="font-semibold text-white">
-                  Paste one idea and Repurso will turn it into platform-ready content.
-                </p>
-
-                <p className="mt-2 text-sm text-zinc-500">
-                  LinkedIn, X, Instagram, TikTok, YouTube, Facebook, Threads, Snapchat and Pinterest.
-                </p>
-              </div>
-            )}
-
             {showPromptLibrary && (
               <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 sm:p-6">
                 <div className="max-h-[85vh] w-full max-w-3xl overflow-y-auto rounded-[28px] border border-zinc-800 bg-zinc-950 p-5 sm:rounded-[32px] sm:p-8">
@@ -1211,7 +1168,7 @@ export default function HomePage() {
           </section>
         </section>
 
-        <section id="hook-generator" className="mb-14 rounded-[28px] border border-purple-400/20 bg-gradient-to-br from-purple-950/30 via-zinc-950 to-black p-4 shadow-2xl shadow-purple-950/20 sm:mb-20 sm:rounded-[32px] sm:p-8">
+        <section id="hook-generator" className="mb-10 rounded-[24px] border border-purple-400/20 bg-gradient-to-br from-purple-950/30 via-zinc-950 to-black p-4 shadow-2xl shadow-purple-950/20 sm:mb-20 sm:rounded-[32px] sm:p-8">
           <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-purple-300">
@@ -1292,50 +1249,8 @@ export default function HomePage() {
             </div>
           )}
         </section>
-
-        <section className="mb-14 sm:mb-20">
-          <div className="mb-10 text-center sm:mb-14">
-            <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-zinc-500">
-              Before / After
-            </p>
-
-            <h2 className="mb-4 text-[2rem] font-bold sm:text-5xl">
-              See the transformation.
-            </h2>
-
-            <p className="mx-auto max-w-2xl text-base leading-7 text-zinc-400 sm:text-lg sm:leading-8">
-              Repurso turns plain ideas into sharper, platform-ready content angles.
-            </p>
-          </div>
-
-          <div className="grid gap-4 lg:grid-cols-3">
-            {VIRAL_EXAMPLES.map((example) => (
-              <div
-                key={example.before}
-                className="rounded-[24px] border border-white/10 bg-zinc-950/70 p-5 shadow-xl shadow-purple-950/10"
-              >
-                <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-zinc-600">
-                  Before
-                </p>
-
-                <p className="mb-5 leading-7 text-zinc-500">
-                  {example.before}
-                </p>
-
-                <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-purple-300">
-                  After
-                </p>
-
-                <p className="leading-7 text-white">
-                  {example.after}
-                </p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="mb-14 sm:mb-20">
-  <div className="mb-10 text-center sm:mb-14">
+        <section className="mb-10 sm:mb-20">
+  <div className="mb-6 text-center sm:mb-14">
     <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-zinc-500">
       How it works
     </p>
@@ -1350,40 +1265,40 @@ export default function HomePage() {
     </p>
   </div>
 
-  <div className="grid gap-6 lg:grid-cols-3">
-    <div className="rounded-[28px] border border-white/10 bg-zinc-950/70 p-6 shadow-xl shadow-purple-950/10 transition hover:-translate-y-1 hover:border-purple-400/30 hover:bg-zinc-900/70">
-      <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-2xl font-bold text-black">
+  <div className="grid grid-cols-3 gap-2 sm:gap-6 lg:grid-cols-3">
+    <div className="rounded-2xl border border-white/10 bg-zinc-950/70 p-3 shadow-xl shadow-purple-950/10 transition hover:-translate-y-1 hover:border-purple-400/30 hover:bg-zinc-900/70 sm:rounded-[28px] sm:p-6">
+      <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-xl bg-white text-base font-bold text-black sm:mb-5 sm:h-14 sm:w-14 sm:rounded-2xl sm:text-2xl">
         1
       </div>
 
-      <h3 className="mb-3 text-2xl font-bold">Paste your content</h3>
+      <h3 className="mb-2 text-sm font-bold sm:mb-3 sm:text-2xl">Paste</h3>
 
-      <p className="leading-7 text-zinc-400">
+      <p className="hidden leading-7 text-zinc-400 sm:block">
         Add an idea, thread, article, script or raw thoughts into the generator.
       </p>
     </div>
 
-    <div className="rounded-[28px] border border-white/10 bg-zinc-950/70 p-6 shadow-xl shadow-purple-950/10 transition hover:-translate-y-1 hover:border-purple-400/30 hover:bg-zinc-900/70">
-      <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-2xl font-bold text-black">
+    <div className="rounded-2xl border border-white/10 bg-zinc-950/70 p-3 shadow-xl shadow-purple-950/10 transition hover:-translate-y-1 hover:border-purple-400/30 hover:bg-zinc-900/70 sm:rounded-[28px] sm:p-6">
+      <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-xl bg-white text-base font-bold text-black sm:mb-5 sm:h-14 sm:w-14 sm:rounded-2xl sm:text-2xl">
         2
       </div>
 
-      <h3 className="mb-3 text-2xl font-bold">Generate instantly</h3>
+      <h3 className="mb-2 text-sm font-bold sm:mb-3 sm:text-2xl">Generate</h3>
 
-      <p className="leading-7 text-zinc-400">
+      <p className="hidden leading-7 text-zinc-400 sm:block">
         AI rewrites your content into LinkedIn posts, captions, scripts and
         platform-ready formats.
       </p>
     </div>
 
-    <div className="rounded-[28px] border border-white/10 bg-zinc-950/70 p-6 shadow-xl shadow-purple-950/10 transition hover:-translate-y-1 hover:border-purple-400/30 hover:bg-zinc-900/70">
-      <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-2xl font-bold text-black">
+    <div className="rounded-2xl border border-white/10 bg-zinc-950/70 p-3 shadow-xl shadow-purple-950/10 transition hover:-translate-y-1 hover:border-purple-400/30 hover:bg-zinc-900/70 sm:rounded-[28px] sm:p-6">
+      <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-xl bg-white text-base font-bold text-black sm:mb-5 sm:h-14 sm:w-14 sm:rounded-2xl sm:text-2xl">
         3
       </div>
 
-      <h3 className="mb-3 text-2xl font-bold">Export and publish</h3>
+      <h3 className="mb-2 text-sm font-bold sm:mb-3 sm:text-2xl">Publish</h3>
 
-      <p className="leading-7 text-zinc-400">
+      <p className="hidden leading-7 text-zinc-400 sm:block">
         Copy, rewrite, improve or export your content and publish faster across
         every platform.
       </p>
@@ -1391,7 +1306,7 @@ export default function HomePage() {
   </div>
 </section>
 
-<section className="mb-14 sm:mb-20">
+<section className="hidden sm:mb-20 sm:block">
   <div className="mb-10 text-center sm:mb-14">
     <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-zinc-500">
       Built for
@@ -1429,7 +1344,7 @@ export default function HomePage() {
   </div>
 </section>
 
-<section className="mb-20 rounded-[32px] border border-purple-400/20 bg-gradient-to-br from-purple-950/35 via-zinc-950 to-black p-8 shadow-2xl shadow-purple-950/20 sm:p-12">
+<section className="mb-20 hidden rounded-[32px] border border-purple-400/20 bg-gradient-to-br from-purple-950/35 via-zinc-950 to-black p-8 shadow-2xl shadow-purple-950/20 sm:block sm:p-12">
   <div className="mx-auto max-w-3xl text-center">
     <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-zinc-500">
       Start creating
@@ -1503,27 +1418,53 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="mb-14 sm:mb-20">
-          <div className="mb-12 text-center">
-            <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-zinc-500">
-              FAQ
-            </p>
+        <section className="mb-10 sm:mb-16">
+          <div className="mx-auto max-w-4xl rounded-[24px] border border-white/10 bg-zinc-950/70 p-4 sm:rounded-[32px] sm:p-6">
+            <div className="mb-3 flex items-center justify-between gap-4">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-zinc-500">
+                  FAQ
+                </p>
 
-            <h2 className="text-[2rem] font-bold sm:text-5xl">
-              Questions before you start?
-            </h2>
-          </div>
-
-          <div className="mx-auto grid max-w-4xl gap-4">
-            {FAQ_ITEMS.map((item) => (
-              <div
-                key={item.question}
-                className="rounded-2xl border border-white/10 bg-zinc-950/70 p-4 sm:rounded-3xl sm:p-6"
-              >
-                <h3 className="mb-2 text-xl font-bold">{item.question}</h3>
-                <p className="leading-7 text-zinc-400">{item.answer}</p>
+                <h2 className="mt-2 text-xl font-bold sm:text-3xl">
+                  Questions before you start?
+                </h2>
               </div>
-            ))}
+
+              <span className="rounded-full bg-purple-500/10 px-3 py-1 text-xs font-bold text-purple-200">
+                Help
+              </span>
+            </div>
+
+            <div className="divide-y divide-white/10">
+              {FAQ_ITEMS.map((item, index) => {
+                const isOpen = openFaqIndex === index;
+
+                return (
+                  <div key={item.question} className="py-3">
+                    <button
+                      type="button"
+                      onClick={() => setOpenFaqIndex(isOpen ? null : index)}
+                      className="flex w-full items-center justify-between gap-4 text-left"
+                    >
+                      <span className="font-semibold text-white">
+                        {item.question}
+                      </span>
+
+                      <span className="text-xl text-zinc-500">
+                        {isOpen ? "−" : "+"}
+                      </span>
+                    </button>
+
+                    {isOpen && (
+                      <p className="mt-3 text-sm leading-6 text-zinc-400">
+                        {item.answer}
+                      </p>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </section>
 
