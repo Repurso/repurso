@@ -724,16 +724,16 @@ export default function HomePage() {
       </div>
 
       <div className="mx-auto max-w-7xl">
-        <nav className="sticky top-2 z-40 mb-6 flex flex-col gap-3 rounded-2xl border border-white/10 bg-black/55 px-3 py-2.5 shadow-2xl shadow-purple-950/20 backdrop-blur-xl sm:top-4 sm:mb-8 sm:flex-row sm:items-center sm:justify-between sm:rounded-3xl sm:px-4 sm:py-3">
+        <nav className="sticky top-2 z-40 mb-4 flex flex-col gap-2 rounded-xl border border-white/10 bg-black/55 px-2.5 py-2 shadow-2xl shadow-purple-950/20 backdrop-blur-xl sm:top-4 sm:mb-8 sm:flex-row sm:items-center sm:justify-between sm:rounded-3xl sm:px-4 sm:py-3">
           <div className="flex items-center justify-between">
             <Link href="/" className="group flex items-center gap-3">
               <img
                 src="/logo-icon.png"
                 alt="Repurso"
-                className="h-8 w-8 rounded-xl object-cover shadow-lg shadow-purple-700/20 transition group-hover:scale-105 sm:h-9 sm:w-9"
+                className="h-7 w-7 rounded-lg sm:h-9 sm:w-9 sm:rounded-xl object-cover shadow-lg shadow-purple-700/20 transition group-hover:scale-105 sm:h-9 sm:w-9"
               />
 
-              <span className="text-xl font-bold tracking-tight sm:text-3xl">
+              <span className="text-lg font-bold tracking-tight sm:text-3xl">
                 Repurso
               </span>
             </Link>
@@ -816,30 +816,30 @@ export default function HomePage() {
 
         <section className="mb-10 grid items-start gap-4 lg:mb-16 lg:grid-cols-[0.8fr_1.2fr] lg:gap-8">
           <div className="pt-2 lg:sticky lg:top-6">
-            <div className="mb-4 inline-flex rounded-full border border-purple-400/20 bg-purple-500/10 px-4 py-2 text-sm text-purple-100 shadow-lg shadow-purple-950/20">
+            <div className="mb-3 inline-flex rounded-full border border-purple-400/20 bg-purple-500/10 px-3 py-1.5 text-xs sm:px-4 sm:py-2 sm:text-sm text-purple-100 shadow-lg shadow-purple-950/20">
               AI content repurposing tool
             </div>
 
-            <h2 className="mb-4 bg-gradient-to-br from-white via-white to-purple-200 bg-clip-text text-[2rem] font-bold leading-tight text-transparent sm:mb-5 sm:text-5xl">
+            <h2 className="mb-4 bg-gradient-to-br from-white via-white to-purple-200 bg-clip-text text-[1.75rem] font-bold leading-tight sm:text-5xl text-transparent sm:mb-5 sm:text-5xl">
               Turn one idea into content for every platform.
             </h2>
 
-            <p className="mb-5 text-sm leading-6 text-zinc-400 sm:mb-6 sm:text-lg sm:leading-8">
+            <p className="mb-4 text-sm leading-6 text-zinc-400 sm:mb-6 sm:text-lg sm:leading-8">
               Repurso helps creators, founders and marketers transform one idea
               into platform-ready content for LinkedIn, X, Instagram, TikTok,
               YouTube, Facebook, Threads, Snapchat and Pinterest.
             </p>
-<div className="mb-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+<div className="mb-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
               <a
                 href="#generator"
-                className="rounded-2xl bg-white px-6 py-3.5 text-center text-sm font-bold text-black shadow-lg shadow-purple-950/30 transition hover:-translate-y-0.5 hover:bg-zinc-200 sm:px-8 sm:py-4 sm:text-base"
+                className="rounded-xl bg-white px-5 py-3 text-center text-sm font-bold text-black shadow-lg shadow-purple-950/30 transition hover:-translate-y-0.5 hover:bg-zinc-200 sm:px-8 sm:py-4 sm:text-base"
               >
                 Try it free
               </a>
 
               <a
                 href="#pricing"
-                className="rounded-2xl border border-white/10 bg-white/[0.03] px-6 py-3.5 text-center text-sm font-bold transition hover:-translate-y-0.5 hover:border-purple-400/40 hover:bg-purple-500/10 sm:px-8 sm:py-4 sm:text-base"
+                className="rounded-xl border border-white/10 bg-white/[0.03] px-5 py-3 text-center text-sm font-bold transition hover:-translate-y-0.5 hover:border-purple-400/40 hover:bg-purple-500/10 sm:px-8 sm:py-4 sm:text-base"
               >
                 View pricing
               </a>
@@ -881,21 +881,21 @@ export default function HomePage() {
 
           <section
             id="generator"
-            className="rounded-[20px] border border-white/10 bg-zinc-950/70 p-4 shadow-2xl shadow-purple-950/20 backdrop-blur sm:rounded-[32px] sm:p-7"
+            className="rounded-[18px] border border-white/10 bg-zinc-950/70 p-3.5 sm:p-7 shadow-2xl shadow-purple-950/20 backdrop-blur sm:rounded-[32px] sm:p-7"
           >
-            <h3 className="mb-2 text-2xl font-bold sm:text-4xl">
+            <h3 className="mb-2 text-xl font-bold sm:text-4xl">
               Generate content
             </h3>
 
-            <p className="mb-5 text-sm text-zinc-400 sm:mb-6 sm:text-lg">
+            <p className="mb-4 text-xs leading-5 text-zinc-400 sm:mb-6 sm:text-lg">
               Paste your content and let Repurso turn it into multiple formats.
             </p>
             <div className="mb-6">
-              <p className="mb-3 text-sm font-semibold uppercase tracking-[0.25em] text-zinc-500">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] sm:mb-3 sm:text-sm sm:tracking-[0.25em] text-zinc-500">
                 Quality Mode
               </p>
 
-              <div className="grid gap-3 sm:grid-cols-3">
+              <div className="grid gap-2 sm:grid-cols-3">
                 {QUALITY_MODES.map((mode) => {
                   const isSelected = qualityMode === mode.id;
 
@@ -904,7 +904,7 @@ export default function HomePage() {
                       key={mode.id}
                       type="button"
                       onClick={() => setQualityMode(mode.id)}
-                      className={`rounded-2xl border p-3 text-left transition sm:p-4 ${
+                      className={`rounded-xl border p-2.5 text-left sm:rounded-2xl sm:p-4 transition sm:p-4 ${
                         isSelected
                           ? "border-white bg-white text-black shadow-lg shadow-purple-950/20"
                           : "border-white/10 bg-black/70 text-white hover:-translate-y-0.5 hover:border-purple-400/40 hover:bg-purple-500/10"
@@ -913,7 +913,7 @@ export default function HomePage() {
                       <h4 className="mb-1 font-bold">{mode.name}</h4>
 
                       <p
-                        className={`text-xs leading-5 ${
+                        className={`hidden text-xs leading-5 sm:block ${
                           isSelected ? "text-zinc-700" : "text-zinc-400"
                         }`}
                       >
@@ -926,11 +926,11 @@ export default function HomePage() {
             </div>
 
             <div className="mb-6">
-              <p className="mb-3 text-sm font-semibold uppercase tracking-[0.25em] text-zinc-500">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] sm:mb-3 sm:text-sm sm:tracking-[0.25em] text-zinc-500">
                 Template
               </p>
 
-              <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-2 xl:grid-cols-5">
                 {PROMPT_TEMPLATES.map((template) => {
                   const isSelected = selectedTemplate === template.id;
 
@@ -939,7 +939,7 @@ export default function HomePage() {
                       key={template.id}
                       type="button"
                       onClick={() => setSelectedTemplate(template.id)}
-                      className={`rounded-2xl border p-3 text-left transition sm:p-4 ${
+                      className={`rounded-xl border p-2.5 text-left sm:rounded-2xl sm:p-4 transition sm:p-4 ${
                         isSelected
                           ? "border-white bg-white text-black shadow-lg shadow-purple-950/20"
                           : "border-white/10 bg-black/70 text-white hover:-translate-y-0.5 hover:border-purple-400/40 hover:bg-purple-500/10"
@@ -948,7 +948,7 @@ export default function HomePage() {
                       <h4 className="mb-1 font-bold">{template.name}</h4>
 
                       <p
-                        className={`text-xs leading-5 ${
+                        className={`hidden text-xs leading-5 sm:block ${
                           isSelected ? "text-zinc-700" : "text-zinc-400"
                         }`}
                       >
@@ -976,7 +976,7 @@ export default function HomePage() {
 
             <textarea
               placeholder="Paste your idea, tweet, article, video script or raw thoughts here..."
-              className="mb-3 h-28 w-full rounded-3xl border border-white/10 bg-black/70 p-3.5 text-sm text-white outline-none transition placeholder:text-zinc-600 focus:border-purple-400/50 focus:ring-4 focus:ring-purple-500/10 sm:h-44 sm:p-5 sm:text-base"
+              className="mb-3 h-24 w-full rounded-2xl sm:h-44 sm:rounded-3xl border border-white/10 bg-black/70 p-3 text-sm sm:p-5 text-white outline-none transition placeholder:text-zinc-600 focus:border-purple-400/50 focus:ring-4 focus:ring-purple-500/10 sm:h-44 sm:p-5 sm:text-base"
               value={input}
               onChange={(e) => setInput(e.target.value)}
             />
@@ -996,8 +996,8 @@ export default function HomePage() {
                 />
               </div>
 
-              <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                <div className="rounded-2xl border border-zinc-800 bg-black p-4">
+              <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                <div className="rounded-xl border border-zinc-800 bg-black p-3 sm:rounded-2xl sm:p-4">
                   <div className="mb-2 flex items-center justify-between text-sm">
                     <span className="text-zinc-500">Generations</span>
                     <span className="font-semibold text-white">
@@ -1015,7 +1015,7 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                <div className="rounded-2xl border border-zinc-800 bg-black p-4">
+                <div className="rounded-xl border border-zinc-800 bg-black p-3 sm:rounded-2xl sm:p-4">
                   <div className="mb-2 flex items-center justify-between text-sm">
                     <span className="text-zinc-500">Rewrites</span>
                     <span className="font-semibold text-white">
@@ -1042,26 +1042,26 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="mb-4 flex flex-col gap-3 lg:flex-row">
+            <div className="mb-3 flex flex-col gap-2 lg:flex-row">
               <input
                 type="text"
                 placeholder="Prompt title..."
                 value={promptTitle}
                 onChange={(e) => setPromptTitle(e.target.value)}
-                className="h-13 flex-1 rounded-2xl border border-zinc-800 bg-black px-5 py-3 text-white outline-none placeholder:text-zinc-600"
+                className="h-13 flex-1 rounded-xl border border-zinc-800 bg-black px-4 py-2.5 sm:rounded-2xl sm:px-5 sm:py-3 text-white outline-none placeholder:text-zinc-600"
               />
 
               <button
                 onClick={savePrompt}
                 disabled={savingPrompt}
-                className="rounded-2xl border border-zinc-700 bg-zinc-950 px-5 py-3 font-bold text-white disabled:opacity-60"
+                className="rounded-xl border border-zinc-700 bg-zinc-950 px-4 py-2.5 sm:rounded-2xl sm:px-5 sm:py-3 font-bold text-white disabled:opacity-60"
               >
                 {savingPrompt ? "Saving..." : "Save Prompt"}
               </button>
 
               <button
                 onClick={openPromptLibrary}
-                className="rounded-2xl border border-zinc-700 bg-zinc-950 px-5 py-3 font-bold text-white"
+                className="rounded-xl border border-zinc-700 bg-zinc-950 px-4 py-2.5 sm:rounded-2xl sm:px-5 sm:py-3 font-bold text-white"
               >
                 Prompt Library
               </button>
@@ -1083,7 +1083,7 @@ export default function HomePage() {
                 characterCount > characterLimit ||
                 generationUsage >= generationLimit
               }
-              className="group inline-flex w-full items-center justify-center gap-3 rounded-2xl bg-white px-8 py-4 text-base font-bold text-black shadow-xl shadow-purple-950/30 transition hover:-translate-y-0.5 hover:bg-zinc-200 disabled:translate-y-0 disabled:opacity-60 sm:w-auto sm:px-10 sm:py-5 sm:text-lg"
+              className="group inline-flex w-full items-center justify-center gap-3 rounded-xl bg-white px-6 py-3 text-sm sm:rounded-2xl sm:px-10 sm:py-5 sm:text-lg font-bold text-black shadow-xl shadow-purple-950/30 transition hover:-translate-y-0.5 hover:bg-zinc-200 disabled:translate-y-0 disabled:opacity-60 sm:w-auto sm:px-10 sm:py-5 sm:text-lg"
             >
               {loading && (
                 <span className="h-5 w-5 animate-spin rounded-full border-2 border-black/20 border-t-black" />
@@ -1093,7 +1093,7 @@ export default function HomePage() {
             </button>
 
             {loading && (
-              <div className="mt-6 rounded-3xl border border-purple-400/20 bg-purple-500/10 p-5">
+              <div className="mt-4 rounded-2xl border border-purple-400/20 bg-purple-500/10 p-4 sm:mt-6 sm:rounded-3xl sm:p-5">
                 <div className="mb-4 flex items-center gap-3">
                   <span className="h-3 w-3 animate-pulse rounded-full bg-purple-400" />
                   <p className="font-semibold text-purple-100">
@@ -1188,8 +1188,8 @@ export default function HomePage() {
             )}
 
             {result && (
-              <div className="mt-8 space-y-5">
-                <div className="rounded-3xl border border-emerald-400/20 bg-emerald-500/10 p-5">
+              <div className="mt-5 space-y-3 sm:mt-8 sm:space-y-5">
+                <div className="rounded-2xl border border-emerald-400/20 bg-emerald-500/10 p-4 sm:rounded-3xl sm:p-5">
                   <p className="font-bold text-emerald-100">
                     Your platform-ready content is ready.
                   </p>
@@ -1203,9 +1203,9 @@ export default function HomePage() {
                   return (
                     <div
                       key={section.id}
-                      className="rounded-3xl border border-white/10 bg-black/80 shadow-xl shadow-purple-950/10 transition hover:border-purple-400/30"
+                      className="rounded-2xl border border-white/10 bg-black/80 sm:rounded-3xl shadow-xl shadow-purple-950/10 transition hover:border-purple-400/30"
                     >
-                      <div className="flex items-start justify-between gap-3 p-4 sm:p-5">
+                      <div className="flex flex-col gap-3 p-3 sm:flex-row sm:items-start sm:justify-between sm:p-5">
                         <button
                           type="button"
                           onClick={() =>
@@ -1213,12 +1213,12 @@ export default function HomePage() {
                           }
                           className="flex min-w-0 flex-1 items-center gap-3 text-left"
                         >
-                          <span className="text-2xl">
+                          <span className="text-xl sm:text-2xl">
                             {SECTION_ICONS[section.title]}
                           </span>
 
                           <span className="min-w-0">
-                            <span className="block truncate text-xl font-bold sm:text-2xl">
+                            <span className="block truncate text-base font-bold sm:text-2xl">
                               {section.title}
                             </span>
 
@@ -1228,7 +1228,7 @@ export default function HomePage() {
                           </span>
                         </button>
 
-                        <div className="flex shrink-0 items-center gap-2">
+                        <div className="flex shrink-0 flex-wrap items-center gap-2">
                           <button
                             onClick={() =>
                               exportTextFile(
@@ -1237,7 +1237,7 @@ export default function HomePage() {
                                 "text/plain;charset=utf-8"
                               )
                             }
-                            className="rounded-xl border border-white/10 bg-zinc-950 px-3 py-2 text-[11px] font-bold text-white transition hover:border-purple-400/40 sm:px-4 sm:text-xs"
+                            className="rounded-lg border border-white/10 bg-zinc-950 px-2.5 py-1.5 text-[10px] sm:rounded-xl sm:px-4 sm:py-2 sm:text-xs font-bold text-white transition hover:border-purple-400/40 sm:px-4 sm:text-xs"
                           >
                             TXT
                           </button>
@@ -1252,14 +1252,14 @@ ${section.content}`,
                                 "text/markdown;charset=utf-8"
                               )
                             }
-                            className="rounded-xl border border-white/10 bg-zinc-950 px-3 py-2 text-[11px] font-bold text-white transition hover:border-purple-400/40 sm:px-4 sm:text-xs"
+                            className="rounded-lg border border-white/10 bg-zinc-950 px-2.5 py-1.5 text-[10px] sm:rounded-xl sm:px-4 sm:py-2 sm:text-xs font-bold text-white transition hover:border-purple-400/40 sm:px-4 sm:text-xs"
                           >
                             MD
                           </button>
 
                           <button
                             onClick={() => copyText(section.content, section.id)}
-                            className="rounded-xl bg-purple-600 px-3 py-2 text-[11px] font-bold text-white shadow-lg shadow-purple-950/30 transition hover:bg-purple-500 sm:px-4 sm:text-xs"
+                            className="rounded-lg bg-purple-600 px-2.5 py-1.5 text-[10px] sm:rounded-xl sm:px-4 sm:py-2 sm:text-xs font-bold text-white shadow-lg shadow-purple-950/30 transition hover:bg-purple-500 sm:px-4 sm:text-xs"
                           >
                             {copiedSection === section.id ? "Copied" : "Copy"}
                           </button>
@@ -1269,7 +1269,7 @@ ${section.content}`,
                             onClick={() =>
                               setOpenResultId(isOpen ? null : section.id)
                             }
-                            className="rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2 text-xs font-bold text-zinc-300 transition hover:border-purple-400/40 hover:bg-purple-500/10"
+                            className="rounded-lg border border-white/10 bg-white/[0.03] px-2.5 py-1.5 text-xs sm:rounded-xl sm:px-3 sm:py-2 font-bold text-zinc-300 transition hover:border-purple-400/40 hover:bg-purple-500/10"
                           >
                             {isOpen ? "−" : "+"}
                           </button>
@@ -1277,8 +1277,8 @@ ${section.content}`,
                       </div>
 
                       {isOpen && (
-                        <div className="border-t border-white/10 p-4 sm:p-5">
-                          <div className="mb-5 grid gap-2 sm:grid-cols-2 lg:flex lg:flex-wrap lg:items-center">
+                        <div className="border-t border-white/10 p-3 sm:p-5">
+                          <div className="mb-4 grid grid-cols-2 gap-2 sm:grid-cols-2 lg:flex lg:flex-wrap lg:items-center">
                             {[
                               ["Regenerate", "default"],
                               ["More Viral", "more-viral"],
@@ -1297,7 +1297,7 @@ ${section.content}`,
                                   rewriteLoadingId === section.id ||
                                   rewriteUsage >= rewriteLimit
                                 }
-                                className="rounded-xl border border-white/10 bg-zinc-950 px-3 py-2 text-xs font-semibold text-white transition hover:-translate-y-0.5 hover:border-purple-400/40 hover:bg-purple-500/10 disabled:opacity-60 sm:rounded-2xl sm:px-4 sm:text-sm"
+                                className="rounded-lg border border-white/10 bg-zinc-950 px-2.5 py-1.5 text-[11px] sm:rounded-2xl sm:px-4 sm:py-2 sm:text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:border-purple-400/40 hover:bg-purple-500/10 disabled:opacity-60 sm:rounded-2xl sm:px-4 sm:text-sm"
                               >
                                 {label}
                               </button>
@@ -1316,7 +1316,7 @@ ${section.content}`,
                             </div>
                           )}
 
-                          <div className="leading-8 text-zinc-200">
+                          <div className="text-sm leading-7 text-zinc-200 sm:text-base sm:leading-8">
                             <ReactMarkdown
                               components={{
                                 p: ({ children }) => (
@@ -1342,18 +1342,18 @@ ${section.content}`,
           </section>
         </section>
 
-        <section id="hook-generator" className="mb-10 rounded-[24px] border border-purple-400/20 bg-gradient-to-br from-purple-950/30 via-zinc-950 to-black p-4 shadow-2xl shadow-purple-950/20 sm:mb-20 sm:rounded-[32px] sm:p-8">
-          <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <section id="hook-generator" className="mb-8 rounded-[20px] sm:mb-20 sm:rounded-[32px] border border-purple-400/20 bg-gradient-to-br from-purple-950/30 via-zinc-950 to-black p-3.5 shadow-2xl sm:p-8 shadow-purple-950/20 sm:mb-20 sm:rounded-[32px] sm:p-8">
+          <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-purple-300">
                 Hook Generator
               </p>
 
-              <h2 className="text-[2rem] font-bold sm:text-5xl">
+              <h2 className="text-[1.65rem] font-bold sm:text-5xl">
                 Generate scroll-stopping hooks.
               </h2>
 
-              <p className="mt-3 max-w-2xl text-sm leading-6 text-zinc-400 sm:text-base sm:leading-7">
+              <p className="mt-2 max-w-2xl text-xs leading-5 sm:text-base sm:leading-7 text-zinc-400 sm:text-base sm:leading-7">
                 Enter a topic, product, idea or niche. Repurso will create viral hooks you can use for TikTok, X, LinkedIn and short-form content.
               </p>
             </div>
@@ -1423,13 +1423,13 @@ ${section.content}`,
             </div>
           )}
         </section>
-        <section className="mb-10 sm:mb-20">
+        <section className="hidden sm:mb-20 sm:block">
   <div className="mb-6 text-center sm:mb-14">
     <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-zinc-500">
       How it works
     </p>
 
-    <h2 className="mb-4 text-[2rem] font-bold sm:text-5xl">
+    <h2 className="mb-4 text-[1.65rem] font-bold sm:text-5xl">
       Create once. Publish everywhere.
     </h2>
 
@@ -1486,7 +1486,7 @@ ${section.content}`,
       Built for
     </p>
 
-    <h2 className="mb-4 text-[2rem] font-bold sm:text-5xl">
+    <h2 className="mb-4 text-[1.65rem] font-bold sm:text-5xl">
       Made for modern creators.
     </h2>
   </div>
@@ -1536,14 +1536,14 @@ ${section.content}`,
     <div className="flex flex-col justify-center gap-4 sm:flex-row">
       <a
         href="#generator"
-        className="rounded-2xl bg-white px-6 py-3.5 text-center text-sm font-bold text-black shadow-lg shadow-purple-950/30 transition hover:-translate-y-0.5 hover:bg-zinc-200 sm:px-8 sm:py-4 sm:text-base"
+        className="rounded-xl bg-white px-5 py-3 text-center text-sm font-bold text-black shadow-lg shadow-purple-950/30 transition hover:-translate-y-0.5 hover:bg-zinc-200 sm:px-8 sm:py-4 sm:text-base"
       >
         Try Repurso Free
       </a>
 
       <a
         href="#pricing"
-        className="rounded-2xl border border-white/10 bg-white/[0.03] px-6 py-3.5 text-center text-sm font-bold transition hover:-translate-y-0.5 hover:border-purple-400/40 hover:bg-purple-500/10 sm:px-8 sm:py-4 sm:text-base"
+        className="rounded-xl border border-white/10 bg-white/[0.03] px-5 py-3 text-center text-sm font-bold transition hover:-translate-y-0.5 hover:border-purple-400/40 hover:bg-purple-500/10 sm:px-8 sm:py-4 sm:text-base"
       >
         View Pricing
       </a>
@@ -1556,7 +1556,7 @@ ${section.content}`,
               Why Repurso
             </p>
 
-            <h2 className="mb-4 text-[2rem] font-bold sm:text-5xl">
+            <h2 className="mb-4 text-[1.65rem] font-bold sm:text-5xl">
               Built for faster content workflows.
             </h2>
 
@@ -1643,18 +1643,18 @@ ${section.content}`,
         </section>
 
 
-        <section id="carousel-generator" className="mb-10 rounded-[24px] border border-white/10 bg-zinc-950/70 p-4 shadow-2xl shadow-purple-950/20 sm:mb-20 sm:rounded-[32px] sm:p-8">
-          <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <section id="carousel-generator" className="mb-8 rounded-[20px] sm:mb-20 sm:rounded-[32px] border border-white/10 bg-zinc-950/70 p-3.5 shadow-2xl sm:p-8 shadow-purple-950/20 sm:mb-20 sm:rounded-[32px] sm:p-8">
+          <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-purple-300">
                 Carousel Generator
               </p>
 
-              <h2 className="text-[2rem] font-bold sm:text-5xl">
+              <h2 className="text-[1.65rem] font-bold sm:text-5xl">
                 Turn ideas into carousel slides.
               </h2>
 
-              <p className="mt-3 max-w-2xl text-sm leading-6 text-zinc-400 sm:text-base sm:leading-7">
+              <p className="mt-2 max-w-2xl text-xs leading-5 sm:text-base sm:leading-7 text-zinc-400 sm:text-base sm:leading-7">
                 Generate a ready-to-use LinkedIn, Instagram or TikTok slideshow structure with strong slide copy.
               </p>
             </div>
@@ -1723,18 +1723,18 @@ ${section.content}`,
           )}
         </section>
 
-        <section id="calendar-generator" className="mb-10 rounded-[24px] border border-purple-400/20 bg-gradient-to-br from-purple-950/30 via-zinc-950 to-black p-4 shadow-2xl shadow-purple-950/20 sm:mb-20 sm:rounded-[32px] sm:p-8">
-          <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <section id="calendar-generator" className="mb-8 rounded-[20px] sm:mb-20 sm:rounded-[32px] border border-purple-400/20 bg-gradient-to-br from-purple-950/30 via-zinc-950 to-black p-3.5 shadow-2xl sm:p-8 shadow-purple-950/20 sm:mb-20 sm:rounded-[32px] sm:p-8">
+          <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-purple-300">
                 Content Calendar
               </p>
 
-              <h2 className="text-[2rem] font-bold sm:text-5xl">
+              <h2 className="text-[1.65rem] font-bold sm:text-5xl">
                 Plan your next 7 posts.
               </h2>
 
-              <p className="mt-3 max-w-2xl text-sm leading-6 text-zinc-400 sm:text-base sm:leading-7">
+              <p className="mt-2 max-w-2xl text-xs leading-5 sm:text-base sm:leading-7 text-zinc-400 sm:text-base sm:leading-7">
                 Enter your niche, product, or audience. Repurso will create a weekly content plan with platform-ready angles.
               </p>
             </div>
@@ -1809,7 +1809,7 @@ ${section.content}`,
               Pricing
             </p>
 
-            <h2 className="mb-4 text-[2rem] font-bold sm:text-5xl">
+            <h2 className="mb-4 text-[1.65rem] font-bold sm:text-5xl">
               Choose your content engine.
             </h2>
 
