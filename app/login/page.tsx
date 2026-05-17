@@ -12,6 +12,8 @@ export default function LoginPage() {
 
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
+  const [githubLoading, setGithubLoading] = useState(false);
+  const [discordLoading, setDiscordLoading] = useState(false);
   const [message, setMessage] = useState("");
 
   const redirectUrl =
@@ -52,6 +54,40 @@ export default function LoginPage() {
     if (error) {
       setMessage(error.message);
       setGoogleLoading(false);
+    }
+  }
+
+  async function signInWithGithub() {
+    setMessage("");
+    setGithubLoading(true);
+
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "github",
+      options: {
+        redirectTo: redirectUrl,
+      },
+    });
+
+    if (error) {
+      setMessage(error.message);
+      setGithubLoading(false);
+    }
+  }
+
+  async function signInWithDiscord() {
+    setMessage("");
+    setDiscordLoading(true);
+
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "discord",
+      options: {
+        redirectTo: redirectUrl,
+      },
+    });
+
+    if (error) {
+      setMessage(error.message);
+      setDiscordLoading(false);
     }
   }
 
@@ -137,7 +173,7 @@ export default function LoginPage() {
       ? "Create your Repurso account with email and password."
       : mode === "magic"
       ? "Get a secure login link sent to your email."
-      : "Continue with Google or login with email and password.";
+      : "Continue with Google, GitHub, Discord or email and password.";
 
   return (
     <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-black px-4 py-8 text-white">
@@ -170,13 +206,33 @@ export default function LoginPage() {
           <p className="mt-3 text-sm leading-6 text-zinc-400">{subtitle}</p>
         </div>
 
-        <button
-          onClick={signInWithGoogle}
-          disabled={googleLoading || loading}
-          className="mb-4 w-full rounded-2xl bg-white py-4 font-bold text-black shadow-lg shadow-purple-950/20 transition hover:-translate-y-0.5 hover:bg-zinc-200 disabled:translate-y-0 disabled:opacity-60"
-        >
-          {googleLoading ? "Redirecting..." : "Continue with Google"}
-        </button>
+        <div className="mb-4 grid gap-3">
+          <button
+            onClick={signInWithGoogle}
+            disabled={googleLoading || githubLoading || discordLoading || loading}
+            className="w-full rounded-2xl bg-white py-4 font-bold text-black shadow-lg shadow-purple-950/20 transition hover:-translate-y-0.5 hover:bg-zinc-200 disabled:translate-y-0 disabled:opacity-60"
+          >
+            {googleLoading ? "Redirecting..." : "Continue with Google"}
+          </button>
+
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              onClick={signInWithGithub}
+              disabled={googleLoading || githubLoading || discordLoading || loading}
+              className="rounded-2xl border border-white/10 bg-white/[0.03] py-3 font-bold text-white transition hover:-translate-y-0.5 hover:border-purple-400/40 hover:bg-purple-500/10 disabled:translate-y-0 disabled:opacity-60"
+            >
+              {githubLoading ? "Opening..." : "GitHub"}
+            </button>
+
+            <button
+              onClick={signInWithDiscord}
+              disabled={googleLoading || githubLoading || discordLoading || loading}
+              className="rounded-2xl border border-white/10 bg-white/[0.03] py-3 font-bold text-white transition hover:-translate-y-0.5 hover:border-purple-400/40 hover:bg-purple-500/10 disabled:translate-y-0 disabled:opacity-60"
+            >
+              {discordLoading ? "Opening..." : "Discord"}
+            </button>
+          </div>
+        </div>
 
         <div className="my-6 flex items-center gap-3">
           <div className="h-px flex-1 bg-white/10" />
