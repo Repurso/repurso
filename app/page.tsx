@@ -223,6 +223,7 @@ export default function HomePage() {
   const [savedPrompts, setSavedPrompts] = useState<SavedPrompt[]>([]);
   const [promptTitle, setPromptTitle] = useState("");
   const [showPromptLibrary, setShowPromptLibrary] = useState(false);
+  const [promptLibraryNotice, setPromptLibraryNotice] = useState("");
   const [savingPrompt, setSavingPrompt] = useState(false);
   const [loadingStep, setLoadingStep] = useState(0);
   const [toast, setToast] = useState("");
@@ -461,6 +462,16 @@ export default function HomePage() {
     }
   }
 
+  function openPromptLibrary() {
+    if (!userEmail) {
+      setPromptLibraryNotice("Login required to access your prompt library.");
+      return;
+    }
+
+    setPromptLibraryNotice("");
+    setShowPromptLibrary(true);
+  }
+
   async function savePrompt() {
     if (!input.trim()) {
       alert("Please enter content first.");
@@ -473,7 +484,7 @@ export default function HomePage() {
     }
 
     if (!userEmail) {
-      alert("Please login first.");
+      setPromptLibraryNotice("Login required to save prompts.");
       return;
     }
 
@@ -1045,12 +1056,21 @@ export default function HomePage() {
               </button>
 
               <button
-                onClick={() => setShowPromptLibrary(true)}
+                onClick={openPromptLibrary}
                 className="rounded-2xl border border-zinc-700 bg-zinc-950 px-5 py-3 font-bold text-white"
               >
                 Prompt Library
               </button>
             </div>
+
+            {promptLibraryNotice && (
+              <div className="mb-4 rounded-2xl border border-purple-400/20 bg-purple-500/10 px-4 py-3 text-sm text-purple-100">
+                {promptLibraryNotice}{" "}
+                <a href="/login" className="font-bold underline underline-offset-4">
+                  Login
+                </a>
+              </div>
+            )}
 
             <button
               onClick={generateContent}
@@ -1077,7 +1097,7 @@ export default function HomePage() {
                   </p>
                 </div>
 
-                <div className="grid gap-2 sm:grid-cols-4">
+                <div className="grid grid-cols-5 gap-2">
                   {LOADING_STEPS.map((step, index) => (
                     <div
                       key={step}
