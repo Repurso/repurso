@@ -65,8 +65,9 @@ const SECTION_ICONS: Record<string, React.ReactElement> = {
 
 const LOADING_STEPS = [
   "Analyzing your idea",
-  "Creating platform-specific hooks",
-  "Optimizing tone for each channel",
+  "Generating platform-specific hooks",
+  "Optimizing tone and engagement",
+  "Creating creator-style variations",
   "Preparing publish-ready outputs",
 ];
 
@@ -92,6 +93,53 @@ const FAQ_ITEMS = [
     answer:
       "Yes. Paid plans include a 3-day free trial and can be cancelled anytime.",
   },
+];
+
+const VIRAL_EXAMPLES = [
+  {
+    before: "We launched a new AI tool for content creators.",
+    after:
+      "Most creators waste hours rewriting the same idea for every platform. We built Repurso to fix that.",
+  },
+  {
+    before: "Our product helps marketers create social media content.",
+    after:
+      "One idea. Nine platform-ready posts. Repurso turns raw thoughts into content you can actually publish.",
+  },
+  {
+    before: "I want to post more consistently.",
+    after:
+      "Consistency gets easier when one idea becomes LinkedIn, X, TikTok, Instagram and YouTube content in seconds.",
+  },
+];
+
+const QUICK_START_PROMPTS = [
+  {
+    title: "SaaS launch",
+    description: "Turn a product launch idea into platform-ready posts.",
+    prompt:
+      "We are launching a new AI SaaS that helps creators repurpose one idea into content for every platform.",
+  },
+  {
+    title: "Founder story",
+    description: "Create personal brand content from a founder insight.",
+    prompt:
+      "I learned that most founders spend too much time building features before validating distribution.",
+  },
+  {
+    title: "Educational post",
+    description: "Explain a useful idea in a way people want to save.",
+    prompt:
+      "Content repurposing helps creators save time by adapting one core idea for different platforms.",
+  },
+];
+
+const EXTRA_REWRITE_OPTIONS = [
+  ["More Storytelling", "more-storytelling"],
+  ["More Founder Style", "more-founder-style"],
+  ["More Contrarian", "more-contrarian"],
+  ["More Gen Z", "more-gen-z"],
+  ["More Luxury Brand", "more-luxury-brand"],
 ];
 
 type OutputSection = {
@@ -179,6 +227,10 @@ export default function HomePage() {
   const [loadingStep, setLoadingStep] = useState(0);
   const [toast, setToast] = useState("");
   const [copiedSection, setCopiedSection] = useState<string | null>(null);
+  const [hookInput, setHookInput] = useState("");
+  const [hooks, setHooks] = useState<string[]>([]);
+  const [hookLoading, setHookLoading] = useState(false);
+  const [copiedHookIndex, setCopiedHookIndex] = useState<number | null>(null);
 
   const outputSections = result ? splitOutput(result) : [];
   const characterCount = input.length;
@@ -468,6 +520,51 @@ export default function HomePage() {
     }, 1800);
   }
 
+  async function generateHooks() {
+    if (!hookInput.trim()) {
+      alert("Please enter a topic or idea.");
+      return;
+    }
+
+    setHookLoading(true);
+    setHooks([]);
+
+    try {
+      const res = await fetch("/api/hooks", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          input: hookInput,
+          userEmail: userEmail || "anonymous",
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.error || "Failed to generate hooks.");
+        return;
+      }
+
+      setHooks(data.hooks || []);
+    } catch {
+      alert("Failed to generate hooks.");
+    } finally {
+      setHookLoading(false);
+    }
+  }
+
+  async function copyHook(hook: string, index: number) {
+    await navigator.clipboard.writeText(hook);
+
+    setCopiedHookIndex(index);
+    window.setTimeout(() => {
+      setCopiedHookIndex(null);
+    }, 1800);
+  }
+
   function exportTextFile(filename: string, content: string, type: string) {
     const blob = new Blob([content], {
       type,
@@ -528,6 +625,13 @@ export default function HomePage() {
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
+            <a
+              href="#hook-generator"
+              className="text-sm text-zinc-400 transition hover:text-white"
+            >
+              Hooks
+            </a>
+
             <a
               href="#pricing"
               className="text-sm text-zinc-400 transition hover:text-white"
@@ -649,6 +753,33 @@ export default function HomePage() {
               Paste your content and let Repurso turn it into multiple formats.
             </p>
 
+            <div className="mb-5">
+              <div className="mb-3 flex items-center justify-between gap-3">
+                <p className="text-sm font-semibold uppercase tracking-[0.25em] text-zinc-500">
+                  Quick Start
+                </p>
+
+                <span className="text-xs text-zinc-600">
+                  Click to fill
+                </span>
+              </div>
+
+              <div className="grid gap-3 sm:grid-cols-3">
+                {QUICK_START_PROMPTS.map((preset) => (
+                  <button
+                    key={preset.title}
+                    type="button"
+                    onClick={() => setInput(preset.prompt)}
+                    className="rounded-2xl border border-white/10 bg-black/60 p-3 text-left transition hover:-translate-y-0.5 hover:border-purple-400/40 hover:bg-purple-500/10 sm:p-4"
+                  >
+                    <p className="mb-1 font-bold text-white">{preset.title}</p>
+                    <p className="text-xs leading-5 text-zinc-500">
+                      {preset.description}
+                    </p>
+                  </button>
+                ))}
+              </div>
+            </div>
 
             <div className="mb-6">
               <p className="mb-3 text-sm font-semibold uppercase tracking-[0.25em] text-zinc-500">
@@ -767,7 +898,7 @@ export default function HomePage() {
 
                   <div className="h-2 overflow-hidden rounded-full bg-zinc-900">
                     <div
-                      className="h-full rounded-full bg-white transition-all"
+                      className="h-full rounded-full bg-purple-500 shadow-[0_0_18px_rgba(168,85,247,0.55)] transition-all duration-700"
                       style={{
                         width: `${generationPercent}%`,
                       }}
@@ -785,7 +916,7 @@ export default function HomePage() {
 
                   <div className="h-2 overflow-hidden rounded-full bg-zinc-900">
                     <div
-                      className="h-full rounded-full bg-white transition-all"
+                      className="h-full rounded-full bg-purple-500 shadow-[0_0_18px_rgba(168,85,247,0.55)] transition-all duration-700"
                       style={{
                         width: `${rewritePercent}%`,
                       }}
@@ -1024,6 +1155,7 @@ export default function HomePage() {
                             ["Shorter", "shorter"],
                             ["Longer", "longer"],
                             ["More Emotional", "more-emotional"],
+                            ...EXTRA_REWRITE_OPTIONS,
                           ].map(([label, type]) => (
                             <button
                               key={type}
@@ -1077,6 +1209,129 @@ export default function HomePage() {
               </div>
             )}
           </section>
+        </section>
+
+        <section id="hook-generator" className="mb-14 rounded-[28px] border border-purple-400/20 bg-gradient-to-br from-purple-950/30 via-zinc-950 to-black p-4 shadow-2xl shadow-purple-950/20 sm:mb-20 sm:rounded-[32px] sm:p-8">
+          <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-purple-300">
+                Hook Generator
+              </p>
+
+              <h2 className="text-[2rem] font-bold sm:text-5xl">
+                Generate scroll-stopping hooks.
+              </h2>
+
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-zinc-400 sm:text-base sm:leading-7">
+                Enter a topic, product, idea or niche. Repurso will create viral hooks you can use for TikTok, X, LinkedIn and short-form content.
+              </p>
+            </div>
+
+            <span className="rounded-full border border-purple-400/30 bg-purple-500/10 px-4 py-2 text-xs font-bold uppercase tracking-wide text-purple-100">
+              New
+            </span>
+          </div>
+
+          <div className="grid gap-4 lg:grid-cols-[1fr_auto]">
+            <input
+              type="text"
+              placeholder="Example: AI tool for creators, SaaS launch, fitness coaching..."
+              value={hookInput}
+              onChange={(e) => setHookInput(e.target.value)}
+              className="rounded-2xl border border-white/10 bg-black/70 px-5 py-4 text-sm text-white outline-none transition placeholder:text-zinc-600 focus:border-purple-400/50 focus:ring-4 focus:ring-purple-500/10"
+            />
+
+            <button
+              onClick={generateHooks}
+              disabled={hookLoading}
+              className="inline-flex items-center justify-center gap-3 rounded-2xl bg-white px-8 py-4 text-sm font-bold text-black shadow-xl shadow-purple-950/30 transition hover:-translate-y-0.5 hover:bg-zinc-200 disabled:opacity-60"
+            >
+              {hookLoading && (
+                <span className="h-4 w-4 animate-spin rounded-full border-2 border-black/20 border-t-black" />
+              )}
+
+              {hookLoading ? "Generating..." : "Generate Hooks"}
+            </button>
+          </div>
+
+          {hooks.length > 0 && (
+            <div className="mt-6 grid gap-3 md:grid-cols-2">
+              {hooks.map((hook, index) => (
+                <div
+                  key={`${hook}-${index}`}
+                  className="rounded-2xl border border-white/10 bg-black/60 p-4 transition hover:border-purple-400/40 hover:bg-purple-500/10"
+                >
+                  <div className="mb-3 flex items-start justify-between gap-3">
+                    <span className="rounded-full bg-purple-500/10 px-3 py-1 text-xs font-bold text-purple-200">
+                      Hook {index + 1}
+                    </span>
+
+                    <button
+                      onClick={() => copyHook(hook, index)}
+                      className="rounded-xl bg-purple-600 px-3 py-1.5 text-xs font-bold text-white transition hover:bg-purple-500"
+                    >
+                      {copiedHookIndex === index ? "Copied" : "Copy"}
+                    </button>
+                  </div>
+
+                  <p className="leading-7 text-zinc-100">{hook}</p>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {!hooks.length && !hookLoading && (
+            <div className="mt-6 rounded-3xl border border-dashed border-white/10 bg-black/40 p-5 text-center">
+              <p className="font-semibold text-white">
+                Try: “AI SaaS for creators” or “fitness coach content ideas”
+              </p>
+
+              <p className="mt-2 text-sm text-zinc-500">
+                Works in the same language as your input.
+              </p>
+            </div>
+          )}
+        </section>
+
+        <section className="mb-14 sm:mb-20">
+          <div className="mb-10 text-center sm:mb-14">
+            <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-zinc-500">
+              Before / After
+            </p>
+
+            <h2 className="mb-4 text-[2rem] font-bold sm:text-5xl">
+              See the transformation.
+            </h2>
+
+            <p className="mx-auto max-w-2xl text-base leading-7 text-zinc-400 sm:text-lg sm:leading-8">
+              Repurso turns plain ideas into sharper, platform-ready content angles.
+            </p>
+          </div>
+
+          <div className="grid gap-4 lg:grid-cols-3">
+            {VIRAL_EXAMPLES.map((example) => (
+              <div
+                key={example.before}
+                className="rounded-[24px] border border-white/10 bg-zinc-950/70 p-5 shadow-xl shadow-purple-950/10"
+              >
+                <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-zinc-600">
+                  Before
+                </p>
+
+                <p className="mb-5 leading-7 text-zinc-500">
+                  {example.before}
+                </p>
+
+                <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-purple-300">
+                  After
+                </p>
+
+                <p className="leading-7 text-white">
+                  {example.after}
+                </p>
+              </div>
+            ))}
+          </div>
         </section>
 
         <section className="mb-14 sm:mb-20">
@@ -1327,8 +1582,6 @@ export default function HomePage() {
                 For creators posting every week.
               </p>
 
-
-
               <div className="mb-8">
                 <div className="flex items-center gap-3">
                   <span className="text-4xl font-bold sm:text-5xl">$9.99</span>
@@ -1367,8 +1620,6 @@ export default function HomePage() {
               <p className="mb-4 text-zinc-400">
                 For power users and small teams.
               </p>
-
-
 
               <div className="mb-8">
                 <div className="flex items-center gap-3">
