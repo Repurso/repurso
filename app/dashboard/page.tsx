@@ -29,10 +29,10 @@ type SortOrder = "latest" | "oldest";
 type DashboardTab = "analytics" | "history" | "subscription";
 
 const CREATOR_CHECKOUT =
-  "https://repursoapp.lemonsqueezy.com/checkout/buy/5f45028d-de97-458d-a827-64f8a7adc153";
+  "https://repursoapp.lemonsqueezy.com/checkout/buy/f331a19b-e62f-4587-b9a8-19b4dad91db3";
 
 const PRO_CHECKOUT =
-  "https://repursoapp.lemonsqueezy.com/checkout/buy/548cbc91-792f-4fae-b6a5-569f95c119c3";
+  "https://repursoapp.lemonsqueezy.com/checkout/buy/41ceda2d-d556-493f-b3f1-777150658c65";
 
 const SECTION_TITLES = [
   "LinkedIn Post",
@@ -153,6 +153,7 @@ export default function DashboardPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [dateFilter, setDateFilter] = useState<DateFilter>("all");
   const [sortOrder, setSortOrder] = useState<SortOrder>("latest");
+  const [copiedKey, setCopiedKey] = useState<string | null>(null);
 
   useEffect(() => {
     async function loadDashboard() {
@@ -197,9 +198,13 @@ export default function DashboardPage() {
     loadDashboard();
   }, []);
 
-  async function copyText(text: string) {
+  async function copyText(text: string, key = "dashboard") {
     await navigator.clipboard.writeText(text);
-    alert("Copied.");
+
+    setCopiedKey(key);
+    window.setTimeout(() => {
+      setCopiedKey(null);
+    }, 1800);
   }
 
   async function deleteGeneration(id: string) {
@@ -337,43 +342,72 @@ export default function DashboardPage() {
   ];
 
   return (
-    <main className="min-h-screen bg-black px-4 py-8 text-white sm:px-6 sm:py-10">
+    <main className="relative min-h-screen overflow-hidden bg-black px-3 py-3 text-white sm:px-6 sm:py-6">
+      <div className="pointer-events-none fixed inset-0 -z-10">
+        <div className="absolute left-1/2 top-0 h-[360px] w-[360px] -translate-x-1/2 rounded-full bg-purple-700/20 blur-[110px] sm:h-[520px] sm:w-[520px] sm:blur-[140px]" />
+        <div className="absolute right-[-120px] top-[260px] h-[300px] w-[300px] rounded-full bg-fuchsia-600/10 blur-[110px] sm:h-[420px] sm:w-[420px] sm:blur-[130px]" />
+        <div className="absolute bottom-[-160px] left-[-120px] h-[300px] w-[300px] rounded-full bg-violet-700/10 blur-[110px] sm:h-[420px] sm:w-[420px] sm:blur-[130px]" />
+      </div>
+
       <div className="mx-auto max-w-7xl">
-        <div className="mb-10 flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
-          <div>
-            <p className="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-zinc-500">
-              Repurso Dashboard
-            </p>
+        <div className="sticky top-2 z-40 mb-6 rounded-2xl border border-white/10 bg-black/55 px-3 py-3 shadow-2xl shadow-purple-950/20 backdrop-blur-xl sm:top-4 sm:mb-8 sm:rounded-3xl sm:px-4">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <a href="/" className="group flex items-center gap-3">
+              <img
+                src="/logo-icon.png"
+                alt="Repurso"
+                className="h-8 w-8 rounded-xl object-cover shadow-lg shadow-purple-700/20 transition group-hover:scale-105 sm:h-9 sm:w-9"
+              />
 
-            <h1 className="text-4xl font-bold sm:text-5xl">Dashboard</h1>
-
-            <p className="mt-3 max-w-2xl text-zinc-400">
-              Track usage, manage history, and control subscription details from
-              clean dashboard tabs.
-            </p>
-          </div>
-
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <a
-              href="/#generator"
-              className="rounded-xl border border-zinc-700 px-5 py-3 text-center font-semibold transition hover:border-zinc-500"
-            >
-              Generate
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.25em] text-purple-200">
+                  Repurso Dashboard
+                </p>
+                <h1 className="text-2xl font-bold sm:text-3xl">Dashboard</h1>
+              </div>
             </a>
 
-            <a
-              href="/"
-              className="rounded-xl bg-white px-5 py-3 text-center font-semibold text-black transition hover:bg-zinc-200"
-            >
-              Back home
-            </a>
+            <div className="flex flex-wrap gap-3">
+              <a
+                href="/#generator"
+                className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2 text-sm font-semibold transition hover:-translate-y-0.5 hover:border-purple-400/40 hover:bg-purple-500/10 sm:px-5 sm:py-3"
+              >
+                Generate
+              </a>
+
+              <a
+                href="/#hook-generator"
+                className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2 text-sm font-semibold transition hover:-translate-y-0.5 hover:border-purple-400/40 hover:bg-purple-500/10 sm:px-5 sm:py-3"
+              >
+                Hooks
+              </a>
+
+              <a
+                href="/"
+                className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-black transition hover:-translate-y-0.5 hover:bg-zinc-200 sm:px-5 sm:py-3"
+              >
+                Back home
+              </a>
+            </div>
           </div>
         </div>
 
+        <div className="mb-8">
+          <p className="max-w-2xl text-sm leading-6 text-zinc-400 sm:text-base">
+            Track usage, manage history, and control subscription details from clean dashboard tabs.
+          </p>
+        </div>
+
         {loading ? (
-          <p className="text-zinc-400">Loading...</p>
+          <div className="rounded-3xl border border-white/10 bg-zinc-950/70 p-8 shadow-2xl shadow-purple-950/20">
+            <div className="mb-4 flex items-center gap-3">
+              <span className="h-4 w-4 animate-spin rounded-full border-2 border-purple-400/20 border-t-purple-400" />
+              <p className="font-semibold text-purple-100">Loading dashboard...</p>
+            </div>
+            <p className="text-sm text-zinc-500">Fetching your usage, history and subscription details.</p>
+          </div>
         ) : !userEmail ? (
-          <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-8">
+          <div className="rounded-3xl border border-white/10 bg-zinc-950/70 p-8 shadow-2xl shadow-purple-950/20">
             <h2 className="mb-3 text-2xl font-bold">Login required</h2>
 
             <p className="mb-6 text-zinc-400">
@@ -382,14 +416,14 @@ export default function DashboardPage() {
 
             <a
               href="/login"
-              className="inline-block rounded-xl bg-white px-5 py-3 font-semibold text-black"
+              className="inline-block rounded-xl bg-white px-5 py-3 font-semibold text-black shadow-lg shadow-purple-950/20 transition hover:bg-zinc-200"
             >
               Login
             </a>
           </div>
         ) : (
           <>
-            <div className="mb-8 grid gap-3 rounded-3xl border border-zinc-800 bg-zinc-950 p-3 md:grid-cols-3">
+            <div className="mb-8 grid gap-2 rounded-3xl border border-white/10 bg-zinc-950/70 p-2 shadow-2xl shadow-purple-950/10 backdrop-blur md:grid-cols-3">
               {tabs.map((tab) => {
                 const isActive = activeTab === tab.id;
 
@@ -398,10 +432,10 @@ export default function DashboardPage() {
                     key={tab.id}
                     type="button"
                     onClick={() => setActiveTab(tab.id)}
-                    className={`rounded-2xl p-4 text-left transition ${
+                    className={`rounded-2xl border border-transparent p-4 text-left transition ${
                       isActive
-                        ? "bg-white text-black"
-                        : "bg-black text-zinc-400 hover:bg-zinc-900 hover:text-white"
+                        ? "bg-white text-black shadow-lg shadow-purple-950/20"
+                        : "bg-black/60 text-zinc-400 hover:border-purple-400/30 hover:bg-purple-500/10 hover:text-white"
                     }`}
                   >
                     <span className="block text-base font-bold">
@@ -420,10 +454,27 @@ export default function DashboardPage() {
               })}
             </div>
 
+            <div className="mb-8 grid gap-3 sm:grid-cols-3">
+              <div className="rounded-2xl border border-white/10 bg-black/50 p-4">
+                <p className="text-xs uppercase tracking-[0.2em] text-zinc-500">Plan</p>
+                <p className="mt-2 text-xl font-bold capitalize">{currentPlan}</p>
+              </div>
+
+              <div className="rounded-2xl border border-white/10 bg-black/50 p-4">
+                <p className="text-xs uppercase tracking-[0.2em] text-zinc-500">Generations left</p>
+                <p className="mt-2 text-xl font-bold">{generationRemaining}</p>
+              </div>
+
+              <div className="rounded-2xl border border-white/10 bg-black/50 p-4">
+                <p className="text-xs uppercase tracking-[0.2em] text-zinc-500">History items</p>
+                <p className="mt-2 text-xl font-bold">{generations.length}</p>
+              </div>
+            </div>
+
             {activeTab === "analytics" && (
               <section>
                 <div className="mb-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                  <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
+                  <div className="rounded-3xl border border-white/10 bg-zinc-950/70 p-6 shadow-xl shadow-purple-950/10 transition hover:-translate-y-1 hover:border-purple-400/30">
                     <p className="text-sm text-zinc-500">Current plan</p>
 
                     <p className="mt-3 text-3xl font-bold capitalize">
@@ -435,7 +486,7 @@ export default function DashboardPage() {
                     </p>
                   </div>
 
-                  <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
+                  <div className="rounded-3xl border border-white/10 bg-zinc-950/70 p-6 shadow-xl shadow-purple-950/10 transition hover:-translate-y-1 hover:border-purple-400/30">
                     <p className="text-sm text-zinc-500">
                       Generations remaining
                     </p>
@@ -449,7 +500,7 @@ export default function DashboardPage() {
                     </p>
                   </div>
 
-                  <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
+                  <div className="rounded-3xl border border-white/10 bg-zinc-950/70 p-6 shadow-xl shadow-purple-950/10 transition hover:-translate-y-1 hover:border-purple-400/30">
                     <p className="text-sm text-zinc-500">Rewrites remaining</p>
 
                     <p className="mt-3 text-3xl font-bold">
@@ -461,7 +512,7 @@ export default function DashboardPage() {
                     </p>
                   </div>
 
-                  <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
+                  <div className="rounded-3xl border border-white/10 bg-zinc-950/70 p-6 shadow-xl shadow-purple-950/10 transition hover:-translate-y-1 hover:border-purple-400/30">
                     <p className="text-sm text-zinc-500">This week</p>
 
                     <p className="mt-3 text-3xl font-bold">
@@ -475,7 +526,7 @@ export default function DashboardPage() {
                 </div>
 
                 <div className="mb-8 grid gap-4 xl:grid-cols-2">
-                  <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
+                  <div className="rounded-3xl border border-white/10 bg-zinc-950/70 p-6 shadow-xl shadow-purple-950/10 transition hover:-translate-y-1 hover:border-purple-400/30">
                     <div className="mb-5 flex items-center justify-between gap-4">
                       <div>
                         <h2 className="text-2xl font-bold">
@@ -494,7 +545,7 @@ export default function DashboardPage() {
 
                     <div className="h-3 overflow-hidden rounded-full bg-zinc-900">
                       <div
-                        className="h-full rounded-full bg-white transition-all"
+                        className="h-full rounded-full bg-purple-500 shadow-[0_0_18px_rgba(168,85,247,0.55)] transition-all duration-700"
                         style={{
                           width: `${generationPercent}%`,
                         }}
@@ -502,7 +553,7 @@ export default function DashboardPage() {
                     </div>
                   </div>
 
-                  <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
+                  <div className="rounded-3xl border border-white/10 bg-zinc-950/70 p-6 shadow-xl shadow-purple-950/10 transition hover:-translate-y-1 hover:border-purple-400/30">
                     <div className="mb-5 flex items-center justify-between gap-4">
                       <div>
                         <h2 className="text-2xl font-bold">Rewrite usage</h2>
@@ -519,7 +570,7 @@ export default function DashboardPage() {
 
                     <div className="h-3 overflow-hidden rounded-full bg-zinc-900">
                       <div
-                        className="h-full rounded-full bg-white transition-all"
+                        className="h-full rounded-full bg-purple-500 shadow-[0_0_18px_rgba(168,85,247,0.55)] transition-all duration-700"
                         style={{
                           width: `${rewritePercent}%`,
                         }}
@@ -529,7 +580,7 @@ export default function DashboardPage() {
                 </div>
 
                 <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                  <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
+                  <div className="rounded-3xl border border-white/10 bg-zinc-950/70 p-6 shadow-xl shadow-purple-950/10 transition hover:-translate-y-1 hover:border-purple-400/30">
                     <p className="text-sm text-zinc-500">
                       Total saved history
                     </p>
@@ -539,7 +590,7 @@ export default function DashboardPage() {
                     </p>
                   </div>
 
-                  <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
+                  <div className="rounded-3xl border border-white/10 bg-zinc-950/70 p-6 shadow-xl shadow-purple-950/10 transition hover:-translate-y-1 hover:border-purple-400/30">
                     <p className="text-sm text-zinc-500">
                       Total input characters
                     </p>
@@ -549,7 +600,7 @@ export default function DashboardPage() {
                     </p>
                   </div>
 
-                  <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
+                  <div className="rounded-3xl border border-white/10 bg-zinc-950/70 p-6 shadow-xl shadow-purple-950/10 transition hover:-translate-y-1 hover:border-purple-400/30">
                     <p className="text-sm text-zinc-500">Average input size</p>
 
                     <p className="mt-3 text-3xl font-bold">
@@ -557,7 +608,7 @@ export default function DashboardPage() {
                     </p>
                   </div>
 
-                  <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
+                  <div className="rounded-3xl border border-white/10 bg-zinc-950/70 p-6 shadow-xl shadow-purple-950/10 transition hover:-translate-y-1 hover:border-purple-400/30">
                     <p className="text-sm text-zinc-500">Account status</p>
 
                     <p className="mt-3 text-3xl font-bold text-green-400">
@@ -565,12 +616,51 @@ export default function DashboardPage() {
                     </p>
                   </div>
                 </div>
+
+                <div className="mt-8 rounded-3xl border border-white/10 bg-zinc-950/70 p-6 shadow-xl shadow-purple-950/10">
+                  <div className="mb-5 flex items-center justify-between gap-4">
+                    <div>
+                      <h2 className="text-2xl font-bold">Recent activity</h2>
+                      <p className="mt-1 text-sm text-zinc-500">
+                        Your latest generated content.
+                      </p>
+                    </div>
+
+                    <button
+                      onClick={() => setActiveTab("history")}
+                      className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2 text-sm font-semibold transition hover:border-purple-400/40 hover:bg-purple-500/10"
+                    >
+                      View history
+                    </button>
+                  </div>
+
+                  {generations.slice(0, 3).length === 0 ? (
+                    <p className="text-zinc-500">No activity yet.</p>
+                  ) : (
+                    <div className="grid gap-3">
+                      {generations.slice(0, 3).map((item) => (
+                        <div
+                          key={item.id}
+                          className="rounded-2xl border border-white/10 bg-black/60 p-4"
+                        >
+                          <p className="mb-2 text-xs text-zinc-600">
+                            {new Date(item.created_at).toLocaleString()}
+                          </p>
+
+                          <p className="line-clamp-2 text-sm text-zinc-300">
+                            {item.input}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </section>
             )}
 
             {activeTab === "subscription" && (
               <section className="space-y-6">
-                <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6 sm:p-8">
+                <div className="rounded-3xl border border-white/10 bg-zinc-950/70 p-6 sm:p-8">
                   <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
                     <div>
                       <p className="mb-3 text-sm font-semibold uppercase tracking-[0.25em] text-zinc-500">
@@ -594,17 +684,17 @@ export default function DashboardPage() {
                           <a
                             href={creatorUrl}
                             target="_blank"
-                            className="rounded-xl bg-white px-5 py-3 text-center font-semibold text-black transition hover:bg-zinc-200"
+                            className="rounded-xl bg-white px-5 py-3 text-center font-semibold text-black shadow-lg shadow-purple-950/20 transition hover:-translate-y-0.5 hover:bg-zinc-200"
                           >
-                            Upgrade to Creator
+                            Start Creator trial
                           </a>
 
                           <a
                             href={proUrl}
                             target="_blank"
-                            className="rounded-xl border border-zinc-700 px-5 py-3 text-center font-semibold transition hover:border-zinc-500"
+                            className="rounded-xl border border-white/10 bg-white/[0.03] px-5 py-3 text-center font-semibold transition hover:-translate-y-0.5 hover:border-purple-400/40 hover:bg-purple-500/10"
                           >
-                            Upgrade to Pro
+                            Start Pro trial
                           </a>
                         </>
                       )}
@@ -613,9 +703,9 @@ export default function DashboardPage() {
                         <a
                           href={proUrl}
                           target="_blank"
-                          className="rounded-xl bg-white px-5 py-3 text-center font-semibold text-black transition hover:bg-zinc-200"
+                          className="rounded-xl bg-white px-5 py-3 text-center font-semibold text-black shadow-lg shadow-purple-950/20 transition hover:-translate-y-0.5 hover:bg-zinc-200"
                         >
-                          Upgrade to Pro
+                          Start Pro trial
                         </a>
                       )}
 
@@ -629,7 +719,7 @@ export default function DashboardPage() {
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-3">
-                  <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
+                  <div className="rounded-3xl border border-white/10 bg-zinc-950/70 p-6 shadow-xl shadow-purple-950/10 transition hover:-translate-y-1 hover:border-purple-400/30">
                     <p className="text-sm text-zinc-500">Plan</p>
 
                     <p className="mt-3 text-3xl font-bold capitalize">
@@ -641,7 +731,7 @@ export default function DashboardPage() {
                     </p>
                   </div>
 
-                  <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
+                  <div className="rounded-3xl border border-white/10 bg-zinc-950/70 p-6 shadow-xl shadow-purple-950/10 transition hover:-translate-y-1 hover:border-purple-400/30">
                     <p className="text-sm text-zinc-500">Generation limit</p>
 
                     <p className="mt-3 text-3xl font-bold">
@@ -653,7 +743,7 @@ export default function DashboardPage() {
                     </p>
                   </div>
 
-                  <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
+                  <div className="rounded-3xl border border-white/10 bg-zinc-950/70 p-6 shadow-xl shadow-purple-950/10 transition hover:-translate-y-1 hover:border-purple-400/30">
                     <p className="text-sm text-zinc-500">Rewrite limit</p>
 
                     <p className="mt-3 text-3xl font-bold">
@@ -666,13 +756,59 @@ export default function DashboardPage() {
                   </div>
                 </div>
 
-                <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className="rounded-3xl border border-white/10 bg-white p-6 text-black shadow-2xl shadow-purple-950/20">
+                    <div className="mb-3 inline-flex rounded-full bg-black px-3 py-1 text-xs font-bold text-white">
+                      Creator
+                    </div>
+
+                    <p className="text-4xl font-bold">$9.99</p>
+                    <p className="mt-1 text-sm text-zinc-600">/ month · 3-day free trial</p>
+
+                    <ul className="mt-5 space-y-3 text-sm">
+                      <li>✓ 300 generations / month</li>
+                      <li>✓ 500 rewrites / month</li>
+                      <li>✓ 5,000 characters</li>
+                    </ul>
+
+                    <a
+                      href={creatorUrl}
+                      target="_blank"
+                      className="mt-6 block rounded-2xl bg-black px-5 py-3 text-center font-bold text-white"
+                    >
+                      Start Creator trial
+                    </a>
+                  </div>
+
+                  <div className="rounded-3xl border border-purple-400/20 bg-purple-500/10 p-6 shadow-2xl shadow-purple-950/20">
+                    <div className="mb-3 inline-flex rounded-full border border-purple-400/30 bg-purple-500/10 px-3 py-1 text-xs font-bold text-purple-100">
+                      Pro
+                    </div>
+
+                    <p className="text-4xl font-bold">$19.99</p>
+                    <p className="mt-1 text-sm text-zinc-400">/ month · 3-day free trial</p>
+
+                    <ul className="mt-5 space-y-3 text-sm text-zinc-300">
+                      <li>✓ 1000 generations / month</li>
+                      <li>✓ 2000 rewrites / month</li>
+                      <li>✓ 10,000 characters</li>
+                    </ul>
+
+                    <a
+                      href={proUrl}
+                      target="_blank"
+                      className="mt-6 block rounded-2xl bg-white px-5 py-3 text-center font-bold text-black"
+                    >
+                      Start Pro trial
+                    </a>
+                  </div>
+                </div>
+
+                <div className="rounded-3xl border border-white/10 bg-zinc-950/70 p-6 shadow-xl shadow-purple-950/10 transition hover:-translate-y-1 hover:border-purple-400/30">
                   <h3 className="text-2xl font-bold">Billing note</h3>
 
                   <p className="mt-3 text-zinc-400">
-                    Customer portal can be added after Lemon Squeezy store
-                    approval. Checkout links and webhook-based plan activation
-                    remain ready.
+                    Paid plans include a 3-day free trial. Customer portal can be added after Lemon Squeezy store approval. Checkout links and webhook-based plan activation remain ready.
                   </p>
                 </div>
               </section>
@@ -680,7 +816,7 @@ export default function DashboardPage() {
 
             {activeTab === "history" && (
               <section>
-                <div className="mb-6 rounded-3xl border border-zinc-800 bg-zinc-950 p-5">
+                <div className="mb-6 rounded-3xl border border-white/10 bg-zinc-950/70 p-5">
                   <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                     <div>
                       <h2 className="text-2xl font-bold">Content history</h2>
@@ -694,7 +830,7 @@ export default function DashboardPage() {
 
                     <button
                       onClick={clearFilters}
-                      className="rounded-xl border border-zinc-700 px-4 py-2 text-sm font-semibold text-zinc-300 transition hover:border-zinc-500 hover:text-white"
+                      className="rounded-xl border border-white/10 px-4 py-2 text-sm font-semibold text-zinc-300 transition hover:border-purple-400/40 hover:text-white"
                     >
                       Clear filters
                     </button>
@@ -706,7 +842,7 @@ export default function DashboardPage() {
                       placeholder="Search history..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="h-12 rounded-2xl border border-zinc-800 bg-black px-5 text-white outline-none placeholder:text-zinc-600"
+                      className="h-12 rounded-2xl border border-white/10 bg-black/70 px-5 text-white outline-none placeholder:text-zinc-600"
                     />
 
                     <select
@@ -714,7 +850,7 @@ export default function DashboardPage() {
                       onChange={(e) =>
                         setDateFilter(e.target.value as DateFilter)
                       }
-                      className="h-12 rounded-2xl border border-zinc-800 bg-black px-5 text-white outline-none"
+                      className="h-12 rounded-2xl border border-white/10 bg-black/70 px-5 text-white outline-none"
                     >
                       <option value="all">All time</option>
                       <option value="today">Today</option>
@@ -727,7 +863,7 @@ export default function DashboardPage() {
                       onChange={(e) =>
                         setSortOrder(e.target.value as SortOrder)
                       }
-                      className="h-12 rounded-2xl border border-zinc-800 bg-black px-5 text-white outline-none"
+                      className="h-12 rounded-2xl border border-white/10 bg-black/70 px-5 text-white outline-none"
                     >
                       <option value="latest">Latest first</option>
                       <option value="oldest">Oldest first</option>
@@ -736,7 +872,7 @@ export default function DashboardPage() {
                 </div>
 
                 {generations.length === 0 ? (
-                  <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-8">
+                  <div className="rounded-3xl border border-white/10 bg-zinc-950/70 p-8">
                     <h2 className="mb-3 text-2xl font-bold">
                       No generations yet
                     </h2>
@@ -747,13 +883,13 @@ export default function DashboardPage() {
 
                     <a
                       href="/#generator"
-                      className="inline-block rounded-xl bg-white px-5 py-3 font-semibold text-black"
+                      className="inline-block rounded-xl bg-white px-5 py-3 font-semibold text-black shadow-lg shadow-purple-950/20 transition hover:bg-zinc-200"
                     >
                       Generate content
                     </a>
                   </div>
                 ) : filteredGenerations.length === 0 ? (
-                  <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-8 text-center">
+                  <div className="rounded-3xl border border-white/10 bg-zinc-950/70 p-8 text-center">
                     <h2 className="mb-3 text-2xl font-bold">
                       No results found
                     </h2>
@@ -777,7 +913,7 @@ export default function DashboardPage() {
                       return (
                         <div
                           key={item.id}
-                          className="rounded-3xl border border-zinc-800 bg-zinc-950 p-5 sm:p-6"
+                          className="rounded-3xl border border-white/10 bg-zinc-950/70 p-5 sm:p-6"
                         >
                           <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                             <div className="text-sm text-zinc-500">
@@ -797,7 +933,7 @@ export default function DashboardPage() {
                                     "text/plain;charset=utf-8"
                                   )
                                 }
-                                className="rounded-xl border border-zinc-700 px-4 py-2 font-semibold transition hover:border-zinc-500"
+                                className="rounded-xl border border-white/10 px-4 py-2 font-semibold transition hover:border-purple-400/40"
                               >
                                 Export TXT
                               </button>
@@ -810,7 +946,7 @@ export default function DashboardPage() {
                                     "text/markdown;charset=utf-8"
                                   )
                                 }
-                                className="rounded-xl border border-zinc-700 px-4 py-2 font-semibold transition hover:border-zinc-500"
+                                className="rounded-xl border border-white/10 px-4 py-2 font-semibold transition hover:border-purple-400/40"
                               >
                                 Export MD
                               </button>
@@ -824,7 +960,7 @@ export default function DashboardPage() {
                             </div>
                           </div>
 
-                          <div className="mb-5 rounded-2xl border border-zinc-800 bg-black p-5">
+                          <div className="mb-5 rounded-2xl border border-white/10 bg-black/70 p-5">
                             <h2 className="mb-2 font-bold">Input</h2>
 
                             <p className="whitespace-pre-wrap text-zinc-300">
@@ -836,7 +972,7 @@ export default function DashboardPage() {
                             {outputSections.map((section) => (
                               <div
                                 key={`${item.id}-${section.title}`}
-                                className="rounded-2xl border border-zinc-800 bg-black p-5"
+                                className="rounded-2xl border border-white/10 bg-black/70 p-5"
                               >
                                 <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                                   <h2 className="text-xl font-bold">
@@ -852,7 +988,7 @@ export default function DashboardPage() {
                                           "text/plain;charset=utf-8"
                                         )
                                       }
-                                      className="rounded-xl border border-zinc-700 px-4 py-2 font-semibold transition hover:border-zinc-500"
+                                      className="rounded-xl border border-white/10 px-4 py-2 font-semibold transition hover:border-purple-400/40"
                                     >
                                       TXT
                                     </button>
@@ -865,18 +1001,18 @@ export default function DashboardPage() {
                                           "text/markdown;charset=utf-8"
                                         )
                                       }
-                                      className="rounded-xl border border-zinc-700 px-4 py-2 font-semibold transition hover:border-zinc-500"
+                                      className="rounded-xl border border-white/10 px-4 py-2 font-semibold transition hover:border-purple-400/40"
                                     >
                                       MD
                                     </button>
 
                                     <button
                                       onClick={() =>
-                                        copyText(section.content)
+                                        copyText(section.content, `${item.id}-${section.title}`)
                                       }
-                                      className="rounded-xl bg-white px-4 py-2 font-semibold text-black transition hover:bg-zinc-200"
+                                      className="rounded-xl bg-purple-600 px-4 py-2 font-semibold text-white shadow-lg shadow-purple-950/20 transition hover:bg-purple-500"
                                     >
-                                      Copy
+                                      {copiedKey === `${item.id}-${section.title}` ? "Copied" : "Copy"}
                                     </button>
                                   </div>
                                 </div>
