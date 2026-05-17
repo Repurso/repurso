@@ -232,7 +232,7 @@ export default function HomePage() {
   const [hooks, setHooks] = useState<string[]>([]);
   const [hookLoading, setHookLoading] = useState(false);
   const [copiedHookIndex, setCopiedHookIndex] = useState<number | null>(null);
-  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
+  
 
   const outputSections = result ? splitOutput(result) : [];
   const characterCount = input.length;
