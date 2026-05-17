@@ -232,6 +232,14 @@ export default function HomePage() {
   const [hooks, setHooks] = useState<string[]>([]);
   const [hookLoading, setHookLoading] = useState(false);
   const [copiedHookIndex, setCopiedHookIndex] = useState<number | null>(null);
+  const [carouselInput, setCarouselInput] = useState("");
+  const [carouselSlides, setCarouselSlides] = useState<string[]>([]);
+  const [carouselLoading, setCarouselLoading] = useState(false);
+  const [copiedSlideIndex, setCopiedSlideIndex] = useState<number | null>(null);
+  const [calendarInput, setCalendarInput] = useState("");
+  const [calendarItems, setCalendarItems] = useState<string[]>([]);
+  const [calendarLoading, setCalendarLoading] = useState(false);
+  const [copiedCalendarIndex, setCopiedCalendarIndex] = useState<number | null>(null);
   
 
   const outputSections = result ? splitOutput(result) : [];
@@ -567,6 +575,96 @@ export default function HomePage() {
     }, 1800);
   }
 
+  async function generateCarousel() {
+    if (!carouselInput.trim()) {
+      alert("Please enter a topic or idea.");
+      return;
+    }
+
+    setCarouselLoading(true);
+    setCarouselSlides([]);
+
+    try {
+      const res = await fetch("/api/carousel", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          input: carouselInput,
+          userEmail: userEmail || "anonymous",
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.error || "Failed to generate carousel.");
+        return;
+      }
+
+      setCarouselSlides(data.slides || []);
+    } catch {
+      alert("Failed to generate carousel.");
+    } finally {
+      setCarouselLoading(false);
+    }
+  }
+
+  async function copySlide(slide: string, index: number) {
+    await navigator.clipboard.writeText(slide);
+
+    setCopiedSlideIndex(index);
+    window.setTimeout(() => {
+      setCopiedSlideIndex(null);
+    }, 1800);
+  }
+
+  async function generateCalendar() {
+    if (!calendarInput.trim()) {
+      alert("Please enter your niche, product, or audience.");
+      return;
+    }
+
+    setCalendarLoading(true);
+    setCalendarItems([]);
+
+    try {
+      const res = await fetch("/api/calendar", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          input: calendarInput,
+          userEmail: userEmail || "anonymous",
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.error || "Failed to generate calendar.");
+        return;
+      }
+
+      setCalendarItems(data.items || []);
+    } catch {
+      alert("Failed to generate calendar.");
+    } finally {
+      setCalendarLoading(false);
+    }
+  }
+
+  async function copyCalendarItem(item: string, index: number) {
+    await navigator.clipboard.writeText(item);
+
+    setCopiedCalendarIndex(index);
+    window.setTimeout(() => {
+      setCopiedCalendarIndex(null);
+    }, 1800);
+  }
+
   function exportTextFile(filename: string, content: string, type: string) {
     const blob = new Blob([content], {
       type,
@@ -632,6 +730,20 @@ export default function HomePage() {
               className="text-sm text-zinc-400 transition hover:text-white"
             >
               Hooks
+            </a>
+
+            <a
+              href="#carousel-generator"
+              className="text-sm text-zinc-400 transition hover:text-white"
+            >
+              Carousel
+            </a>
+
+            <a
+              href="#calendar-generator"
+              className="text-sm text-zinc-400 transition hover:text-white"
+            >
+              Calendar
             </a>
 
             <a
