@@ -228,6 +228,7 @@ export default function HomePage() {
   const [loadingStep, setLoadingStep] = useState(0);
   const [toast, setToast] = useState("");
   const [copiedSection, setCopiedSection] = useState<string | null>(null);
+  const [openResultId, setOpenResultId] = useState<string | null>(null);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
   const [hookInput, setHookInput] = useState("");
   const [hooks, setHooks] = useState<string[]>([]);
@@ -379,6 +380,9 @@ export default function HomePage() {
 
       setResult(data.result);
 
+      const sections = splitOutput(data.result);
+      setOpenResultId(sections[0]?.id || null);
+
       if (data.usage) {
         setGenerationUsage(data.usage.used || 0);
       }
@@ -451,6 +455,7 @@ export default function HomePage() {
         .join("\n\n");
 
       setResult(rebuiltResult);
+      setOpenResultId(sectionId);
 
       if (data.usage) {
         setRewriteUsage(data.usage.used || 0);
@@ -508,8 +513,7 @@ export default function HomePage() {
 
       setSavedPrompts((prev) => [data, ...prev]);
       setPromptTitle("");
-
-      alert("Prompt saved.");
+      setPromptLibraryNotice("Prompt saved successfully.");
     } catch {
       alert("Failed to save prompt.");
     } finally {
@@ -1193,20 +1197,36 @@ export default function HomePage() {
                     Rewrite, copy or export each version below.
                   </p>
                 </div>
-                {outputSections.map((section) => (
-                  <div
-                    key={section.id}
-                    className="rounded-3xl border border-white/10 bg-black/80 p-5 shadow-xl shadow-purple-950/10 transition hover:border-purple-400/30 sm:p-6"
-                  >
-                    <div className="mb-5 flex flex-col gap-4">
-                      <div className="flex items-start justify-between gap-3">
-                        <h4 className="flex min-w-0 items-center gap-3 text-2xl font-bold">
+                {outputSections.map((section) => {
+                  const isOpen = openResultId === section.id;
+
+                  return (
+                    <div
+                      key={section.id}
+                      className="rounded-3xl border border-white/10 bg-black/80 shadow-xl shadow-purple-950/10 transition hover:border-purple-400/30"
+                    >
+                      <div className="flex items-start justify-between gap-3 p-4 sm:p-5">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setOpenResultId(isOpen ? null : section.id)
+                          }
+                          className="flex min-w-0 flex-1 items-center gap-3 text-left"
+                        >
                           <span className="text-2xl">
                             {SECTION_ICONS[section.title]}
                           </span>
 
-                          <span className="truncate">{section.title}</span>
-                        </h4>
+                          <span className="min-w-0">
+                            <span className="block truncate text-xl font-bold sm:text-2xl">
+                              {section.title}
+                            </span>
+
+                            <span className="mt-1 block text-xs text-zinc-500">
+                              {isOpen ? "Click to collapse" : "Click to expand"}
+                            </span>
+                          </span>
+                        </button>
 
                         <div className="flex shrink-0 items-center gap-2">
                           <button
@@ -1217,7 +1237,7 @@ export default function HomePage() {
                                 "text/plain;charset=utf-8"
                               )
                             }
-                            className="rounded-xl border border-zinc-700 bg-zinc-950 px-3 py-2 text-[11px] font-bold text-white transition hover:border-zinc-500 sm:px-4 sm:text-xs"
+                            className="rounded-xl border border-white/10 bg-zinc-950 px-3 py-2 text-[11px] font-bold text-white transition hover:border-purple-400/40 sm:px-4 sm:text-xs"
                           >
                             TXT
                           </button>
@@ -1226,11 +1246,13 @@ export default function HomePage() {
                             onClick={() =>
                               exportTextFile(
                                 `${section.id}.md`,
-                                `# ${section.title}\n\n${section.content}`,
+                                `# ${section.title}
+
+${section.content}`,
                                 "text/markdown;charset=utf-8"
                               )
                             }
-                            className="rounded-xl border border-zinc-700 bg-zinc-950 px-3 py-2 text-[11px] font-bold text-white transition hover:border-zinc-500 sm:px-4 sm:text-xs"
+                            className="rounded-xl border border-white/10 bg-zinc-950 px-3 py-2 text-[11px] font-bold text-white transition hover:border-purple-400/40 sm:px-4 sm:text-xs"
                           >
                             MD
                           </button>
@@ -1241,69 +1263,80 @@ export default function HomePage() {
                           >
                             {copiedSection === section.id ? "Copied" : "Copy"}
                           </button>
+
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setOpenResultId(isOpen ? null : section.id)
+                            }
+                            className="rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2 text-xs font-bold text-zinc-300 transition hover:border-purple-400/40 hover:bg-purple-500/10"
+                          >
+                            {isOpen ? "−" : "+"}
+                          </button>
                         </div>
                       </div>
 
-                      <div className="space-y-3 sm:space-y-4">
-                        <div className="grid gap-3 sm:grid-cols-2 lg:flex lg:flex-wrap lg:items-center">
-                          {[
-                            ["Regenerate", "default"],
-                            ["More Viral", "more-viral"],
-                            ["More Professional", "more-professional"],
-                            ["Shorter", "shorter"],
-                            ["Longer", "longer"],
-                            ["More Emotional", "more-emotional"],
-                            ...EXTRA_REWRITE_OPTIONS,
-                          ].map(([label, type]) => (
-                            <button
-                              key={type}
-                              onClick={() =>
-                                rewriteSection(section.id, section.content, type)
-                              }
-                              disabled={
-                                rewriteLoadingId === section.id ||
-                                rewriteUsage >= rewriteLimit
-                              }
-                              className="rounded-xl border border-zinc-700 bg-zinc-950 px-3 py-2 text-xs sm:rounded-2xl sm:px-4 sm:text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:border-zinc-500 hover:bg-zinc-900 disabled:opacity-60"
+                      {isOpen && (
+                        <div className="border-t border-white/10 p-4 sm:p-5">
+                          <div className="mb-5 grid gap-2 sm:grid-cols-2 lg:flex lg:flex-wrap lg:items-center">
+                            {[
+                              ["Regenerate", "default"],
+                              ["More Viral", "more-viral"],
+                              ["More Professional", "more-professional"],
+                              ["Shorter", "shorter"],
+                              ["Longer", "longer"],
+                              ["More Emotional", "more-emotional"],
+                              ...EXTRA_REWRITE_OPTIONS,
+                            ].map(([label, type]) => (
+                              <button
+                                key={type}
+                                onClick={() =>
+                                  rewriteSection(section.id, section.content, type)
+                                }
+                                disabled={
+                                  rewriteLoadingId === section.id ||
+                                  rewriteUsage >= rewriteLimit
+                                }
+                                className="rounded-xl border border-white/10 bg-zinc-950 px-3 py-2 text-xs font-semibold text-white transition hover:-translate-y-0.5 hover:border-purple-400/40 hover:bg-purple-500/10 disabled:opacity-60 sm:rounded-2xl sm:px-4 sm:text-sm"
+                              >
+                                {label}
+                              </button>
+                            ))}
+                          </div>
+
+                          {rewriteLoadingId === section.id && (
+                            <div className="mb-5 rounded-2xl border border-white/10 bg-zinc-950 px-4 py-3 text-sm text-zinc-400">
+                              Rewriting content with AI...
+                            </div>
+                          )}
+
+                          {rewriteUsage >= rewriteLimit && (
+                            <div className="mb-5 rounded-2xl border border-red-900/60 bg-red-950/30 px-4 py-3 text-sm text-red-300">
+                              Rewrite limit reached. Upgrade your plan to continue rewriting.
+                            </div>
+                          )}
+
+                          <div className="leading-8 text-zinc-200">
+                            <ReactMarkdown
+                              components={{
+                                p: ({ children }) => (
+                                  <p className="mb-4 whitespace-pre-wrap">
+                                    {children}
+                                  </p>
+                                ),
+                                li: ({ children }) => (
+                                  <li className="mb-2">{children}</li>
+                                ),
+                              }}
                             >
-                              {label}
-                            </button>
-                          ))}
+                              {section.content}
+                            </ReactMarkdown>
+                          </div>
                         </div>
-                      </div>
+                      )}
                     </div>
-
-                    {rewriteLoadingId === section.id && (
-                      <div className="mb-5 rounded-2xl border border-zinc-800 bg-zinc-950 px-4 py-3 text-sm text-zinc-400">
-                        Rewriting content with AI...
-                      </div>
-                    )}
-
-                    {rewriteUsage >= rewriteLimit && (
-                      <div className="mb-5 rounded-2xl border border-red-900/60 bg-red-950/30 px-4 py-3 text-sm text-red-300">
-                        Rewrite limit reached. Upgrade your plan to continue
-                        rewriting.
-                      </div>
-                    )}
-
-                    <div className="leading-8 text-zinc-200">
-                      <ReactMarkdown
-                        components={{
-                          p: ({ children }) => (
-                            <p className="mb-4 whitespace-pre-wrap">
-                              {children}
-                            </p>
-                          ),
-                          li: ({ children }) => (
-                            <li className="mb-2">{children}</li>
-                          ),
-                        }}
-                      >
-                        {section.content}
-                      </ReactMarkdown>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </section>
