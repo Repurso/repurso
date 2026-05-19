@@ -859,38 +859,38 @@ export default function HomePage() {
           </div>
         </nav>
 
-        <section className="mb-7 grid items-start gap-4 sm:mb-12 lg:grid-cols-[0.66fr_1.34fr] lg:gap-6">
+        <section className="mb-7 grid items-start gap-4 sm:mb-12 lg:grid-cols-[0.72fr_1.28fr] lg:gap-6">
           <div className="pt-2 lg:sticky lg:top-6">
             <div className="mb-3 inline-flex rounded-full border border-purple-400/20 bg-purple-500/10 px-3 py-1.5 text-xs text-purple-100 shadow-lg shadow-purple-950/20 sm:px-4 sm:py-2 sm:text-sm">
               AI content repurposing for creators
             </div>
 
-            <h1 className="mb-3 max-w-md bg-gradient-to-br from-white via-white to-purple-200 bg-clip-text text-[2.05rem] font-black leading-[0.98] tracking-tight text-transparent sm:mb-4 sm:text-5xl lg:text-[3.35rem]">
+            <h1 className="mb-3 max-w-md bg-gradient-to-br from-white via-white to-purple-200 bg-clip-text text-[1.95rem] font-black leading-[0.98] tracking-tight text-transparent sm:mb-4 sm:text-5xl lg:text-[3.35rem]">
               Turn one idea into weeks of content.
             </h1>
 
-            <p className="mb-4 max-w-md text-sm leading-6 text-zinc-400 sm:mb-5 sm:text-base sm:leading-7">
+            <p className="mb-4 max-w-md text-[13px] leading-6 text-zinc-400 sm:mb-5 sm:text-base sm:leading-7">
               Repurso turns raw thoughts into platform-ready posts, hooks, scripts and captions in seconds.
             </p>
 
-            <div className="mb-4 grid max-w-md grid-cols-3 gap-2 text-center text-[11px] text-zinc-400 sm:mb-5 sm:text-sm">
-              <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-2 py-2.5 sm:px-3 sm:py-3">
-                <span className="block text-base font-bold text-white sm:text-xl">1</span>
+            <div className="mb-4 grid max-w-[420px] grid-cols-3 gap-2.5 text-center text-[11px] text-zinc-400 sm:mb-5 sm:text-sm">
+              <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-2 py-3 sm:px-3 sm:py-3.5">
+                <span className="mb-1 block text-base font-black text-white sm:text-[1.35rem]">1</span>
                 Idea
               </div>
 
-              <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-2 py-2.5 sm:px-3 sm:py-3">
-                <span className="block text-base font-bold text-white sm:text-xl">9</span>
+              <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-2 py-3 sm:px-3 sm:py-3.5">
+                <span className="mb-1 block text-base font-black text-white sm:text-[1.35rem]">9</span>
                 Formats
               </div>
 
-              <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-2 py-2.5 sm:px-3 sm:py-3">
-                <span className="block text-base font-bold text-white sm:text-xl">60s</span>
+              <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-2 py-3 sm:px-3 sm:py-3.5">
+                <span className="mb-1 block text-base font-black text-white sm:text-[1.35rem]">60s</span>
                 Drafts
               </div>
             </div>
 
-            <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+            <div className="mb-4 flex flex-col gap-2 sm:flex-row">
               <a
                 href="#generator"
                 className="rounded-xl bg-white px-5 py-3 text-center text-sm font-bold text-black shadow-lg shadow-purple-950/30 transition hover:-translate-y-0.5 hover:bg-zinc-200 sm:px-8 sm:py-4 sm:text-base"
@@ -928,14 +928,14 @@ export default function HomePage() {
                 </span>
               </div>
 
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-3 gap-2.5">
                 {SECTION_TITLES.map((title) => (
                   <div
                     key={title}
-                    className="flex min-h-[68px] flex-col items-center justify-center gap-1.5 rounded-2xl border border-white/10 bg-black/70 px-2 py-2 text-center text-[10px] text-zinc-300 transition hover:border-purple-400/40 hover:bg-purple-500/10"
+                    className="flex min-h-[74px] flex-col items-center justify-center gap-1.5 rounded-2xl border border-white/10 bg-black/70 px-2 py-2.5 text-center text-[10px] text-zinc-300 transition hover:border-purple-400/40 hover:bg-purple-500/10 sm:min-h-[78px]"
                     title={title}
                   >
-                    <span className="text-lg">{SECTION_ICONS[title]}</span>
+                    <span className="text-[1.15rem] sm:text-xl">{SECTION_ICONS[title]}</span>
                     <span className="leading-3">
                       {title
                         .replace(" Description", "")
@@ -952,7 +952,7 @@ export default function HomePage() {
 
           <section
             id="generator"
-            className="rounded-[18px] border border-white/10 bg-zinc-950/70 p-3.5 shadow-2xl shadow-purple-950/20 backdrop-blur sm:rounded-[28px] sm:p-5 lg:p-5"
+            className="rounded-[18px] border border-white/10 bg-zinc-950/70 p-3 shadow-2xl shadow-purple-950/20 backdrop-blur sm:rounded-[28px] sm:p-5 lg:p-5"
           >
             <h3 className="mb-2 text-xl font-bold sm:text-3xl">
               Generate your content
@@ -1369,7 +1369,7 @@ ${section.content}`,
           </section>
         </section>
 
-        <section id="hook-generator" className="mb-6 rounded-[20px] border border-purple-400/20 bg-gradient-to-br from-purple-950/30 via-zinc-950 to-black p-3.5 shadow-2xl shadow-purple-950/20 sm:mb-16 sm:rounded-[32px] sm:p-8">
+        <section id="hook-generator" className="mb-6 rounded-[20px] border border-purple-400/20 bg-gradient-to-br from-purple-950/30 via-zinc-950 to-black p-3 shadow-2xl shadow-purple-950/20 sm:mb-16 sm:rounded-[32px] sm:p-8">
           <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-purple-300">
@@ -1721,7 +1721,7 @@ ${section.content}`,
         </section>
 
 
-        <section className="mb-10 sm:mb-16">
+        <section className="mb-8 sm:mb-16">
           <div className="mx-auto max-w-4xl rounded-[24px] border border-white/10 bg-zinc-950/70 p-4 sm:rounded-[32px] sm:p-6">
             <div className="mb-3 flex items-center justify-between gap-4">
               <div>
