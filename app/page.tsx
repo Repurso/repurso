@@ -792,7 +792,7 @@ export default function HomePage() {
             )}
           </div>
 
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="hidden flex-wrap items-center gap-3 sm:flex">
             <a
               href="#hook-generator"
               className="text-sm text-zinc-400 transition hover:text-white"
@@ -859,35 +859,34 @@ export default function HomePage() {
           </div>
         </nav>
 
-        <section className="mb-10 grid items-start gap-4 lg:mb-16 lg:grid-cols-[0.8fr_1.2fr] lg:gap-8">
+        <section className="mb-7 grid items-start gap-4 sm:mb-12 lg:grid-cols-[0.82fr_1.18fr] lg:gap-8">
           <div className="pt-2 lg:sticky lg:top-6">
-            <div className="mb-3 inline-flex rounded-full border border-purple-400/20 bg-purple-500/10 px-3 py-1.5 text-xs sm:px-4 sm:py-2 sm:text-sm text-purple-100 shadow-lg shadow-purple-950/20">
-              AI content workspace for creators and teams
+            <div className="mb-3 inline-flex rounded-full border border-purple-400/20 bg-purple-500/10 px-3 py-1.5 text-xs text-purple-100 shadow-lg shadow-purple-950/20 sm:px-4 sm:py-2 sm:text-sm">
+              AI content repurposing for creators
             </div>
 
-            <h1 className="mb-4 bg-gradient-to-br from-white via-white to-purple-200 bg-clip-text text-[2rem] font-black leading-tight text-transparent sm:mb-5 sm:text-6xl">
-              Create platform-ready content from one idea.
+            <h1 className="mb-3 bg-gradient-to-br from-white via-white to-purple-200 bg-clip-text text-[2.15rem] font-black leading-[0.98] tracking-tight text-transparent sm:mb-5 sm:text-6xl">
+              Turn one idea into weeks of content.
             </h1>
 
-            <p className="mb-4 text-sm leading-6 text-zinc-400 sm:mb-6 sm:text-lg sm:leading-8">
-              Repurso turns raw thoughts into polished posts, captions, hooks,
-              scripts and content plans for every major social platform.
+            <p className="mb-4 max-w-xl text-sm leading-6 text-zinc-400 sm:mb-6 sm:text-lg sm:leading-8">
+              Repurso transforms raw ideas into posts, hooks, scripts, captions and content plans built for every major platform.
             </p>
 
-            <div className="mb-4 grid grid-cols-3 gap-2 text-center text-[11px] text-zinc-400 sm:mb-6 sm:text-sm">
-              <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-3 py-3">
-                <span className="block text-base font-bold text-white sm:text-xl">9</span>
-                Platforms
-              </div>
-
+            <div className="mb-4 grid grid-cols-3 gap-2 text-center text-[11px] text-zinc-400 sm:mb-6 sm:max-w-lg sm:text-sm">
               <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-3 py-3">
                 <span className="block text-base font-bold text-white sm:text-xl">1</span>
                 Idea
               </div>
 
               <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-3 py-3">
-                <span className="block text-base font-bold text-white sm:text-xl">AI</span>
-                Workflow
+                <span className="block text-base font-bold text-white sm:text-xl">9</span>
+                Formats
+              </div>
+
+              <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-3 py-3">
+                <span className="block text-base font-bold text-white sm:text-xl">60s</span>
+                Drafts
               </div>
             </div>
 
@@ -900,48 +899,58 @@ export default function HomePage() {
               </a>
 
               <a
-                href="#hook-generator"
+                href="#pricing"
                 className="rounded-xl border border-white/10 bg-white/[0.03] px-5 py-3 text-center text-sm font-bold transition hover:-translate-y-0.5 hover:border-purple-400/40 hover:bg-purple-500/10 sm:px-8 sm:py-4 sm:text-base"
               >
-                Try hook generator
+                View pricing
               </a>
             </div>
 
-            <p className="mb-5 text-xs leading-5 text-zinc-500 sm:text-sm">
-              No complicated setup. Paste an idea, choose a style and generate
-              content you can copy, improve or export.
-            </p>
+            <div className="mb-5 flex flex-wrap gap-2 text-xs text-zinc-500 sm:text-sm">
+              <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5">
+                Built for creators
+              </span>
+              <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5">
+                Founder-friendly
+              </span>
+              <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5">
+                No workflow setup
+              </span>
+            </div>
 
             <div className="hidden rounded-[28px] border border-white/10 bg-zinc-950/70 p-5 shadow-2xl shadow-purple-950/10 backdrop-blur lg:block">
               <div className="mb-4 flex items-center justify-between">
-                <p className="text-sm text-zinc-500">Output formats</p>
+                <p className="text-sm text-zinc-500">What you get</p>
                 <span className="rounded-full bg-purple-500/10 px-3 py-1 text-xs font-semibold text-purple-200">
                   Platform-native
                 </span>
               </div>
 
               <div className="grid gap-3">
-                {SECTION_TITLES.map((title) => (
+                {[
+                  "LinkedIn posts",
+                  "X/Twitter posts",
+                  "Instagram captions",
+                  "TikTok scripts",
+                  "YouTube descriptions",
+                  "Pinterest descriptions",
+                ].map((item) => (
                   <div
-                    key={title}
-                    className="flex items-center gap-3 rounded-2xl border border-white/10 bg-black/70 p-2.5 text-xs sm:p-3 sm:text-sm text-zinc-300 transition hover:border-purple-400/30 hover:bg-purple-500/10"
+                    key={item}
+                    className="flex items-center justify-between rounded-2xl border border-white/10 bg-black/70 p-3 text-sm text-zinc-300"
                   >
-                    <span className="text-lg">
-                      {SECTION_ICONS[title]}
-                    </span>
-
-                    {title}
+                    <span>{item}</span>
+                    <span className="text-purple-300">✓</span>
                   </div>
                 ))}
               </div>
 
               <div className="mt-5 rounded-3xl border border-purple-400/20 bg-purple-500/10 p-4">
                 <p className="mb-2 text-sm font-semibold text-purple-100">
-                  Professional content workflow
+                  Try these prompts
                 </p>
                 <p className="text-sm leading-6 text-zinc-400">
-                  Generate platform-native posts, rewrite weak sections, export
-                  finished content and keep your best prompts in one place.
+                  “AI SaaS launch”, “Founder story”, “Fitness creator tips”.
                 </p>
               </div>
             </div>
@@ -949,17 +958,16 @@ export default function HomePage() {
 
           <section
             id="generator"
-            className="rounded-[18px] border border-white/10 bg-zinc-950/70 p-3.5 sm:p-7 shadow-2xl shadow-purple-950/20 backdrop-blur sm:rounded-[32px] sm:p-7"
+            className="rounded-[18px] border border-white/10 bg-zinc-950/70 p-3.5 shadow-2xl shadow-purple-950/20 backdrop-blur sm:rounded-[32px] sm:p-7"
           >
             <h3 className="mb-2 text-xl font-bold sm:text-4xl">
-              Start with one idea
+              Generate your content
             </h3>
 
             <p className="mb-4 text-xs leading-5 text-zinc-400 sm:mb-6 sm:text-lg">
-              Paste a rough idea, launch note, thread, script or article.
-              Repurso will turn it into polished content for every platform.
+              Paste an idea. Get platform-ready content in seconds.
             </p>
-            <div className="mb-6">
+            <div className="mb-6 hidden sm:block">
               <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] sm:mb-3 sm:text-sm sm:tracking-[0.25em] text-zinc-500">
                 Quality Mode
               </p>
@@ -994,7 +1002,7 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="mb-6">
+            <div className="mb-6 hidden sm:block">
               <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] sm:mb-3 sm:text-sm sm:tracking-[0.25em] text-zinc-500">
                 Template
               </p>
@@ -1045,7 +1053,7 @@ export default function HomePage() {
 
             <textarea
               placeholder="Example: We are launching an AI SaaS that helps creators turn one idea into posts for every platform..."
-              className="mb-3 h-24 w-full rounded-2xl sm:h-44 sm:rounded-3xl border border-white/10 bg-black/70 p-3 text-sm sm:p-5 text-white outline-none transition placeholder:text-zinc-600 focus:border-purple-400/50 focus:ring-4 focus:ring-purple-500/10 sm:h-44 sm:p-5 sm:text-base"
+              className="mb-3 h-28 w-full rounded-2xl border border-white/10 bg-black/70 p-3 text-sm text-white outline-none transition placeholder:text-zinc-600 focus:border-purple-400/50 focus:ring-4 focus:ring-purple-500/10 sm:h-44 sm:rounded-3xl sm:p-5 sm:text-base"
               value={input}
               onChange={(e) => setInput(e.target.value)}
             />
@@ -1065,7 +1073,7 @@ export default function HomePage() {
                 />
               </div>
 
-              <div className="mt-3 grid gap-2 sm:grid-cols-2">
+              <div className="mt-3 hidden gap-2 sm:grid sm:grid-cols-2">
                 <div className="rounded-xl border border-zinc-800 bg-black p-3 sm:rounded-2xl sm:p-4">
                   <div className="mb-2 flex items-center justify-between text-sm">
                     <span className="text-zinc-500">Generations</span>
@@ -1103,7 +1111,7 @@ export default function HomePage() {
                 </div>
               </div>
 
-              <p className="mt-3 text-sm text-zinc-500">
+              <p className="mt-3 hidden text-sm text-zinc-500 sm:block">
                 Current plan:{" "}
                 <span className="font-semibold capitalize text-white">
                   {userPlan}
@@ -1111,7 +1119,7 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="mb-3 flex flex-col gap-2 lg:flex-row">
+            <div className="mb-3 hidden flex-col gap-2 sm:flex lg:flex-row">
               <input
                 type="text"
                 placeholder="Prompt title..."
@@ -1432,7 +1440,7 @@ ${section.content}`,
           </section>
         </section>
 
-        <section id="hook-generator" className="mb-8 rounded-[20px] sm:mb-20 sm:rounded-[32px] border border-purple-400/20 bg-gradient-to-br from-purple-950/30 via-zinc-950 to-black p-3.5 shadow-2xl sm:p-8 shadow-purple-950/20 sm:mb-20 sm:rounded-[32px] sm:p-8">
+        <section id="hook-generator" className="mb-6 rounded-[20px] border border-purple-400/20 bg-gradient-to-br from-purple-950/30 via-zinc-950 to-black p-3.5 shadow-2xl shadow-purple-950/20 sm:mb-16 sm:rounded-[32px] sm:p-8">
           <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-purple-300">
@@ -1440,11 +1448,11 @@ ${section.content}`,
               </p>
 
               <h2 className="text-[1.65rem] font-bold sm:text-5xl">
-                Generate scroll-stopping hooks.
+                Generate viral hooks.
               </h2>
 
               <p className="mt-2 max-w-2xl text-xs leading-5 sm:text-base sm:leading-7 text-zinc-400 sm:text-base sm:leading-7">
-                Enter a topic, product, idea or niche. Repurso will create viral hooks you can use for TikTok, X, LinkedIn and short-form content.
+                Create stronger opening lines for TikTok, X, LinkedIn and short-form content.
               </p>
             </div>
 
@@ -1570,7 +1578,7 @@ ${section.content}`,
   </div>
 </section>
 
-<section className="hidden sm:mb-20 sm:block">
+<section className="hidden">
   <div className="mb-10 text-center sm:mb-14">
     <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-zinc-500">
       Built for
@@ -1615,7 +1623,7 @@ ${section.content}`,
     </p>
 
     <h2 className="mb-5 text-4xl font-bold sm:text-5xl">
-      Turn your ideas into content faster.
+      Turn one idea into weeks of content.
     </h2>
 
     <p className="mb-8 text-lg leading-8 text-zinc-400">
@@ -1640,7 +1648,7 @@ ${section.content}`,
     </div>
   </div>
 </section>
-        <section className="mb-14 sm:mb-20">
+        <section className="mb-14 hidden sm:mb-20 sm:block">
           <div className="mb-12 text-center">
             <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-zinc-500">
               Why Repurso
@@ -1682,218 +1690,7 @@ ${section.content}`,
           </div>
         </section>
 
-        <section className="mb-10 sm:mb-16">
-          <div className="mx-auto max-w-4xl rounded-[24px] border border-white/10 bg-zinc-950/70 p-4 sm:rounded-[32px] sm:p-6">
-            <div className="mb-3 flex items-center justify-between gap-4">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-zinc-500">
-                  FAQ
-                </p>
-
-                <h2 className="mt-2 text-xl font-bold sm:text-3xl">
-                  Questions before you start?
-                </h2>
-              </div>
-
-              <span className="rounded-full bg-purple-500/10 px-3 py-1 text-xs font-bold text-purple-200">
-                Help
-              </span>
-            </div>
-
-            <div className="divide-y divide-white/10">
-              {FAQ_ITEMS.map((item, index) => {
-                const isOpen = openFaqIndex === index;
-
-                return (
-                  <div key={item.question} className="py-3">
-                    <button
-                      type="button"
-                      onClick={() => setOpenFaqIndex(isOpen ? null : index)}
-                      className="flex w-full items-center justify-between gap-4 text-left"
-                    >
-                      <span className="font-semibold text-white">
-                        {item.question}
-                      </span>
-
-                      <span className="text-xl text-zinc-500">
-                        {isOpen ? "−" : "+"}
-                      </span>
-                    </button>
-
-                    {isOpen && (
-                      <p className="mt-3 text-sm leading-6 text-zinc-400">
-                        {item.answer}
-                      </p>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-
-
-        <section id="carousel-generator" className="mb-8 rounded-[20px] sm:mb-20 sm:rounded-[32px] border border-white/10 bg-zinc-950/70 p-3.5 shadow-2xl sm:p-8 shadow-purple-950/20 sm:mb-20 sm:rounded-[32px] sm:p-8">
-          <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <p className="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-purple-300">
-                Carousel Generator
-              </p>
-
-              <h2 className="text-[1.65rem] font-bold sm:text-5xl">
-                Turn ideas into carousel slides.
-              </h2>
-
-              <p className="mt-2 max-w-2xl text-xs leading-5 sm:text-base sm:leading-7 text-zinc-400 sm:text-base sm:leading-7">
-                Generate a ready-to-use LinkedIn, Instagram or TikTok slideshow structure with strong slide copy.
-              </p>
-            </div>
-
-            <span className="rounded-full border border-purple-400/30 bg-purple-500/10 px-4 py-2 text-xs font-bold uppercase tracking-wide text-purple-100">
-              LinkedIn + Instagram
-            </span>
-          </div>
-
-          <div className="grid gap-4 lg:grid-cols-[1fr_auto]">
-            <input
-              type="text"
-              placeholder="Example: 7 lessons from building an AI SaaS..."
-              value={carouselInput}
-              onChange={(e) => setCarouselInput(e.target.value)}
-              className="rounded-2xl border border-white/10 bg-black/70 px-5 py-4 text-sm text-white outline-none transition placeholder:text-zinc-600 focus:border-purple-400/50 focus:ring-4 focus:ring-purple-500/10"
-            />
-
-            <button
-              onClick={generateCarousel}
-              disabled={carouselLoading}
-              className="inline-flex items-center justify-center gap-3 rounded-2xl bg-white px-8 py-4 text-sm font-bold text-black shadow-xl shadow-purple-950/30 transition hover:-translate-y-0.5 hover:bg-zinc-200 disabled:opacity-60"
-            >
-              {carouselLoading && (
-                <span className="h-4 w-4 animate-spin rounded-full border-2 border-black/20 border-t-black" />
-              )}
-
-              {carouselLoading ? "Generating..." : "Generate Carousel"}
-            </button>
-          </div>
-
-          {carouselSlides.length > 0 ? (
-            <div className="mt-6 grid gap-3 md:grid-cols-2">
-              {carouselSlides.map((slide, index) => (
-                <div
-                  key={`${slide}-${index}`}
-                  className="rounded-2xl border border-white/10 bg-black/60 p-4 transition hover:border-purple-400/40 hover:bg-purple-500/10"
-                >
-                  <div className="mb-3 flex items-start justify-between gap-3">
-                    <span className="rounded-full bg-purple-500/10 px-3 py-1 text-xs font-bold text-purple-200">
-                      Slide {index + 1}
-                    </span>
-
-                    <button
-                      onClick={() => copySlide(slide, index)}
-                      className="rounded-xl bg-purple-600 px-3 py-1.5 text-xs font-bold text-white transition hover:bg-purple-500"
-                    >
-                      {copiedSlideIndex === index ? "Copied" : "Copy"}
-                    </button>
-                  </div>
-
-                  <p className="whitespace-pre-wrap leading-7 text-zinc-100">{slide}</p>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="mt-6 rounded-3xl border border-dashed border-white/10 bg-black/40 p-5 text-center">
-              <p className="font-semibold text-white">
-                Try: “7 lessons from building a SaaS”
-              </p>
-
-              <p className="mt-2 text-sm text-zinc-500">
-                Output appears here as slide-by-slide copy.
-              </p>
-            </div>
-          )}
-        </section>
-
-        <section id="calendar-generator" className="mb-8 rounded-[20px] sm:mb-20 sm:rounded-[32px] border border-purple-400/20 bg-gradient-to-br from-purple-950/30 via-zinc-950 to-black p-3.5 shadow-2xl sm:p-8 shadow-purple-950/20 sm:mb-20 sm:rounded-[32px] sm:p-8">
-          <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <p className="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-purple-300">
-                Content Calendar
-              </p>
-
-              <h2 className="text-[1.65rem] font-bold sm:text-5xl">
-                Plan your next 7 posts.
-              </h2>
-
-              <p className="mt-2 max-w-2xl text-xs leading-5 sm:text-base sm:leading-7 text-zinc-400 sm:text-base sm:leading-7">
-                Enter your niche, product, or audience. Repurso will create a weekly content plan with platform-ready angles.
-              </p>
-            </div>
-
-            <span className="rounded-full border border-purple-400/30 bg-purple-500/10 px-4 py-2 text-xs font-bold uppercase tracking-wide text-purple-100">
-              7-day plan
-            </span>
-          </div>
-
-          <div className="grid gap-4 lg:grid-cols-[1fr_auto]">
-            <input
-              type="text"
-              placeholder="Example: AI tools for creators..."
-              value={calendarInput}
-              onChange={(e) => setCalendarInput(e.target.value)}
-              className="rounded-2xl border border-white/10 bg-black/70 px-5 py-4 text-sm text-white outline-none transition placeholder:text-zinc-600 focus:border-purple-400/50 focus:ring-4 focus:ring-purple-500/10"
-            />
-
-            <button
-              onClick={generateCalendar}
-              disabled={calendarLoading}
-              className="inline-flex items-center justify-center gap-3 rounded-2xl bg-white px-8 py-4 text-sm font-bold text-black shadow-xl shadow-purple-950/30 transition hover:-translate-y-0.5 hover:bg-zinc-200 disabled:opacity-60"
-            >
-              {calendarLoading && (
-                <span className="h-4 w-4 animate-spin rounded-full border-2 border-black/20 border-t-black" />
-              )}
-
-              {calendarLoading ? "Generating..." : "Generate Calendar"}
-            </button>
-          </div>
-
-          {calendarItems.length > 0 ? (
-            <div className="mt-6 grid gap-3">
-              {calendarItems.map((item, index) => (
-                <div
-                  key={`${item}-${index}`}
-                  className="rounded-2xl border border-white/10 bg-black/60 p-4 transition hover:border-purple-400/40 hover:bg-purple-500/10"
-                >
-                  <div className="mb-3 flex items-start justify-between gap-3">
-                    <span className="rounded-full bg-purple-500/10 px-3 py-1 text-xs font-bold text-purple-200">
-                      Day {index + 1}
-                    </span>
-
-                    <button
-                      onClick={() => copyCalendarItem(item, index)}
-                      className="rounded-xl bg-purple-600 px-3 py-1.5 text-xs font-bold text-white transition hover:bg-purple-500"
-                    >
-                      {copiedCalendarIndex === index ? "Copied" : "Copy"}
-                    </button>
-                  </div>
-
-                  <p className="whitespace-pre-wrap leading-7 text-zinc-100">{item}</p>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="mt-6 rounded-3xl border border-dashed border-white/10 bg-black/40 p-5 text-center">
-              <p className="font-semibold text-white">
-                Try: “AI SaaS for creators”
-              </p>
-
-              <p className="mt-2 text-sm text-zinc-500">
-                Output appears here as a 7-day content plan.
-              </p>
-            </div>
-          )}
-        </section>
-
-        <section id="pricing" className="py-12 sm:py-16">
+        <section id="pricing" className="py-8 sm:py-16">
           <div className="mb-12 text-center">
             <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-zinc-500">
               Pricing
@@ -2023,6 +1820,219 @@ ${section.content}`,
           <p className="mt-8 text-center text-sm text-zinc-500">
             Paid plans include a 3-day free trial. Login is required before checkout so your plan can be activated correctly.
           </p>
+        </section>
+
+        
+
+        <section className="mb-10 sm:mb-16">
+          <div className="mx-auto max-w-4xl rounded-[24px] border border-white/10 bg-zinc-950/70 p-4 sm:rounded-[32px] sm:p-6">
+            <div className="mb-3 flex items-center justify-between gap-4">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-zinc-500">
+                  FAQ
+                </p>
+
+                <h2 className="mt-2 text-xl font-bold sm:text-3xl">
+                  Questions before you start?
+                </h2>
+              </div>
+
+              <span className="rounded-full bg-purple-500/10 px-3 py-1 text-xs font-bold text-purple-200">
+                Help
+              </span>
+            </div>
+
+            <div className="divide-y divide-white/10">
+              {FAQ_ITEMS.map((item, index) => {
+                const isOpen = openFaqIndex === index;
+
+                return (
+                  <div key={item.question} className="py-3">
+                    <button
+                      type="button"
+                      onClick={() => setOpenFaqIndex(isOpen ? null : index)}
+                      className="flex w-full items-center justify-between gap-4 text-left"
+                    >
+                      <span className="font-semibold text-white">
+                        {item.question}
+                      </span>
+
+                      <span className="text-xl text-zinc-500">
+                        {isOpen ? "−" : "+"}
+                      </span>
+                    </button>
+
+                    {isOpen && (
+                      <p className="mt-3 text-sm leading-6 text-zinc-400">
+                        {item.answer}
+                      </p>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+
+        <section id="carousel-generator" className="mb-16 hidden rounded-[32px] border border-white/10 bg-zinc-950/70 p-8 shadow-2xl shadow-purple-950/20 sm:block">
+          <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-purple-300">
+                Carousel Generator
+              </p>
+
+              <h2 className="text-[1.65rem] font-bold sm:text-5xl">
+                Turn ideas into carousel slides.
+              </h2>
+
+              <p className="mt-2 max-w-2xl text-xs leading-5 sm:text-base sm:leading-7 text-zinc-400 sm:text-base sm:leading-7">
+                Generate a ready-to-use LinkedIn, Instagram or TikTok slideshow structure with strong slide copy.
+              </p>
+            </div>
+
+            <span className="rounded-full border border-purple-400/30 bg-purple-500/10 px-4 py-2 text-xs font-bold uppercase tracking-wide text-purple-100">
+              LinkedIn + Instagram
+            </span>
+          </div>
+
+          <div className="grid gap-4 lg:grid-cols-[1fr_auto]">
+            <input
+              type="text"
+              placeholder="Example: 7 lessons from building an AI SaaS..."
+              value={carouselInput}
+              onChange={(e) => setCarouselInput(e.target.value)}
+              className="rounded-2xl border border-white/10 bg-black/70 px-5 py-4 text-sm text-white outline-none transition placeholder:text-zinc-600 focus:border-purple-400/50 focus:ring-4 focus:ring-purple-500/10"
+            />
+
+            <button
+              onClick={generateCarousel}
+              disabled={carouselLoading}
+              className="inline-flex items-center justify-center gap-3 rounded-2xl bg-white px-8 py-4 text-sm font-bold text-black shadow-xl shadow-purple-950/30 transition hover:-translate-y-0.5 hover:bg-zinc-200 disabled:opacity-60"
+            >
+              {carouselLoading && (
+                <span className="h-4 w-4 animate-spin rounded-full border-2 border-black/20 border-t-black" />
+              )}
+
+              {carouselLoading ? "Generating..." : "Generate Carousel"}
+            </button>
+          </div>
+
+          {carouselSlides.length > 0 ? (
+            <div className="mt-6 grid gap-3 md:grid-cols-2">
+              {carouselSlides.map((slide, index) => (
+                <div
+                  key={`${slide}-${index}`}
+                  className="rounded-2xl border border-white/10 bg-black/60 p-4 transition hover:border-purple-400/40 hover:bg-purple-500/10"
+                >
+                  <div className="mb-3 flex items-start justify-between gap-3">
+                    <span className="rounded-full bg-purple-500/10 px-3 py-1 text-xs font-bold text-purple-200">
+                      Slide {index + 1}
+                    </span>
+
+                    <button
+                      onClick={() => copySlide(slide, index)}
+                      className="rounded-xl bg-purple-600 px-3 py-1.5 text-xs font-bold text-white transition hover:bg-purple-500"
+                    >
+                      {copiedSlideIndex === index ? "Copied" : "Copy"}
+                    </button>
+                  </div>
+
+                  <p className="whitespace-pre-wrap leading-7 text-zinc-100">{slide}</p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="mt-6 rounded-3xl border border-dashed border-white/10 bg-black/40 p-5 text-center">
+              <p className="font-semibold text-white">
+                Try: “7 lessons from building a SaaS”
+              </p>
+
+              <p className="mt-2 text-sm text-zinc-500">
+                Output appears here as slide-by-slide copy.
+              </p>
+            </div>
+          )}
+        </section>
+
+        <section id="calendar-generator" className="mb-16 hidden rounded-[32px] border border-purple-400/20 bg-gradient-to-br from-purple-950/30 via-zinc-950 to-black p-8 shadow-2xl shadow-purple-950/20 sm:block">
+          <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-purple-300">
+                Content Calendar
+              </p>
+
+              <h2 className="text-[1.65rem] font-bold sm:text-5xl">
+                Plan your next 7 posts.
+              </h2>
+
+              <p className="mt-2 max-w-2xl text-xs leading-5 sm:text-base sm:leading-7 text-zinc-400 sm:text-base sm:leading-7">
+                Enter your niche, product, or audience. Repurso will create a weekly content plan with platform-ready angles.
+              </p>
+            </div>
+
+            <span className="rounded-full border border-purple-400/30 bg-purple-500/10 px-4 py-2 text-xs font-bold uppercase tracking-wide text-purple-100">
+              7-day plan
+            </span>
+          </div>
+
+          <div className="grid gap-4 lg:grid-cols-[1fr_auto]">
+            <input
+              type="text"
+              placeholder="Example: AI tools for creators..."
+              value={calendarInput}
+              onChange={(e) => setCalendarInput(e.target.value)}
+              className="rounded-2xl border border-white/10 bg-black/70 px-5 py-4 text-sm text-white outline-none transition placeholder:text-zinc-600 focus:border-purple-400/50 focus:ring-4 focus:ring-purple-500/10"
+            />
+
+            <button
+              onClick={generateCalendar}
+              disabled={calendarLoading}
+              className="inline-flex items-center justify-center gap-3 rounded-2xl bg-white px-8 py-4 text-sm font-bold text-black shadow-xl shadow-purple-950/30 transition hover:-translate-y-0.5 hover:bg-zinc-200 disabled:opacity-60"
+            >
+              {calendarLoading && (
+                <span className="h-4 w-4 animate-spin rounded-full border-2 border-black/20 border-t-black" />
+              )}
+
+              {calendarLoading ? "Generating..." : "Generate Calendar"}
+            </button>
+          </div>
+
+          {calendarItems.length > 0 ? (
+            <div className="mt-6 grid gap-3">
+              {calendarItems.map((item, index) => (
+                <div
+                  key={`${item}-${index}`}
+                  className="rounded-2xl border border-white/10 bg-black/60 p-4 transition hover:border-purple-400/40 hover:bg-purple-500/10"
+                >
+                  <div className="mb-3 flex items-start justify-between gap-3">
+                    <span className="rounded-full bg-purple-500/10 px-3 py-1 text-xs font-bold text-purple-200">
+                      Day {index + 1}
+                    </span>
+
+                    <button
+                      onClick={() => copyCalendarItem(item, index)}
+                      className="rounded-xl bg-purple-600 px-3 py-1.5 text-xs font-bold text-white transition hover:bg-purple-500"
+                    >
+                      {copiedCalendarIndex === index ? "Copied" : "Copy"}
+                    </button>
+                  </div>
+
+                  <p className="whitespace-pre-wrap leading-7 text-zinc-100">{item}</p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="mt-6 rounded-3xl border border-dashed border-white/10 bg-black/40 p-5 text-center">
+              <p className="font-semibold text-white">
+                Try: “AI SaaS for creators”
+              </p>
+
+              <p className="mt-2 text-sm text-zinc-500">
+                Output appears here as a 7-day content plan.
+              </p>
+            </div>
+          )}
         </section>
 
         <footer className="border-t border-zinc-800 py-10">
