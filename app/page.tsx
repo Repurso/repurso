@@ -918,26 +918,28 @@ export default function HomePage() {
               </span>
             </div>
 
-            <div className="hidden max-w-lg rounded-[24px] border border-purple-400/20 bg-purple-500/10 p-4 shadow-2xl shadow-purple-950/10 lg:block">
-              <p className="text-sm font-semibold text-purple-100">
-                Try these prompts
-              </p>
-              <div className="mt-3 grid gap-2">
-                {QUICK_START_PROMPTS.map((item) => (
-                  <button
-                    key={item.title}
-                    type="button"
-                    onClick={() => {
-                      setInput(item.prompt);
-                      track("quick_prompt_used", { prompt: item.title });
-                    }}
-                    className="rounded-2xl border border-white/10 bg-black/50 px-4 py-3 text-left text-sm text-zinc-300 transition hover:border-purple-400/40 hover:bg-purple-500/10"
+            <div className="hidden max-w-lg rounded-[24px] border border-white/10 bg-zinc-950/70 p-4 shadow-2xl shadow-purple-950/10 lg:block">
+              <div className="mb-3 flex items-center justify-between">
+                <p className="text-sm font-semibold text-zinc-300">
+                  Platform-ready outputs
+                </p>
+                <span className="rounded-full bg-purple-500/10 px-3 py-1 text-xs font-semibold text-purple-200">
+                  9 formats
+                </span>
+              </div>
+
+              <div className="flex gap-2 overflow-x-auto pb-1">
+                {SECTION_TITLES.map((title) => (
+                  <div
+                    key={title}
+                    className="flex min-w-[86px] flex-col items-center justify-center gap-2 rounded-2xl border border-white/10 bg-black/70 px-3 py-3 text-center text-[11px] text-zinc-300 transition hover:border-purple-400/40 hover:bg-purple-500/10"
+                    title={title}
                   >
-                    <span className="font-semibold text-white">{item.title}</span>
-                    <span className="mt-1 block text-xs text-zinc-500">
-                      {item.description}
+                    <span className="text-xl">{SECTION_ICONS[title]}</span>
+                    <span className="leading-4">
+                      {title.replace(" Description", "").replace(" Caption", "")}
                     </span>
-                  </button>
+                  </div>
                 ))}
               </div>
             </div>
@@ -954,40 +956,58 @@ export default function HomePage() {
             <p className="mb-4 text-xs leading-5 text-zinc-400 sm:text-base">
               Paste an idea. Choose a style. Generate publish-ready content.
             </p>
-            <div className="mb-4 grid gap-3 sm:grid-cols-[0.45fr_0.55fr]">
-              <label className="block">
-                <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.22em] text-zinc-500">
+            <div className="mb-4 grid gap-4">
+              <div>
+                <p className="mb-2 text-xs font-semibold uppercase tracking-[0.22em] text-zinc-500">
                   Quality
-                </span>
-                <select
-                  value={qualityMode}
-                  onChange={(e) => setQualityMode(e.target.value as QualityModeId)}
-                  className="h-12 w-full rounded-2xl border border-white/10 bg-black/70 px-4 text-sm font-semibold text-white outline-none focus:border-purple-400/50"
-                >
-                  {QUALITY_MODES.map((mode) => (
-                    <option key={mode.id} value={mode.id}>
-                      {mode.name}
-                    </option>
-                  ))}
-                </select>
-              </label>
+                </p>
+                <div className="grid grid-cols-3 gap-2">
+                  {QUALITY_MODES.map((mode) => {
+                    const isSelected = qualityMode === mode.id;
 
-              <label className="block">
-                <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.22em] text-zinc-500">
+                    return (
+                      <button
+                        key={mode.id}
+                        type="button"
+                        onClick={() => setQualityMode(mode.id)}
+                        className={`rounded-2xl border px-3 py-3 text-left text-xs font-semibold transition sm:text-sm ${
+                          isSelected
+                            ? "border-purple-300 bg-white text-black shadow-lg shadow-purple-950/20"
+                            : "border-white/10 bg-black/70 text-zinc-300 hover:border-purple-400/40 hover:bg-purple-500/10 hover:text-white"
+                        }`}
+                      >
+                        {mode.name}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div>
+                <p className="mb-2 text-xs font-semibold uppercase tracking-[0.22em] text-zinc-500">
                   Template
-                </span>
-                <select
-                  value={selectedTemplate}
-                  onChange={(e) => setSelectedTemplate(e.target.value as PromptTemplateId)}
-                  className="h-12 w-full rounded-2xl border border-white/10 bg-black/70 px-4 text-sm font-semibold text-white outline-none focus:border-purple-400/50"
-                >
-                  {PROMPT_TEMPLATES.map((template) => (
-                    <option key={template.id} value={template.id}>
-                      {template.name}
-                    </option>
-                  ))}
-                </select>
-              </label>
+                </p>
+                <div className="flex gap-2 overflow-x-auto pb-1">
+                  {PROMPT_TEMPLATES.map((template) => {
+                    const isSelected = selectedTemplate === template.id;
+
+                    return (
+                      <button
+                        key={template.id}
+                        type="button"
+                        onClick={() => setSelectedTemplate(template.id)}
+                        className={`min-w-[142px] rounded-2xl border px-3 py-3 text-left text-xs font-semibold transition sm:text-sm ${
+                          isSelected
+                            ? "border-purple-300 bg-white text-black shadow-lg shadow-purple-950/20"
+                            : "border-white/10 bg-black/70 text-zinc-300 hover:border-purple-400/40 hover:bg-purple-500/10 hover:text-white"
+                        }`}
+                      >
+                        {template.name}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
 
             <div className="mb-3 flex items-center justify-between gap-4">
@@ -1535,191 +1555,6 @@ ${section.content}`,
           </div>
         </section>
 
-        <section id="pricing" className="py-8 sm:py-12">
-          <div className="mb-12 text-center">
-            <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-zinc-500">
-              Pricing
-            </p>
-
-            <h2 className="mb-4 text-[1.65rem] font-bold sm:text-5xl">
-              Choose your content engine.
-            </h2>
-
-            <p className="mx-auto max-w-2xl text-base leading-7 text-zinc-400 sm:text-lg sm:leading-8">
-              Start free, then upgrade when Repurso becomes part of your content
-              workflow.
-            </p>
-          </div>
-
-          <div className="grid gap-6 lg:grid-cols-3">
-            <div className="rounded-[28px] border border-white/10 bg-zinc-950/70 p-6 shadow-xl shadow-purple-950/10 transition hover:-translate-y-1 hover:border-purple-400/30 sm:rounded-[32px] sm:p-8">
-              <h3 className="mb-2 text-2xl font-bold">Free</h3>
-
-              <p className="mb-6 text-zinc-400">For testing the product.</p>
-
-              <div className="mb-8">
-                <span className="text-4xl font-bold sm:text-5xl">$0</span>
-                <span className="text-zinc-500"> / forever</span>
-              </div>
-
-              <ul className="mb-8 space-y-4 text-zinc-300">
-                <li>✓ 20 AI generations / month</li>
-                <li>✓ 10 rewrites / month</li>
-                <li>✓ 1,000 characters</li>
-                <li>✓ 9 output formats</li>
-                <li>✓ AI quality modes</li>
-                <li>✓ Saved prompt library</li>
-              </ul>
-
-              <a
-                href="#generator"
-                className="block rounded-2xl border border-zinc-700 px-6 py-4 text-center font-bold"
-              >
-                Start free
-              </a>
-            </div>
-
-            <div className="relative scale-[1.02] rounded-[28px] border border-purple-200 bg-white p-6 text-black shadow-2xl shadow-purple-500/25 ring-4 ring-purple-500/10 transition hover:-translate-y-1 sm:rounded-[32px] sm:p-8">
-              <div className="mb-5 inline-flex rounded-full bg-black px-4 py-2 text-sm font-bold text-white lg:absolute lg:-top-4 lg:left-1/2 lg:mb-0 lg:-translate-x-1/2">
-                Most popular
-              </div>
-
-              <h3 className="mb-2 text-2xl font-bold">Creator</h3>
-
-              <p className="mb-4 text-zinc-600">
-                For creators posting every week.
-              </p>
-
-              <div className="mb-8">
-                <div className="flex items-center gap-3">
-                  <span className="text-4xl font-bold sm:text-5xl">$9.99</span>
-
-                  <span className="rounded-full bg-black px-3 py-1 text-xs font-bold uppercase tracking-wide text-white">
-                    3-day free trial
-                  </span>
-                </div>
-
-                <span className="text-zinc-600"> / month</span>
-              </div>
-
-              <ul className="mb-8 space-y-4">
-                <li>✓ 300 AI generations / month</li>
-                <li>✓ 500 rewrites / month</li>
-                <li>✓ 5,000 characters</li>
-                <li>✓ AI quality modes</li>
-                <li>✓ Saved prompt library</li>
-                <li>✓ TXT and Markdown export</li>
-                <li>✓ 3-day free trial</li>
-                <li>✓ Cancel anytime</li>
-              </ul>
-
-              <button
-                type="button"
-                onClick={() => handleCheckout(CREATOR_CHECKOUT(userEmail), "creator")}
-                className="block w-full rounded-2xl bg-black px-6 py-4 text-center font-bold text-white transition hover:bg-zinc-900"
-              >
-                {userEmail ? "Upgrade to Creator" : "Login to upgrade"}
-              </button>
-            </div>
-
-            <div className="rounded-[28px] border border-white/10 bg-zinc-950/70 p-6 shadow-xl shadow-purple-950/10 transition hover:-translate-y-1 hover:border-purple-400/30 sm:rounded-[32px] sm:p-8">
-              <h3 className="mb-2 text-2xl font-bold">Pro</h3>
-
-              <p className="mb-4 text-zinc-400">
-                For power users and small teams.
-              </p>
-
-              <div className="mb-8">
-                <div className="flex items-center gap-3">
-                  <span className="text-4xl font-bold sm:text-5xl">$19.99</span>
-
-                  <span className="rounded-full border border-purple-400/30 bg-purple-500/10 px-3 py-1 text-xs font-bold uppercase tracking-wide text-purple-100">
-                    3-day free trial
-                  </span>
-                </div>
-
-                <span className="text-zinc-500"> / month</span>
-              </div>
-
-              <ul className="mb-8 space-y-4 text-zinc-300">
-                <li>✓ 1000 AI generations / month</li>
-                <li>✓ 2000 rewrites / month</li>
-                <li>✓ 10,000 characters</li>
-                <li>✓ AI quality modes</li>
-                <li>✓ Saved prompt library</li>
-                <li>✓ Priority content workflows</li>
-                <li>✓ 3-day free trial</li>
-                <li>✓ Cancel anytime</li>
-              </ul>
-
-              <button
-                type="button"
-                onClick={() => handleCheckout(PRO_CHECKOUT(userEmail), "pro")}
-                className="block w-full rounded-2xl border border-white/10 px-6 py-4 text-center font-bold transition hover:border-purple-400/40 hover:bg-purple-500/10"
-              >
-                {userEmail ? "Upgrade to Pro" : "Login to upgrade"}
-              </button>
-            </div>
-          </div>
-
-          <p className="mt-8 text-center text-sm text-zinc-500">
-            Paid plans include a 3-day free trial. Login is required before checkout so your plan can be activated correctly.
-          </p>
-        </section>
-
-        
-
-        <section className="mb-10 sm:mb-16">
-          <div className="mx-auto max-w-4xl rounded-[24px] border border-white/10 bg-zinc-950/70 p-4 sm:rounded-[32px] sm:p-6">
-            <div className="mb-3 flex items-center justify-between gap-4">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-zinc-500">
-                  FAQ
-                </p>
-
-                <h2 className="mt-2 text-xl font-bold sm:text-3xl">
-                  Questions before you start?
-                </h2>
-              </div>
-
-              <span className="rounded-full bg-purple-500/10 px-3 py-1 text-xs font-bold text-purple-200">
-                Help
-              </span>
-            </div>
-
-            <div className="divide-y divide-white/10">
-              {FAQ_ITEMS.map((item, index) => {
-                const isOpen = openFaqIndex === index;
-
-                return (
-                  <div key={item.question} className="py-3">
-                    <button
-                      type="button"
-                      onClick={() => setOpenFaqIndex(isOpen ? null : index)}
-                      className="flex w-full items-center justify-between gap-4 text-left"
-                    >
-                      <span className="font-semibold text-white">
-                        {item.question}
-                      </span>
-
-                      <span className="text-xl text-zinc-500">
-                        {isOpen ? "−" : "+"}
-                      </span>
-                    </button>
-
-                    {isOpen && (
-                      <p className="mt-3 text-sm leading-6 text-zinc-400">
-                        {item.answer}
-                      </p>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-
-
         <section id="carousel-generator" className="mb-16 hidden rounded-[32px] border border-white/10 bg-zinc-950/70 p-8 shadow-2xl shadow-purple-950/20 sm:block">
           <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
@@ -1879,6 +1714,193 @@ ${section.content}`,
             </div>
           )}
         </section>
+
+
+        <section className="mb-10 sm:mb-16">
+          <div className="mx-auto max-w-4xl rounded-[24px] border border-white/10 bg-zinc-950/70 p-4 sm:rounded-[32px] sm:p-6">
+            <div className="mb-3 flex items-center justify-between gap-4">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-zinc-500">
+                  FAQ
+                </p>
+
+                <h2 className="mt-2 text-xl font-bold sm:text-3xl">
+                  Questions before you start?
+                </h2>
+              </div>
+
+              <span className="rounded-full bg-purple-500/10 px-3 py-1 text-xs font-bold text-purple-200">
+                Help
+              </span>
+            </div>
+
+            <div className="divide-y divide-white/10">
+              {FAQ_ITEMS.map((item, index) => {
+                const isOpen = openFaqIndex === index;
+
+                return (
+                  <div key={item.question} className="py-3">
+                    <button
+                      type="button"
+                      onClick={() => setOpenFaqIndex(isOpen ? null : index)}
+                      className="flex w-full items-center justify-between gap-4 text-left"
+                    >
+                      <span className="font-semibold text-white">
+                        {item.question}
+                      </span>
+
+                      <span className="text-xl text-zinc-500">
+                        {isOpen ? "−" : "+"}
+                      </span>
+                    </button>
+
+                    {isOpen && (
+                      <p className="mt-3 text-sm leading-6 text-zinc-400">
+                        {item.answer}
+                      </p>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+
+        <section id="pricing" className="py-10 sm:py-14">
+          <div className="mb-12 text-center">
+            <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-zinc-500">
+              Pricing
+            </p>
+
+            <h2 className="mb-4 text-[1.65rem] font-bold sm:text-5xl">
+              Choose your content engine.
+            </h2>
+
+            <p className="mx-auto max-w-2xl text-base leading-7 text-zinc-400 sm:text-lg sm:leading-8">
+              Start free, then upgrade when Repurso becomes part of your content
+              workflow.
+            </p>
+          </div>
+
+          <div className="grid gap-6 lg:grid-cols-3">
+            <div className="rounded-[28px] border border-white/10 bg-zinc-950/70 p-6 shadow-xl shadow-purple-950/10 transition hover:-translate-y-1 hover:border-purple-400/30 sm:rounded-[32px] sm:p-8">
+              <h3 className="mb-2 text-2xl font-bold">Free</h3>
+
+              <p className="mb-6 text-zinc-400">For testing the product.</p>
+
+              <div className="mb-8">
+                <span className="text-4xl font-bold sm:text-5xl">$0</span>
+                <span className="text-zinc-500"> / forever</span>
+              </div>
+
+              <ul className="mb-8 space-y-4 text-zinc-300">
+                <li>✓ 20 AI generations / month</li>
+                <li>✓ 10 rewrites / month</li>
+                <li>✓ 1,000 characters</li>
+                <li>✓ 9 output formats</li>
+                <li>✓ AI quality modes</li>
+                <li>✓ Saved prompt library</li>
+              </ul>
+
+              <a
+                href="#generator"
+                className="block rounded-2xl border border-zinc-700 px-6 py-4 text-center font-bold"
+              >
+                Start free
+              </a>
+            </div>
+
+            <div className="relative scale-[1.02] rounded-[28px] border border-purple-200 bg-white p-6 text-black shadow-2xl shadow-purple-500/25 ring-4 ring-purple-500/10 transition hover:-translate-y-1 sm:rounded-[32px] sm:p-8">
+              <div className="mb-5 inline-flex rounded-full bg-black px-4 py-2 text-sm font-bold text-white lg:absolute lg:-top-4 lg:left-1/2 lg:mb-0 lg:-translate-x-1/2">
+                Most popular
+              </div>
+
+              <h3 className="mb-2 text-2xl font-bold">Creator</h3>
+
+              <p className="mb-4 text-zinc-600">
+                For creators posting every week.
+              </p>
+
+              <div className="mb-8">
+                <div className="flex items-center gap-3">
+                  <span className="text-4xl font-bold sm:text-5xl">$9.99</span>
+
+                  <span className="rounded-full bg-black px-3 py-1 text-xs font-bold uppercase tracking-wide text-white">
+                    3-day free trial
+                  </span>
+                </div>
+
+                <span className="text-zinc-600"> / month</span>
+              </div>
+
+              <ul className="mb-8 space-y-4">
+                <li>✓ 300 AI generations / month</li>
+                <li>✓ 500 rewrites / month</li>
+                <li>✓ 5,000 characters</li>
+                <li>✓ AI quality modes</li>
+                <li>✓ Saved prompt library</li>
+                <li>✓ TXT and Markdown export</li>
+                <li>✓ 3-day free trial</li>
+                <li>✓ Cancel anytime</li>
+              </ul>
+
+              <button
+                type="button"
+                onClick={() => handleCheckout(CREATOR_CHECKOUT(userEmail), "creator")}
+                className="block w-full rounded-2xl bg-black px-6 py-4 text-center font-bold text-white transition hover:bg-zinc-900"
+              >
+                {userEmail ? "Upgrade to Creator" : "Login to upgrade"}
+              </button>
+            </div>
+
+            <div className="rounded-[28px] border border-white/10 bg-zinc-950/70 p-6 shadow-xl shadow-purple-950/10 transition hover:-translate-y-1 hover:border-purple-400/30 sm:rounded-[32px] sm:p-8">
+              <h3 className="mb-2 text-2xl font-bold">Pro</h3>
+
+              <p className="mb-4 text-zinc-400">
+                For power users and small teams.
+              </p>
+
+              <div className="mb-8">
+                <div className="flex items-center gap-3">
+                  <span className="text-4xl font-bold sm:text-5xl">$19.99</span>
+
+                  <span className="rounded-full border border-purple-400/30 bg-purple-500/10 px-3 py-1 text-xs font-bold uppercase tracking-wide text-purple-100">
+                    3-day free trial
+                  </span>
+                </div>
+
+                <span className="text-zinc-500"> / month</span>
+              </div>
+
+              <ul className="mb-8 space-y-4 text-zinc-300">
+                <li>✓ 1000 AI generations / month</li>
+                <li>✓ 2000 rewrites / month</li>
+                <li>✓ 10,000 characters</li>
+                <li>✓ AI quality modes</li>
+                <li>✓ Saved prompt library</li>
+                <li>✓ Priority content workflows</li>
+                <li>✓ 3-day free trial</li>
+                <li>✓ Cancel anytime</li>
+              </ul>
+
+              <button
+                type="button"
+                onClick={() => handleCheckout(PRO_CHECKOUT(userEmail), "pro")}
+                className="block w-full rounded-2xl border border-white/10 px-6 py-4 text-center font-bold transition hover:border-purple-400/40 hover:bg-purple-500/10"
+              >
+                {userEmail ? "Upgrade to Pro" : "Login to upgrade"}
+              </button>
+            </div>
+          </div>
+
+          <p className="mt-8 text-center text-sm text-zinc-500">
+            Paid plans include a 3-day free trial. Login is required before checkout so your plan can be activated correctly.
+          </p>
+        </section>
+
+        
+
 
         <footer className="border-t border-zinc-800 py-10">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
