@@ -932,7 +932,7 @@ export default function HomePage() {
                 {SECTION_TITLES.map((title) => (
                   <div
                     key={title}
-                    className="flex min-h-[74px] flex-col items-center justify-center gap-1.5 rounded-2xl border border-white/10 bg-black/70 px-2 py-2.5 text-center text-[10px] text-zinc-300 transition hover:border-purple-400/40 hover:bg-purple-500/10 sm:min-h-[78px]"
+                    className="flex min-h-[74px] flex-col items-center justify-center gap-1.5 rounded-2xl border border-purple-400/20 bg-black/70 shadow-[0_0_0_1px_rgba(168,85,247,0.08)] px-2 py-2.5 text-center text-[10px] text-zinc-300 transition hover:border-purple-400/40 hover:bg-purple-500/10 sm:min-h-[78px]"
                     title={title}
                   >
                     <span className="text-[1.15rem] sm:text-xl">{SECTION_ICONS[title]}</span>
@@ -1031,7 +1031,7 @@ export default function HomePage() {
 
             <textarea
               placeholder="Example: We are launching an AI SaaS that helps creators turn one idea into posts for every platform..."
-              className="mb-3 h-28 w-full rounded-2xl border border-white/10 bg-black/70 p-3 text-sm text-white outline-none transition placeholder:text-zinc-600 focus:border-purple-400/50 focus:ring-4 focus:ring-purple-500/10 sm:h-36 sm:rounded-3xl sm:p-5 sm:text-base"
+              className="mb-3 h-28 w-full rounded-2xl border border-purple-400/20 bg-black/70 shadow-[0_0_0_1px_rgba(168,85,247,0.08)] p-3 text-sm text-white outline-none transition placeholder:text-zinc-600 focus:border-purple-400/70 focus:ring-4 focus:ring-purple-500/20 sm:h-36 sm:rounded-3xl sm:p-5 sm:text-base"
               value={input}
               onChange={(e) => setInput(e.target.value)}
             />
@@ -1396,7 +1396,7 @@ ${section.content}`,
               placeholder="Example: AI tool for creators, SaaS launch, fitness coaching..."
               value={hookInput}
               onChange={(e) => setHookInput(e.target.value)}
-              className="rounded-2xl border border-white/10 bg-black/70 px-5 py-4 text-sm text-white outline-none transition placeholder:text-zinc-600 focus:border-purple-400/50 focus:ring-4 focus:ring-purple-500/10"
+              className="rounded-2xl border border-purple-400/20 bg-black/70 shadow-[0_0_0_1px_rgba(168,85,247,0.08)] px-5 py-4 text-sm text-white outline-none transition placeholder:text-zinc-600 focus:border-purple-400/70 focus:ring-4 focus:ring-purple-500/20"
             />
 
             <button
@@ -1587,7 +1587,7 @@ ${section.content}`,
               placeholder="Example: 7 lessons from building an AI SaaS..."
               value={carouselInput}
               onChange={(e) => setCarouselInput(e.target.value)}
-              className="rounded-2xl border border-white/10 bg-black/70 px-5 py-4 text-sm text-white outline-none transition placeholder:text-zinc-600 focus:border-purple-400/50 focus:ring-4 focus:ring-purple-500/10"
+              className="rounded-2xl border border-purple-400/20 bg-black/70 shadow-[0_0_0_1px_rgba(168,85,247,0.08)] px-5 py-4 text-sm text-white outline-none transition placeholder:text-zinc-600 focus:border-purple-400/70 focus:ring-4 focus:ring-purple-500/20"
             />
 
             <button
@@ -1667,7 +1667,7 @@ ${section.content}`,
               placeholder="Example: AI tools for creators..."
               value={calendarInput}
               onChange={(e) => setCalendarInput(e.target.value)}
-              className="rounded-2xl border border-white/10 bg-black/70 px-5 py-4 text-sm text-white outline-none transition placeholder:text-zinc-600 focus:border-purple-400/50 focus:ring-4 focus:ring-purple-500/10"
+              className="rounded-2xl border border-purple-400/20 bg-black/70 shadow-[0_0_0_1px_rgba(168,85,247,0.08)] px-5 py-4 text-sm text-white outline-none transition placeholder:text-zinc-600 focus:border-purple-400/70 focus:ring-4 focus:ring-purple-500/20"
             />
 
             <button
