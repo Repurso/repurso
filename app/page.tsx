@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import posthog from "posthog-js";
+import { track } from "@/lib/analytics";
 import { supabase } from "@/lib/supabase";
 import ReactMarkdown from "react-markdown";
 import {
@@ -370,7 +370,7 @@ export default function HomePage() {
       const data = await res.json();
 
       if (res.ok) {
-        posthog.capture("content_generated", {
+        track("content_generated", {
           template: selectedTemplate,
           quality_mode: qualityMode,
           user_email: userEmail || "anonymous",
@@ -469,6 +469,13 @@ export default function HomePage() {
       if (data.usage) {
         setRewriteUsage(data.usage.used || 0);
       }
+
+      track("rewrite_used", {
+        rewrite_type: rewriteType,
+        template: selectedTemplate,
+        quality_mode: qualityMode,
+        user_email: userEmail || "anonymous",
+      });
     } catch {
       alert("Rewrite failed.");
     } finally {
@@ -583,6 +590,10 @@ export default function HomePage() {
       }
 
       setHooks(data.hooks || []);
+
+      track("hook_generated", {
+        user_email: userEmail || "anonymous",
+      });
     } catch {
       alert("Failed to generate hooks.");
     } finally {
@@ -628,6 +639,10 @@ export default function HomePage() {
       }
 
       setCarouselSlides(data.slides || []);
+
+      track("carousel_generated", {
+        user_email: userEmail || "anonymous",
+      });
     } catch {
       alert("Failed to generate carousel.");
     } finally {
@@ -673,6 +688,10 @@ export default function HomePage() {
       }
 
       setCalendarItems(data.items || []);
+
+      track("calendar_generated", {
+        user_email: userEmail || "anonymous",
+      });
     } catch {
       alert("Failed to generate calendar.");
     } finally {
@@ -711,6 +730,10 @@ export default function HomePage() {
   }
 
   function handleCheckout(url: string) {
+    track("checkout_clicked", {
+      user_email: userEmail || "anonymous",
+    });
+
     if (!userEmail) {
       window.location.href = "/login";
       return;
