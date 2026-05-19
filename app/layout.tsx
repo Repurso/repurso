@@ -18,12 +18,15 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://repurso.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
+
   title: {
     default: "Repurso — AI Content Repurposing Tool",
     template: "%s | Repurso",
   },
+
   description:
     "Turn one idea into platform-native content for LinkedIn, X, Instagram, TikTok, YouTube, Facebook, Threads, Snapchat and Pinterest.",
+
   keywords: [
     "AI content repurposing",
     "social media content generator",
@@ -33,31 +36,52 @@ export const metadata: Metadata = {
     "content creator tools",
     "Repurso",
   ],
+
   applicationName: "Repurso",
+
   authors: [{ name: "Repurso" }],
+
   creator: "Repurso",
+
   publisher: "Repurso",
+
   alternates: {
     canonical: "/",
   },
+
   openGraph: {
     title: "Repurso — Turn one idea into content for every platform",
+
     description:
       "Repurso helps creators, founders and marketers repurpose one idea into platform-native content in seconds.",
+
     url: "/",
+
     siteName: "Repurso",
+
     type: "website",
+
     locale: "en_US",
   },
+
   twitter: {
     card: "summary_large_image",
+
     title: "Repurso — AI Content Repurposing Tool",
+
     description:
       "Create platform-native posts, captions, scripts and descriptions from one idea.",
   },
+
   robots: {
     index: true,
     follow: true,
+  },
+
+  icons: {
+    icon: "/icon.png",
+    shortcut: "/icon.png",
+    apple: "/icon.png",
   },
 };
 
