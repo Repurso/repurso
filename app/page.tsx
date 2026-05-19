@@ -769,7 +769,7 @@ export default function HomePage() {
       <div className="mx-auto w-full max-w-6xl overflow-x-hidden">
         <nav className="sticky top-2 z-40 mb-4 flex w-full flex-col gap-2 rounded-xl border border-white/10 bg-black/55 px-2.5 py-2 shadow-2xl shadow-purple-950/20 backdrop-blur-xl sm:top-4 sm:mb-8 sm:flex-row sm:items-center sm:justify-between sm:rounded-3xl sm:px-4 sm:py-3">
           <div className="flex items-center justify-between">
-            <Link href="/" className="group flex items-center gap-3">
+            <Link href="/" className="group flex min-w-0 items-center gap-2 sm:gap-3">
               <img
                 src="/logo-icon.png"
                 alt="Repurso"
@@ -781,15 +781,33 @@ export default function HomePage() {
               </span>
             </Link>
 
-            {!userEmail && (
-              <Link
-                href="/login"
-                onClick={() => track("signup_started", { source: "mobile_nav" })}
-                className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-black transition hover:-translate-y-0.5 hover:bg-zinc-200 sm:hidden"
-              >
-                Login
-              </Link>
-            )}
+            <div className="flex items-center gap-2 sm:hidden">
+              {userEmail ? (
+                <>
+                  <Link
+                    href="/dashboard"
+                    className="rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2 text-xs font-bold text-white"
+                  >
+                    Dashboard
+                  </Link>
+
+                  <button
+                    onClick={logout}
+                    className="rounded-xl bg-white px-3 py-2 text-xs font-bold text-black"
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <Link
+                  href="/login"
+                  onClick={() => track("signup_started", { source: "mobile_nav" })}
+                  className="rounded-xl bg-white px-3 py-2 text-xs font-bold text-black transition hover:-translate-y-0.5 hover:bg-zinc-200"
+                >
+                  Login
+                </Link>
+              )}
+            </div>
           </div>
 
           <div className="hidden flex-wrap items-center gap-3 sm:flex">
@@ -906,24 +924,15 @@ export default function HomePage() {
               </a>
             </div>
 
-            <div className="mb-4 max-w-md overflow-hidden">
-              <div className="flex gap-2 overflow-x-auto pb-1 [-webkit-overflow-scrolling:touch]">
+            <div className="mb-4 max-w-md">
+              <div className="grid grid-cols-9 gap-1">
                 {SECTION_TITLES.map((title) => (
                   <div
                     key={title}
-                    className="flex min-w-[58px] flex-col items-center justify-center gap-1 rounded-2xl border border-white/10 bg-white/[0.03] px-2 py-2 text-center text-[9px] leading-3 text-zinc-400 sm:min-w-[74px] sm:text-[10px]"
+                    className="flex h-10 min-w-0 items-center justify-center rounded-xl border border-white/10 bg-white/[0.03] text-[15px] text-zinc-300 sm:h-12 sm:text-lg"
                     title={title}
                   >
-                    <span className="text-base sm:text-lg">{SECTION_ICONS[title]}</span>
-                    <span>
-                      {title
-                        .replace(" Description", "")
-                        .replace(" Caption", "")
-                        .replace("Twitter/X", "X")
-                        .replace("Pinterest Pin", "Pinterest")
-                        .replace("YouTube", "YT")
-                        .replace("Instagram", "IG")}
-                    </span>
+                    {SECTION_ICONS[title]}
                   </div>
                 ))}
               </div>
