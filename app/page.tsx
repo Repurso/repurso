@@ -924,7 +924,8 @@ export default function HomePage() {
               </a>
             </div>
 
-            <div className="mb-4 max-w-md">
+            {/* MOBILE PLATFORM ICONS */}
+            <div className="mb-4 max-w-md lg:hidden">
               <div className="grid grid-cols-9 gap-1">
                 {SECTION_TITLES.map((title) => (
                   <div
@@ -938,6 +939,7 @@ export default function HomePage() {
               </div>
             </div>
 
+            {/* DESKTOP PLATFORM CARDS */}
             <div className="hidden max-w-md rounded-[22px] border border-white/10 bg-zinc-950/70 p-3 shadow-2xl shadow-purple-950/10 lg:block">
               <div className="mb-3 flex items-center justify-between">
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-400">
