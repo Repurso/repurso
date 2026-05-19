@@ -859,32 +859,32 @@ export default function HomePage() {
           </div>
         </nav>
 
-        <section className="mb-7 grid items-start gap-4 sm:mb-12 lg:grid-cols-[0.72fr_1.28fr] lg:gap-7">
+        <section className="mb-7 grid items-start gap-4 sm:mb-12 lg:grid-cols-[0.66fr_1.34fr] lg:gap-6">
           <div className="pt-2 lg:sticky lg:top-6">
             <div className="mb-3 inline-flex rounded-full border border-purple-400/20 bg-purple-500/10 px-3 py-1.5 text-xs text-purple-100 shadow-lg shadow-purple-950/20 sm:px-4 sm:py-2 sm:text-sm">
               AI content repurposing for creators
             </div>
 
-            <h1 className="mb-3 max-w-xl bg-gradient-to-br from-white via-white to-purple-200 bg-clip-text text-[2.15rem] font-black leading-[0.98] tracking-tight text-transparent sm:mb-5 sm:text-6xl">
+            <h1 className="mb-3 max-w-md bg-gradient-to-br from-white via-white to-purple-200 bg-clip-text text-[2.05rem] font-black leading-[0.98] tracking-tight text-transparent sm:mb-4 sm:text-5xl lg:text-[3.35rem]">
               Turn one idea into weeks of content.
             </h1>
 
-            <p className="mb-4 max-w-lg text-sm leading-6 text-zinc-400 sm:mb-6 sm:text-lg sm:leading-8">
+            <p className="mb-4 max-w-md text-sm leading-6 text-zinc-400 sm:mb-5 sm:text-base sm:leading-7">
               Repurso turns raw thoughts into platform-ready posts, hooks, scripts and captions in seconds.
             </p>
 
-            <div className="mb-4 grid max-w-lg grid-cols-3 gap-2 text-center text-[11px] text-zinc-400 sm:mb-6 sm:text-sm">
-              <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-3 py-3">
+            <div className="mb-4 grid max-w-md grid-cols-3 gap-2 text-center text-[11px] text-zinc-400 sm:mb-5 sm:text-sm">
+              <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-2 py-2.5 sm:px-3 sm:py-3">
                 <span className="block text-base font-bold text-white sm:text-xl">1</span>
                 Idea
               </div>
 
-              <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-3 py-3">
+              <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-2 py-2.5 sm:px-3 sm:py-3">
                 <span className="block text-base font-bold text-white sm:text-xl">9</span>
                 Formats
               </div>
 
-              <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-3 py-3">
+              <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-2 py-2.5 sm:px-3 sm:py-3">
                 <span className="block text-base font-bold text-white sm:text-xl">60s</span>
                 Drafts
               </div>
@@ -906,7 +906,7 @@ export default function HomePage() {
               </a>
             </div>
 
-            <div className="mb-5 flex max-w-lg flex-wrap gap-2 text-xs text-zinc-500 sm:text-sm">
+            <div className="mb-4 flex max-w-md flex-wrap gap-2 text-xs text-zinc-500 sm:text-sm">
               <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5">
                 No workflow setup
               </span>
@@ -918,26 +918,31 @@ export default function HomePage() {
               </span>
             </div>
 
-            <div className="hidden max-w-lg rounded-[24px] border border-white/10 bg-zinc-950/70 p-4 shadow-2xl shadow-purple-950/10 lg:block">
+            <div className="hidden max-w-md rounded-[22px] border border-white/10 bg-zinc-950/70 p-3 shadow-2xl shadow-purple-950/10 lg:block">
               <div className="mb-3 flex items-center justify-between">
-                <p className="text-sm font-semibold text-zinc-300">
-                  Platform-ready outputs
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-400">
+                  Outputs
                 </p>
                 <span className="rounded-full bg-purple-500/10 px-3 py-1 text-xs font-semibold text-purple-200">
                   9 formats
                 </span>
               </div>
 
-              <div className="flex gap-2 overflow-x-auto pb-1">
+              <div className="grid grid-cols-3 gap-2">
                 {SECTION_TITLES.map((title) => (
                   <div
                     key={title}
-                    className="flex min-w-[86px] flex-col items-center justify-center gap-2 rounded-2xl border border-white/10 bg-black/70 px-3 py-3 text-center text-[11px] text-zinc-300 transition hover:border-purple-400/40 hover:bg-purple-500/10"
+                    className="flex min-h-[68px] flex-col items-center justify-center gap-1.5 rounded-2xl border border-white/10 bg-black/70 px-2 py-2 text-center text-[10px] text-zinc-300 transition hover:border-purple-400/40 hover:bg-purple-500/10"
                     title={title}
                   >
-                    <span className="text-xl">{SECTION_ICONS[title]}</span>
-                    <span className="leading-4">
-                      {title.replace(" Description", "").replace(" Caption", "")}
+                    <span className="text-lg">{SECTION_ICONS[title]}</span>
+                    <span className="leading-3">
+                      {title
+                        .replace(" Description", "")
+                        .replace(" Caption", "")
+                        .replace("Twitter/X", "X")
+                        .replace("Pinterest Pin", "Pinterest")
+                        .replace("YouTube", "YT")}
                     </span>
                   </div>
                 ))}
@@ -947,7 +952,7 @@ export default function HomePage() {
 
           <section
             id="generator"
-            className="rounded-[18px] border border-white/10 bg-zinc-950/70 p-3.5 shadow-2xl shadow-purple-950/20 backdrop-blur sm:rounded-[28px] sm:p-5"
+            className="rounded-[18px] border border-white/10 bg-zinc-950/70 p-3.5 shadow-2xl shadow-purple-950/20 backdrop-blur sm:rounded-[28px] sm:p-5 lg:p-5"
           >
             <h3 className="mb-2 text-xl font-bold sm:text-3xl">
               Generate your content
@@ -996,7 +1001,7 @@ export default function HomePage() {
                         key={template.id}
                         type="button"
                         onClick={() => setSelectedTemplate(template.id)}
-                        className={`min-w-[142px] rounded-2xl border px-3 py-3 text-left text-xs font-semibold transition sm:text-sm ${
+                        className={`min-w-[128px] rounded-2xl border px-3 py-3 text-left text-xs font-semibold transition sm:text-sm ${
                           isSelected
                             ? "border-purple-300 bg-white text-black shadow-lg shadow-purple-950/20"
                             : "border-white/10 bg-black/70 text-zinc-300 hover:border-purple-400/40 hover:bg-purple-500/10 hover:text-white"
@@ -1449,7 +1454,7 @@ ${section.content}`,
         <section className="mb-8 grid gap-3 sm:hidden">
           <a
             href="#pricing"
-            className="rounded-2xl border border-white/10 bg-zinc-950/70 p-4 text-center font-bold text-white"
+            className="rounded-2xl border border-white/10 bg-zinc-950/70 p-3 text-center text-sm font-bold text-white"
           >
             View plans after generating
           </a>
@@ -1513,7 +1518,7 @@ ${section.content}`,
 </section>
 
 
-<section className="mb-14 hidden sm:mb-20 sm:block">
+<section className="mb-10 hidden sm:mb-14 sm:block">
           <div className="mb-8 text-center">
             <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-zinc-500">
               Why Repurso
@@ -1528,7 +1533,7 @@ ${section.content}`,
             </p>
           </div>
 
-          <div className="grid gap-6 lg:grid-cols-3">
+          <div className="grid gap-4 lg:grid-cols-3">
             <div className="rounded-[28px] border border-white/10 bg-zinc-950/70 p-6 shadow-xl shadow-purple-950/10">
               <div className="mb-4 text-3xl">⚡</div>
               <h3 className="mb-3 text-2xl font-bold">Save hours every week</h3>
@@ -1768,7 +1773,7 @@ ${section.content}`,
 
 
         <section id="pricing" className="py-10 sm:py-14">
-          <div className="mb-12 text-center">
+          <div className="mb-8 text-center">
             <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-zinc-500">
               Pricing
             </p>
