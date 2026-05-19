@@ -1217,9 +1217,25 @@ export default function HomePage() {
                   <p className="font-bold text-emerald-100">
                     Your platform-ready content is ready.
                   </p>
+
                   <p className="mt-1 text-sm text-emerald-100/70">
                     Rewrite, copy or export each version below.
                   </p>
+
+                  {!userEmail && (
+                    <div className="mt-4 rounded-2xl border border-purple-400/20 bg-purple-500/10 p-4">
+                      <p className="text-sm leading-6 text-purple-100">
+                        Save your generations, access prompt history and unlock premium rewrites.
+                      </p>
+
+                      <Link
+                        href="/login"
+                        className="mt-3 inline-flex rounded-xl bg-white px-4 py-2 font-bold text-black transition hover:bg-zinc-200"
+                      >
+                        Create Free Account
+                      </Link>
+                    </div>
+                  )}
                 </div>
                 {outputSections.map((section) => {
                   const isOpen = openResultId === section.id;
