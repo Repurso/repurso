@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import posthog from "posthog-js";
 import { supabase } from "@/lib/supabase";
 import ReactMarkdown from "react-markdown";
 import {
@@ -367,6 +368,14 @@ export default function HomePage() {
       });
 
       const data = await res.json();
+
+      if (res.ok) {
+        posthog.capture("content_generated", {
+          template: selectedTemplate,
+          quality_mode: qualityMode,
+          user_email: userEmail || "anonymous",
+        });
+      }
 
       if (!res.ok) {
         alert(data.error || "Something went wrong.");
