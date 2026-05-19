@@ -729,15 +729,26 @@ export default function HomePage() {
     }
   }
 
-  function handleCheckout(url: string) {
+  function handleCheckout(url: string, plan: "creator" | "pro") {
     track("checkout_clicked", {
+      plan,
       user_email: userEmail || "anonymous",
     });
 
     if (!userEmail) {
-      window.location.href = "/login";
+      track("signup_started", {
+        source: "pricing",
+        plan,
+      });
+
+      window.location.href = `/login?plan=${plan}`;
       return;
     }
+
+    track("checkout_opened", {
+      plan,
+      user_email: userEmail,
+    });
 
     window.open(url, "_blank", "noopener,noreferrer");
   }
@@ -773,6 +784,7 @@ export default function HomePage() {
             {!userEmail && (
               <Link
                 href="/login"
+                onClick={() => track("signup_started", { source: "mobile_nav" })}
                 className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-black transition hover:-translate-y-0.5 hover:bg-zinc-200 sm:hidden"
               >
                 Login
@@ -838,6 +850,7 @@ export default function HomePage() {
             ) : (
               <Link
                 href="/login"
+                onClick={() => track("signup_started", { source: "desktop_nav" })}
                 className="hidden rounded-xl bg-white px-4 py-2 font-semibold text-black transition hover:-translate-y-0.5 hover:bg-zinc-200 sm:block"
               >
                 Login
@@ -1126,7 +1139,11 @@ export default function HomePage() {
             {promptLibraryNotice && (
               <div className="mb-4 rounded-2xl border border-purple-400/20 bg-purple-500/10 px-4 py-3 text-sm text-purple-100">
                 {promptLibraryNotice}{" "}
-                <a href="/login" className="font-bold underline underline-offset-4">
+                <a
+                  href="/login"
+                  onClick={() => track("signup_started", { source: "prompt_library" })}
+                  className="font-bold underline underline-offset-4"
+                >
                   Login
                 </a>
               </div>
@@ -1262,6 +1279,7 @@ export default function HomePage() {
 
                       <Link
                         href="/login"
+                        onClick={() => track("signup_started", { source: "result_cta" })}
                         className="mt-3 inline-flex rounded-xl bg-white px-4 py-2 font-bold text-black transition hover:bg-zinc-200"
                       >
                         Create Free Account
@@ -1955,7 +1973,7 @@ ${section.content}`,
 
               <button
                 type="button"
-                onClick={() => handleCheckout(CREATOR_CHECKOUT(userEmail))}
+                onClick={() => handleCheckout(CREATOR_CHECKOUT(userEmail), "creator")}
                 className="block w-full rounded-2xl bg-black px-6 py-4 text-center font-bold text-white transition hover:bg-zinc-900"
               >
                 {userEmail ? "Upgrade to Creator" : "Login to upgrade"}
@@ -1994,7 +2012,7 @@ ${section.content}`,
 
               <button
                 type="button"
-                onClick={() => handleCheckout(PRO_CHECKOUT(userEmail))}
+                onClick={() => handleCheckout(PRO_CHECKOUT(userEmail), "pro")}
                 className="block w-full rounded-2xl border border-white/10 px-6 py-4 text-center font-bold transition hover:border-purple-400/40 hover:bg-purple-500/10"
               >
                 {userEmail ? "Upgrade to Pro" : "Login to upgrade"}
