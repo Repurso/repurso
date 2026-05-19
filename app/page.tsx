@@ -759,7 +759,7 @@ export default function HomePage() {
   }
 
   return (
-    <main className="relative min-h-screen overflow-x-hidden bg-black px-3 py-3 text-white sm:px-6 sm:py-6">
+    <main className="relative min-h-screen w-full overflow-x-hidden bg-black px-3 py-3 text-white sm:px-6 sm:py-6">
       <div className="pointer-events-none fixed inset-0 -z-10">
         <div className="absolute left-1/2 top-0 h-[320px] w-[320px] -translate-x-1/2 rounded-full bg-purple-700/20 blur-[100px] sm:h-[520px] sm:w-[520px] sm:blur-[140px]" />
         <div className="absolute right-[-120px] top-[220px] h-[280px] w-[280px] rounded-full bg-fuchsia-600/10 blur-[100px] sm:h-[420px] sm:w-[420px] sm:blur-[130px]" />
@@ -859,61 +859,61 @@ export default function HomePage() {
           </div>
         </nav>
 
-        <section className="mb-7 grid items-start gap-4 sm:mb-12 lg:grid-cols-[0.72fr_1.28fr] lg:gap-6">
-          <div className="pt-2 lg:sticky lg:top-6">
+        <section className="mb-7 grid min-w-0 items-start gap-4 overflow-hidden sm:mb-12 lg:grid-cols-[0.72fr_1.28fr] lg:gap-6">
+          <div className="min-w-0 pt-2 lg:sticky lg:top-6">
             <div className="mb-3 inline-flex rounded-full border border-purple-400/20 bg-purple-500/10 px-3 py-1.5 text-xs text-purple-100 shadow-lg shadow-purple-950/20 sm:px-4 sm:py-2 sm:text-sm">
               AI content repurposing for creators
             </div>
 
-            <h1 className="mb-3 max-w-md bg-gradient-to-br from-white via-white to-purple-200 bg-clip-text text-[1.95rem] font-black leading-[0.98] tracking-tight text-transparent sm:mb-4 sm:text-5xl lg:text-[3.35rem]">
+            <h1 className="mb-3 max-w-md bg-gradient-to-br from-white via-white to-purple-200 bg-clip-text text-[1.72rem] font-black leading-[1.02] tracking-tight text-transparent sm:mb-4 sm:text-5xl lg:text-[3.35rem]">
               Turn one idea into weeks of content.
             </h1>
 
-            <p className="mb-4 max-w-md text-[13px] leading-6 text-zinc-400 sm:mb-5 sm:text-base sm:leading-7">
+            <p className="mb-4 max-w-md text-[12.5px] leading-6 text-zinc-400 sm:mb-5 sm:text-base sm:leading-7">
               Repurso turns raw thoughts into platform-ready posts, hooks, scripts and captions in seconds.
             </p>
 
-            <div className="mb-4 grid max-w-[420px] grid-cols-3 gap-2.5 text-center text-[11px] text-zinc-400 sm:mb-5 sm:text-sm">
-              <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-2 py-3 sm:px-3 sm:py-3.5">
+            <div className="mb-4 grid w-full max-w-md grid-cols-3 gap-2 text-center text-[10px] text-zinc-400 sm:mb-5 sm:text-sm">
+              <div className="min-w-0 rounded-2xl border border-white/10 bg-white/[0.03] px-2 py-2.5 sm:px-3 sm:py-3.5">
                 <span className="mb-1 block text-base font-black text-white sm:text-[1.35rem]">1</span>
                 Idea
               </div>
 
-              <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-2 py-3 sm:px-3 sm:py-3.5">
+              <div className="min-w-0 rounded-2xl border border-white/10 bg-white/[0.03] px-2 py-2.5 sm:px-3 sm:py-3.5">
                 <span className="mb-1 block text-base font-black text-white sm:text-[1.35rem]">9</span>
                 Formats
               </div>
 
-              <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-2 py-3 sm:px-3 sm:py-3.5">
+              <div className="min-w-0 rounded-2xl border border-white/10 bg-white/[0.03] px-2 py-2.5 sm:px-3 sm:py-3.5">
                 <span className="mb-1 block text-base font-black text-white sm:text-[1.35rem]">60s</span>
                 Drafts
               </div>
             </div>
 
-            <div className="mb-4 flex flex-col gap-2 sm:flex-row">
+            <div className="mb-4 grid grid-cols-2 gap-2 sm:flex sm:flex-row">
               <a
                 href="#generator"
-                className="rounded-xl bg-white px-5 py-3 text-center text-sm font-bold text-black shadow-lg shadow-purple-950/30 transition hover:-translate-y-0.5 hover:bg-zinc-200 sm:px-8 sm:py-4 sm:text-base"
+                className="min-w-0 rounded-xl bg-white px-3 py-3 text-center text-xs font-bold text-black shadow-lg shadow-purple-950/30 transition hover:-translate-y-0.5 hover:bg-zinc-200 sm:px-8 sm:py-4 sm:text-base"
               >
                 Generate free content
               </a>
 
               <a
                 href="#pricing"
-                className="rounded-xl border border-white/10 bg-white/[0.03] px-5 py-3 text-center text-sm font-bold transition hover:-translate-y-0.5 hover:border-purple-400/40 hover:bg-purple-500/10 sm:px-8 sm:py-4 sm:text-base"
+                className="min-w-0 rounded-xl border border-white/10 bg-white/[0.03] px-3 py-3 text-center text-xs font-bold transition hover:-translate-y-0.5 hover:border-purple-400/40 hover:bg-purple-500/10 sm:px-8 sm:py-4 sm:text-base"
               >
                 View pricing
               </a>
             </div>
 
-            <div className="mb-4 flex max-w-md flex-wrap gap-2 text-xs text-zinc-500 sm:text-sm">
-              <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5">
+            <div className="mb-4 grid max-w-md grid-cols-3 gap-2 text-center text-[10px] text-zinc-500 sm:flex sm:flex-wrap sm:text-sm">
+              <span className="min-w-0 rounded-full border border-white/10 bg-white/[0.03] px-2 py-1.5 sm:px-3">
                 No workflow setup
               </span>
-              <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5">
+              <span className="min-w-0 rounded-full border border-white/10 bg-white/[0.03] px-2 py-1.5 sm:px-3">
                 Creator-friendly
               </span>
-              <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5">
+              <span className="min-w-0 rounded-full border border-white/10 bg-white/[0.03] px-2 py-1.5 sm:px-3">
                 Export-ready
               </span>
             </div>
@@ -952,7 +952,7 @@ export default function HomePage() {
 
           <section
             id="generator"
-            className="rounded-[18px] border border-white/10 bg-zinc-950/70 p-3 shadow-2xl shadow-purple-950/20 backdrop-blur sm:rounded-[28px] sm:p-5 lg:p-5"
+            className="min-w-0 overflow-hidden rounded-[18px] border border-white/10 bg-zinc-950/70 p-3 shadow-2xl shadow-purple-950/20 backdrop-blur sm:rounded-[28px] sm:p-5 lg:p-5"
           >
             <h3 className="mb-2 text-xl font-bold sm:text-3xl">
               Generate your content
@@ -961,56 +961,94 @@ export default function HomePage() {
             <p className="mb-4 text-xs leading-5 text-zinc-400 sm:text-base">
               Paste an idea. Choose a style. Generate publish-ready content.
             </p>
-            <div className="mb-4 grid gap-4">
-              <div>
-                <p className="mb-2 text-xs font-semibold uppercase tracking-[0.22em] text-zinc-500">
-                  Quality
-                </p>
-                <div className="grid grid-cols-3 gap-2">
-                  {QUALITY_MODES.map((mode) => {
-                    const isSelected = qualityMode === mode.id;
-
-                    return (
-                      <button
-                        key={mode.id}
-                        type="button"
-                        onClick={() => setQualityMode(mode.id)}
-                        className={`rounded-2xl border px-3 py-3 text-left text-xs font-semibold transition sm:text-sm ${
-                          isSelected
-                            ? "border-purple-300 bg-white text-black shadow-lg shadow-purple-950/20"
-                            : "border-white/10 bg-black/70 text-zinc-300 hover:border-purple-400/40 hover:bg-purple-500/10 hover:text-white"
-                        }`}
-                      >
+            <div className="mb-4 grid gap-3">
+              <div className="grid gap-3 sm:hidden">
+                <label className="block">
+                  <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.22em] text-zinc-500">
+                    Quality
+                  </span>
+                  <select
+                    value={qualityMode}
+                    onChange={(e) => setQualityMode(e.target.value as QualityModeId)}
+                    className="h-11 w-full rounded-2xl border border-purple-400/20 bg-black px-3 text-sm font-semibold text-white outline-none"
+                  >
+                    {QUALITY_MODES.map((mode) => (
+                      <option key={mode.id} value={mode.id} className="bg-black text-white">
                         {mode.name}
-                      </button>
-                    );
-                  })}
-                </div>
+                      </option>
+                    ))}
+                  </select>
+                </label>
+
+                <label className="block">
+                  <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.22em] text-zinc-500">
+                    Template
+                  </span>
+                  <select
+                    value={selectedTemplate}
+                    onChange={(e) => setSelectedTemplate(e.target.value as PromptTemplateId)}
+                    className="h-11 w-full rounded-2xl border border-purple-400/20 bg-black px-3 text-sm font-semibold text-white outline-none"
+                  >
+                    {PROMPT_TEMPLATES.map((template) => (
+                      <option key={template.id} value={template.id} className="bg-black text-white">
+                        {template.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
               </div>
 
-              <div>
-                <p className="mb-2 text-xs font-semibold uppercase tracking-[0.22em] text-zinc-500">
-                  Template
-                </p>
-                <div className="flex max-w-full gap-2 overflow-x-auto pb-1 [-webkit-overflow-scrolling:touch]">
-                  {PROMPT_TEMPLATES.map((template) => {
-                    const isSelected = selectedTemplate === template.id;
+              <div className="hidden gap-4 sm:grid">
+                <div>
+                  <p className="mb-2 text-xs font-semibold uppercase tracking-[0.22em] text-zinc-500">
+                    Quality
+                  </p>
+                  <div className="grid grid-cols-3 gap-2">
+                    {QUALITY_MODES.map((mode) => {
+                      const isSelected = qualityMode === mode.id;
 
-                    return (
-                      <button
-                        key={template.id}
-                        type="button"
-                        onClick={() => setSelectedTemplate(template.id)}
-                        className={`min-w-[128px] rounded-2xl border px-3 py-3 text-left text-xs font-semibold transition sm:text-sm ${
-                          isSelected
-                            ? "border-purple-300 bg-white text-black shadow-lg shadow-purple-950/20"
-                            : "border-white/10 bg-black/70 text-zinc-300 hover:border-purple-400/40 hover:bg-purple-500/10 hover:text-white"
-                        }`}
-                      >
-                        {template.name}
-                      </button>
-                    );
-                  })}
+                      return (
+                        <button
+                          key={mode.id}
+                          type="button"
+                          onClick={() => setQualityMode(mode.id)}
+                          className={`rounded-2xl border px-3 py-3 text-left text-xs font-semibold transition sm:text-sm ${
+                            isSelected
+                              ? "border-purple-300 bg-white text-black shadow-lg shadow-purple-950/20"
+                              : "border-white/10 bg-black/70 text-zinc-300 hover:border-purple-400/40 hover:bg-purple-500/10 hover:text-white"
+                          }`}
+                        >
+                          {mode.name}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div>
+                  <p className="mb-2 text-xs font-semibold uppercase tracking-[0.22em] text-zinc-500">
+                    Template
+                  </p>
+                  <div className="flex max-w-full gap-2 overflow-x-auto pb-1 [-webkit-overflow-scrolling:touch]">
+                    {PROMPT_TEMPLATES.map((template) => {
+                      const isSelected = selectedTemplate === template.id;
+
+                      return (
+                        <button
+                          key={template.id}
+                          type="button"
+                          onClick={() => setSelectedTemplate(template.id)}
+                          className={`min-w-[128px] rounded-2xl border px-3 py-3 text-left text-xs font-semibold transition sm:text-sm ${
+                            isSelected
+                              ? "border-purple-300 bg-white text-black shadow-lg shadow-purple-950/20"
+                              : "border-white/10 bg-black/70 text-zinc-300 hover:border-purple-400/40 hover:bg-purple-500/10 hover:text-white"
+                          }`}
+                        >
+                          {template.name}
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
             </div>
@@ -1031,7 +1069,7 @@ export default function HomePage() {
 
             <textarea
               placeholder="Example: We are launching an AI SaaS that helps creators turn one idea into posts for every platform..."
-              className="mb-3 h-28 w-full rounded-2xl border border-purple-400/20 bg-black/70 shadow-[0_0_0_1px_rgba(168,85,247,0.08)] p-3 text-sm text-white outline-none transition placeholder:text-zinc-600 focus:border-purple-400/70 focus:ring-4 focus:ring-purple-500/20 sm:h-36 sm:rounded-3xl sm:p-5 sm:text-base"
+              className="mb-3 h-28 w-full max-w-full rounded-2xl border border-purple-400/20 bg-black/70 p-3 text-sm text-white shadow-[0_0_0_1px_rgba(168,85,247,0.08)] outline-none transition placeholder:text-zinc-600 focus:border-purple-400/70 focus:ring-4 focus:ring-purple-500/20 sm:h-36 sm:rounded-3xl sm:p-5 sm:text-base"
               value={input}
               onChange={(e) => setInput(e.target.value)}
             />
@@ -1125,8 +1163,8 @@ export default function HomePage() {
             )}
 
             {showPromptLibrary && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 sm:p-6">
-                <div className="max-h-[85vh] w-full max-w-3xl overflow-y-auto rounded-[28px] border border-zinc-800 bg-zinc-950 p-5 sm:rounded-[32px] sm:p-6">
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 sm:p-5">
+                <div className="max-h-[85vh] w-full max-w-3xl overflow-y-auto rounded-[28px] border border-zinc-800 bg-zinc-950 p-5 sm:rounded-[32px] sm:p-5">
                   <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                       <h2 className="text-[2rem] font-bold">Prompt Library</h2>
@@ -1369,14 +1407,14 @@ ${section.content}`,
           </section>
         </section>
 
-        <section id="hook-generator" className="mb-6 rounded-[18px] border border-purple-400/20 bg-zinc-950/70 p-3 shadow-xl shadow-purple-950/10 sm:mb-12 sm:rounded-[28px] sm:p-6">
+        <section id="hook-generator" className="mb-6 rounded-[18px] border border-purple-400/20 bg-zinc-950/70 p-3 shadow-xl shadow-purple-950/10 sm:mb-12 sm:rounded-[28px] sm:p-5">
           <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="mb-2 text-xs font-semibold uppercase tracking-[0.25em] text-purple-300">
                 Hook Generator
               </p>
 
-              <h2 className="text-2xl font-bold sm:text-4xl">
+              <h2 className="text-xl font-bold sm:text-3xl">
                 Generate viral hooks.
               </h2>
 
@@ -1478,7 +1516,7 @@ ${section.content}`,
           </div>
 
           <div className="grid gap-4 lg:grid-cols-3">
-            <div className="rounded-[24px] border border-white/10 bg-zinc-950/70 p-5 shadow-xl shadow-purple-950/10">
+            <div className="rounded-[22px] border border-white/10 bg-zinc-950/70 p-5 shadow-xl shadow-purple-950/10">
               <div className="mb-4 text-3xl">⚡</div>
               <h3 className="mb-3 text-2xl font-bold">Save hours every week</h3>
               <p className="leading-7 text-zinc-400">
@@ -1486,7 +1524,7 @@ ${section.content}`,
               </p>
             </div>
 
-            <div className="rounded-[24px] border border-white/10 bg-zinc-950/70 p-5 shadow-xl shadow-purple-950/10">
+            <div className="rounded-[22px] border border-white/10 bg-zinc-950/70 p-5 shadow-xl shadow-purple-950/10">
               <div className="mb-4 text-3xl">✦</div>
               <h3 className="mb-3 text-2xl font-bold">Improve every output</h3>
               <p className="leading-7 text-zinc-400">
@@ -1494,7 +1532,7 @@ ${section.content}`,
               </p>
             </div>
 
-            <div className="rounded-[24px] border border-white/10 bg-zinc-950/70 p-5 shadow-xl shadow-purple-950/10">
+            <div className="rounded-[22px] border border-white/10 bg-zinc-950/70 p-5 shadow-xl shadow-purple-950/10">
               <div className="mb-4 text-3xl">↗</div>
               <h3 className="mb-3 text-2xl font-bold">Publish everywhere</h3>
               <p className="leading-7 text-zinc-400">
@@ -1504,14 +1542,14 @@ ${section.content}`,
           </div>
         </section>
 
-        <section id="carousel-generator" className="mb-10 hidden rounded-[24px] border border-white/10 bg-zinc-950/70 p-8 shadow-2xl shadow-purple-950/20 sm:block">
+        <section id="carousel-generator" className="mb-10 hidden rounded-[22px] border border-white/10 bg-zinc-950/70 p-8 shadow-2xl shadow-purple-950/20 sm:block">
           <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-purple-300">
                 Carousel Generator
               </p>
 
-              <h2 className="text-2xl font-bold sm:text-4xl">
+              <h2 className="text-xl font-bold sm:text-3xl">
                 Turn ideas into carousel slides.
               </h2>
 
@@ -1584,14 +1622,14 @@ ${section.content}`,
           )}
         </section>
 
-        <section id="calendar-generator" className="mb-10 hidden rounded-[24px] border border-purple-400/20 bg-gradient-to-br from-purple-950/30 via-zinc-950 to-black p-8 shadow-2xl shadow-purple-950/20 sm:block">
+        <section id="calendar-generator" className="mb-10 hidden rounded-[22px] border border-purple-400/20 bg-gradient-to-br from-purple-950/30 via-zinc-950 to-black p-8 shadow-2xl shadow-purple-950/20 sm:block">
           <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-purple-300">
                 Content Calendar
               </p>
 
-              <h2 className="text-2xl font-bold sm:text-4xl">
+              <h2 className="text-xl font-bold sm:text-3xl">
                 Plan your next 7 posts.
               </h2>
 
@@ -1665,7 +1703,7 @@ ${section.content}`,
         </section>
 
 
-        <section className="mb-8 sm:mb-16">
+        <section className="mb-8 sm:mb-10">
           <div className="mx-auto max-w-3xl rounded-[20px] border border-white/10 bg-zinc-950/70 p-4 sm:rounded-[28px] sm:p-5">
             <div className="mb-3 flex items-center justify-between gap-4">
               <div>
@@ -1722,7 +1760,7 @@ ${section.content}`,
               Pricing
             </p>
 
-            <h2 className="mb-4 text-2xl font-bold sm:text-4xl">
+            <h2 className="mb-4 text-xl font-bold sm:text-3xl">
               Choose your content engine.
             </h2>
 
@@ -1733,7 +1771,7 @@ ${section.content}`,
           </div>
 
           <div className="grid gap-6 lg:grid-cols-3">
-            <div className="rounded-[28px] border border-white/10 bg-zinc-950/70 p-6 shadow-xl shadow-purple-950/10 transition hover:-translate-y-1 hover:border-purple-400/30 sm:rounded-[32px] sm:p-6">
+            <div className="rounded-[28px] border border-white/10 bg-zinc-950/70 p-6 shadow-xl shadow-purple-950/10 transition hover:-translate-y-1 hover:border-purple-400/30 sm:rounded-[32px] sm:p-5">
               <h3 className="mb-2 text-2xl font-bold">Free</h3>
 
               <p className="mb-6 text-zinc-400">For testing the product.</p>
@@ -1760,7 +1798,7 @@ ${section.content}`,
               </a>
             </div>
 
-            <div className="relative scale-[1.02] rounded-[28px] border border-purple-200 bg-white p-6 text-black shadow-2xl shadow-purple-500/25 ring-4 ring-purple-500/10 transition hover:-translate-y-1 sm:rounded-[32px] sm:p-6">
+            <div className="relative scale-[1.02] rounded-[28px] border border-purple-200 bg-white p-6 text-black shadow-2xl shadow-purple-500/25 ring-4 ring-purple-500/10 transition hover:-translate-y-1 sm:rounded-[32px] sm:p-5">
               <div className="mb-5 inline-flex rounded-full bg-black px-4 py-2 text-sm font-bold text-white lg:absolute lg:-top-4 lg:left-1/2 lg:mb-0 lg:-translate-x-1/2">
                 Most popular
               </div>
@@ -1803,7 +1841,7 @@ ${section.content}`,
               </button>
             </div>
 
-            <div className="rounded-[28px] border border-white/10 bg-zinc-950/70 p-6 shadow-xl shadow-purple-950/10 transition hover:-translate-y-1 hover:border-purple-400/30 sm:rounded-[32px] sm:p-6">
+            <div className="rounded-[28px] border border-white/10 bg-zinc-950/70 p-6 shadow-xl shadow-purple-950/10 transition hover:-translate-y-1 hover:border-purple-400/30 sm:rounded-[32px] sm:p-5">
               <h3 className="mb-2 text-2xl font-bold">Pro</h3>
 
               <p className="mb-4 text-zinc-400">
