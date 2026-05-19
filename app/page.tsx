@@ -906,16 +906,27 @@ export default function HomePage() {
               </a>
             </div>
 
-            <div className="mb-4 grid max-w-md grid-cols-3 gap-2 text-center text-[10px] text-zinc-500 sm:flex sm:flex-wrap sm:text-sm">
-              <span className="min-w-0 rounded-full border border-white/10 bg-white/[0.03] px-2 py-1.5 sm:px-3">
-                No workflow setup
-              </span>
-              <span className="min-w-0 rounded-full border border-white/10 bg-white/[0.03] px-2 py-1.5 sm:px-3">
-                Creator-friendly
-              </span>
-              <span className="min-w-0 rounded-full border border-white/10 bg-white/[0.03] px-2 py-1.5 sm:px-3">
-                Export-ready
-              </span>
+            <div className="mb-4 max-w-md overflow-hidden">
+              <div className="flex gap-2 overflow-x-auto pb-1 [-webkit-overflow-scrolling:touch]">
+                {SECTION_TITLES.map((title) => (
+                  <div
+                    key={title}
+                    className="flex min-w-[58px] flex-col items-center justify-center gap-1 rounded-2xl border border-white/10 bg-white/[0.03] px-2 py-2 text-center text-[9px] leading-3 text-zinc-400 sm:min-w-[74px] sm:text-[10px]"
+                    title={title}
+                  >
+                    <span className="text-base sm:text-lg">{SECTION_ICONS[title]}</span>
+                    <span>
+                      {title
+                        .replace(" Description", "")
+                        .replace(" Caption", "")
+                        .replace("Twitter/X", "X")
+                        .replace("Pinterest Pin", "Pinterest")
+                        .replace("YouTube", "YT")
+                        .replace("Instagram", "IG")}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
 
             <div className="hidden max-w-md rounded-[22px] border border-white/10 bg-zinc-950/70 p-3 shadow-2xl shadow-purple-950/10 lg:block">
