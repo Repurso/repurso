@@ -759,15 +759,15 @@ export default function HomePage() {
   }
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-black px-2 py-2 text-white sm:px-6 sm:py-6">
+    <main className="relative min-h-screen overflow-x-hidden bg-black px-3 py-3 text-white sm:px-6 sm:py-6">
       <div className="pointer-events-none fixed inset-0 -z-10">
         <div className="absolute left-1/2 top-0 h-[320px] w-[320px] -translate-x-1/2 rounded-full bg-purple-700/20 blur-[100px] sm:h-[520px] sm:w-[520px] sm:blur-[140px]" />
         <div className="absolute right-[-120px] top-[220px] h-[280px] w-[280px] rounded-full bg-fuchsia-600/10 blur-[100px] sm:h-[420px] sm:w-[420px] sm:blur-[130px]" />
         <div className="absolute bottom-[-160px] left-[-120px] h-[280px] w-[280px] rounded-full bg-violet-700/10 blur-[100px] sm:h-[420px] sm:w-[420px] sm:blur-[130px]" />
       </div>
 
-      <div className="mx-auto max-w-6xl">
-        <nav className="sticky top-2 z-40 mb-4 flex flex-col gap-2 rounded-xl border border-white/10 bg-black/55 px-2.5 py-2 shadow-2xl shadow-purple-950/20 backdrop-blur-xl sm:top-4 sm:mb-8 sm:flex-row sm:items-center sm:justify-between sm:rounded-3xl sm:px-4 sm:py-3">
+      <div className="mx-auto w-full max-w-6xl overflow-x-hidden">
+        <nav className="sticky top-2 z-40 mb-4 flex w-full flex-col gap-2 rounded-xl border border-white/10 bg-black/55 px-2.5 py-2 shadow-2xl shadow-purple-950/20 backdrop-blur-xl sm:top-4 sm:mb-8 sm:flex-row sm:items-center sm:justify-between sm:rounded-3xl sm:px-4 sm:py-3">
           <div className="flex items-center justify-between">
             <Link href="/" className="group flex items-center gap-3">
               <img
@@ -992,7 +992,7 @@ export default function HomePage() {
                 <p className="mb-2 text-xs font-semibold uppercase tracking-[0.22em] text-zinc-500">
                   Template
                 </p>
-                <div className="flex gap-2 overflow-x-auto pb-1">
+                <div className="flex max-w-full gap-2 overflow-x-auto pb-1 [-webkit-overflow-scrolling:touch]">
                   {PROMPT_TEMPLATES.map((template) => {
                     const isSelected = selectedTemplate === template.id;
 
@@ -1126,7 +1126,7 @@ export default function HomePage() {
 
             {showPromptLibrary && (
               <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 sm:p-6">
-                <div className="max-h-[85vh] w-full max-w-3xl overflow-y-auto rounded-[28px] border border-zinc-800 bg-zinc-950 p-5 sm:rounded-[32px] sm:p-8">
+                <div className="max-h-[85vh] w-full max-w-3xl overflow-y-auto rounded-[28px] border border-zinc-800 bg-zinc-950 p-5 sm:rounded-[32px] sm:p-6">
                   <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                       <h2 className="text-[2rem] font-bold">Prompt Library</h2>
@@ -1369,40 +1369,40 @@ ${section.content}`,
           </section>
         </section>
 
-        <section id="hook-generator" className="mb-6 rounded-[20px] border border-purple-400/20 bg-gradient-to-br from-purple-950/30 via-zinc-950 to-black p-3 shadow-2xl shadow-purple-950/20 sm:mb-16 sm:rounded-[32px] sm:p-8">
-          <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+        <section id="hook-generator" className="mb-6 rounded-[18px] border border-purple-400/20 bg-zinc-950/70 p-3 shadow-xl shadow-purple-950/10 sm:mb-12 sm:rounded-[28px] sm:p-6">
+          <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <p className="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-purple-300">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.25em] text-purple-300">
                 Hook Generator
               </p>
 
-              <h2 className="text-[1.65rem] font-bold sm:text-5xl">
+              <h2 className="text-2xl font-bold sm:text-4xl">
                 Generate viral hooks.
               </h2>
 
-              <p className="mt-2 max-w-2xl text-xs leading-5 sm:text-base sm:leading-7 text-zinc-400 sm:text-base sm:leading-7">
-                Create stronger opening lines for TikTok, X, LinkedIn and short-form content.
+              <p className="mt-2 max-w-2xl text-xs leading-5 text-zinc-400 sm:text-sm sm:leading-6">
+                Create stronger opening lines for short-form and social content.
               </p>
             </div>
 
-            <span className="rounded-full border border-purple-400/30 bg-purple-500/10 px-4 py-2 text-xs font-bold uppercase tracking-wide text-purple-100">
+            <span className="hidden rounded-full border border-purple-400/30 bg-purple-500/10 px-4 py-2 text-xs font-bold uppercase tracking-wide text-purple-100 sm:inline-flex">
               New
             </span>
           </div>
 
-          <div className="grid gap-4 lg:grid-cols-[1fr_auto]">
+          <div className="grid gap-3 lg:grid-cols-[1fr_auto]">
             <input
               type="text"
               placeholder="Example: AI tool for creators, SaaS launch, fitness coaching..."
               value={hookInput}
               onChange={(e) => setHookInput(e.target.value)}
-              className="rounded-2xl border border-purple-400/20 bg-black/70 shadow-[0_0_0_1px_rgba(168,85,247,0.08)] px-5 py-4 text-sm text-white outline-none transition placeholder:text-zinc-600 focus:border-purple-400/70 focus:ring-4 focus:ring-purple-500/20"
+              className="w-full rounded-2xl border border-purple-400/20 bg-black/70 px-4 py-3 text-sm text-white shadow-[0_0_0_1px_rgba(168,85,247,0.08)] outline-none transition placeholder:text-zinc-600 focus:border-purple-400/70 focus:ring-4 focus:ring-purple-500/20 sm:px-5 sm:py-4"
             />
 
             <button
               onClick={generateHooks}
               disabled={hookLoading}
-              className="inline-flex items-center justify-center gap-3 rounded-2xl bg-white px-8 py-4 text-sm font-bold text-black shadow-xl shadow-purple-950/30 transition hover:-translate-y-0.5 hover:bg-zinc-200 disabled:opacity-60"
+              className="inline-flex w-full items-center justify-center gap-3 rounded-2xl bg-white px-5 py-3 text-sm font-bold text-black shadow-xl shadow-purple-950/30 transition hover:-translate-y-0.5 hover:bg-zinc-200 disabled:opacity-60 lg:w-auto"
             >
               {hookLoading && (
                 <span className="h-4 w-4 animate-spin rounded-full border-2 border-black/20 border-t-black" />
@@ -1413,11 +1413,11 @@ ${section.content}`,
           </div>
 
           {hooks.length > 0 && (
-            <div className="mt-6 grid gap-3 md:grid-cols-2">
+            <div className="mt-4 grid gap-3 md:grid-cols-2">
               {hooks.map((hook, index) => (
                 <div
                   key={`${hook}-${index}`}
-                  className="rounded-2xl border border-white/10 bg-black/60 p-4 transition hover:border-purple-400/40 hover:bg-purple-500/10"
+                  className="rounded-2xl border border-white/10 bg-black/60 p-3 transition hover:border-purple-400/40 hover:bg-purple-500/10 sm:p-4"
                 >
                   <div className="mb-3 flex items-start justify-between gap-3">
                     <span className="rounded-full bg-purple-500/10 px-3 py-1 text-xs font-bold text-purple-200">
@@ -1439,7 +1439,7 @@ ${section.content}`,
           )}
 
           {!hooks.length && !hookLoading && (
-            <div className="mt-6 rounded-3xl border border-dashed border-white/10 bg-black/40 p-5 text-center">
+            <div className="mt-4 rounded-2xl border border-dashed border-white/10 bg-black/40 p-4 text-center">
               <p className="font-semibold text-white">
                 Try: “AI SaaS for creators” or “fitness coach content ideas”
               </p>
@@ -1460,71 +1460,15 @@ ${section.content}`,
           </a>
         </section>
 
-        <section className="hidden sm:mb-14 sm:block">
-  <div className="mb-6 text-center sm:mb-14">
-    <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-zinc-500">
-      How it works
-    </p>
-
-    <h2 className="mb-4 text-[1.65rem] font-bold sm:text-5xl">
-      Create once. Publish everywhere.
-    </h2>
-
-    <p className="mx-auto max-w-2xl text-base leading-7 text-zinc-400 sm:text-lg sm:leading-8">
-      Repurso transforms one idea into platform-specific content optimized for
-      creators, founders and marketers.
-    </p>
-  </div>
-
-  <div className="grid grid-cols-3 gap-2 sm:gap-6 lg:grid-cols-3">
-    <div className="rounded-2xl border border-white/10 bg-zinc-950/70 p-3 shadow-xl shadow-purple-950/10 transition hover:-translate-y-1 hover:border-purple-400/30 hover:bg-zinc-900/70 sm:rounded-[28px] sm:p-6">
-      <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-xl bg-white text-base font-bold text-black sm:mb-5 sm:h-14 sm:w-14 sm:rounded-2xl sm:text-2xl">
-        1
-      </div>
-
-      <h3 className="mb-2 text-sm font-bold sm:mb-3 sm:text-2xl">Paste</h3>
-
-      <p className="hidden leading-7 text-zinc-400 sm:block">
-        Add an idea, thread, article, script or raw thoughts into the generator.
-      </p>
-    </div>
-
-    <div className="rounded-2xl border border-white/10 bg-zinc-950/70 p-3 shadow-xl shadow-purple-950/10 transition hover:-translate-y-1 hover:border-purple-400/30 hover:bg-zinc-900/70 sm:rounded-[28px] sm:p-6">
-      <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-xl bg-white text-base font-bold text-black sm:mb-5 sm:h-14 sm:w-14 sm:rounded-2xl sm:text-2xl">
-        2
-      </div>
-
-      <h3 className="mb-2 text-sm font-bold sm:mb-3 sm:text-2xl">Generate</h3>
-
-      <p className="hidden leading-7 text-zinc-400 sm:block">
-        AI rewrites your content into LinkedIn posts, captions, scripts and
-        platform-ready formats.
-      </p>
-    </div>
-
-    <div className="rounded-2xl border border-white/10 bg-zinc-950/70 p-3 shadow-xl shadow-purple-950/10 transition hover:-translate-y-1 hover:border-purple-400/30 hover:bg-zinc-900/70 sm:rounded-[28px] sm:p-6">
-      <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-xl bg-white text-base font-bold text-black sm:mb-5 sm:h-14 sm:w-14 sm:rounded-2xl sm:text-2xl">
-        3
-      </div>
-
-      <h3 className="mb-2 text-sm font-bold sm:mb-3 sm:text-2xl">Publish</h3>
-
-      <p className="hidden leading-7 text-zinc-400 sm:block">
-        Copy, rewrite, improve or export your content and publish faster across
-        every platform.
-      </p>
-    </div>
-  </div>
-</section>
 
 
-<section className="mb-10 hidden sm:mb-14 sm:block">
+<section className="mb-8 hidden sm:mb-10 sm:block">
           <div className="mb-8 text-center">
             <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-zinc-500">
               Why Repurso
             </p>
 
-            <h2 className="mb-4 text-[1.65rem] font-bold sm:text-5xl">
+            <h2 className="mb-3 text-[1.65rem] font-bold sm:text-4xl">
               A cleaner way to create social content.
             </h2>
 
@@ -1534,7 +1478,7 @@ ${section.content}`,
           </div>
 
           <div className="grid gap-4 lg:grid-cols-3">
-            <div className="rounded-[28px] border border-white/10 bg-zinc-950/70 p-6 shadow-xl shadow-purple-950/10">
+            <div className="rounded-[24px] border border-white/10 bg-zinc-950/70 p-5 shadow-xl shadow-purple-950/10">
               <div className="mb-4 text-3xl">⚡</div>
               <h3 className="mb-3 text-2xl font-bold">Save hours every week</h3>
               <p className="leading-7 text-zinc-400">
@@ -1542,7 +1486,7 @@ ${section.content}`,
               </p>
             </div>
 
-            <div className="rounded-[28px] border border-white/10 bg-zinc-950/70 p-6 shadow-xl shadow-purple-950/10">
+            <div className="rounded-[24px] border border-white/10 bg-zinc-950/70 p-5 shadow-xl shadow-purple-950/10">
               <div className="mb-4 text-3xl">✦</div>
               <h3 className="mb-3 text-2xl font-bold">Improve every output</h3>
               <p className="leading-7 text-zinc-400">
@@ -1550,7 +1494,7 @@ ${section.content}`,
               </p>
             </div>
 
-            <div className="rounded-[28px] border border-white/10 bg-zinc-950/70 p-6 shadow-xl shadow-purple-950/10">
+            <div className="rounded-[24px] border border-white/10 bg-zinc-950/70 p-5 shadow-xl shadow-purple-950/10">
               <div className="mb-4 text-3xl">↗</div>
               <h3 className="mb-3 text-2xl font-bold">Publish everywhere</h3>
               <p className="leading-7 text-zinc-400">
@@ -1560,18 +1504,18 @@ ${section.content}`,
           </div>
         </section>
 
-        <section id="carousel-generator" className="mb-16 hidden rounded-[32px] border border-white/10 bg-zinc-950/70 p-8 shadow-2xl shadow-purple-950/20 sm:block">
+        <section id="carousel-generator" className="mb-10 hidden rounded-[24px] border border-white/10 bg-zinc-950/70 p-8 shadow-2xl shadow-purple-950/20 sm:block">
           <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-purple-300">
                 Carousel Generator
               </p>
 
-              <h2 className="text-[1.65rem] font-bold sm:text-5xl">
+              <h2 className="text-2xl font-bold sm:text-4xl">
                 Turn ideas into carousel slides.
               </h2>
 
-              <p className="mt-2 max-w-2xl text-xs leading-5 sm:text-base sm:leading-7 text-zinc-400 sm:text-base sm:leading-7">
+              <p className="mt-2 max-w-2xl text-xs leading-5 text-zinc-400 sm:text-sm sm:leading-6">
                 Generate a ready-to-use LinkedIn, Instagram or TikTok slideshow structure with strong slide copy.
               </p>
             </div>
@@ -1581,19 +1525,19 @@ ${section.content}`,
             </span>
           </div>
 
-          <div className="grid gap-4 lg:grid-cols-[1fr_auto]">
+          <div className="grid gap-3 lg:grid-cols-[1fr_auto]">
             <input
               type="text"
               placeholder="Example: 7 lessons from building an AI SaaS..."
               value={carouselInput}
               onChange={(e) => setCarouselInput(e.target.value)}
-              className="rounded-2xl border border-purple-400/20 bg-black/70 shadow-[0_0_0_1px_rgba(168,85,247,0.08)] px-5 py-4 text-sm text-white outline-none transition placeholder:text-zinc-600 focus:border-purple-400/70 focus:ring-4 focus:ring-purple-500/20"
+              className="w-full rounded-2xl border border-purple-400/20 bg-black/70 px-4 py-3 text-sm text-white shadow-[0_0_0_1px_rgba(168,85,247,0.08)] outline-none transition placeholder:text-zinc-600 focus:border-purple-400/70 focus:ring-4 focus:ring-purple-500/20 sm:px-5 sm:py-4"
             />
 
             <button
               onClick={generateCarousel}
               disabled={carouselLoading}
-              className="inline-flex items-center justify-center gap-3 rounded-2xl bg-white px-8 py-4 text-sm font-bold text-black shadow-xl shadow-purple-950/30 transition hover:-translate-y-0.5 hover:bg-zinc-200 disabled:opacity-60"
+              className="inline-flex w-full items-center justify-center gap-3 rounded-2xl bg-white px-5 py-3 text-sm font-bold text-black shadow-xl shadow-purple-950/30 transition hover:-translate-y-0.5 hover:bg-zinc-200 disabled:opacity-60 lg:w-auto"
             >
               {carouselLoading && (
                 <span className="h-4 w-4 animate-spin rounded-full border-2 border-black/20 border-t-black" />
@@ -1640,18 +1584,18 @@ ${section.content}`,
           )}
         </section>
 
-        <section id="calendar-generator" className="mb-16 hidden rounded-[32px] border border-purple-400/20 bg-gradient-to-br from-purple-950/30 via-zinc-950 to-black p-8 shadow-2xl shadow-purple-950/20 sm:block">
+        <section id="calendar-generator" className="mb-10 hidden rounded-[24px] border border-purple-400/20 bg-gradient-to-br from-purple-950/30 via-zinc-950 to-black p-8 shadow-2xl shadow-purple-950/20 sm:block">
           <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-purple-300">
                 Content Calendar
               </p>
 
-              <h2 className="text-[1.65rem] font-bold sm:text-5xl">
+              <h2 className="text-2xl font-bold sm:text-4xl">
                 Plan your next 7 posts.
               </h2>
 
-              <p className="mt-2 max-w-2xl text-xs leading-5 sm:text-base sm:leading-7 text-zinc-400 sm:text-base sm:leading-7">
+              <p className="mt-2 max-w-2xl text-xs leading-5 text-zinc-400 sm:text-sm sm:leading-6">
                 Enter your niche, product, or audience. Repurso will create a weekly content plan with platform-ready angles.
               </p>
             </div>
@@ -1661,19 +1605,19 @@ ${section.content}`,
             </span>
           </div>
 
-          <div className="grid gap-4 lg:grid-cols-[1fr_auto]">
+          <div className="grid gap-3 lg:grid-cols-[1fr_auto]">
             <input
               type="text"
               placeholder="Example: AI tools for creators..."
               value={calendarInput}
               onChange={(e) => setCalendarInput(e.target.value)}
-              className="rounded-2xl border border-purple-400/20 bg-black/70 shadow-[0_0_0_1px_rgba(168,85,247,0.08)] px-5 py-4 text-sm text-white outline-none transition placeholder:text-zinc-600 focus:border-purple-400/70 focus:ring-4 focus:ring-purple-500/20"
+              className="w-full rounded-2xl border border-purple-400/20 bg-black/70 px-4 py-3 text-sm text-white shadow-[0_0_0_1px_rgba(168,85,247,0.08)] outline-none transition placeholder:text-zinc-600 focus:border-purple-400/70 focus:ring-4 focus:ring-purple-500/20 sm:px-5 sm:py-4"
             />
 
             <button
               onClick={generateCalendar}
               disabled={calendarLoading}
-              className="inline-flex items-center justify-center gap-3 rounded-2xl bg-white px-8 py-4 text-sm font-bold text-black shadow-xl shadow-purple-950/30 transition hover:-translate-y-0.5 hover:bg-zinc-200 disabled:opacity-60"
+              className="inline-flex w-full items-center justify-center gap-3 rounded-2xl bg-white px-5 py-3 text-sm font-bold text-black shadow-xl shadow-purple-950/30 transition hover:-translate-y-0.5 hover:bg-zinc-200 disabled:opacity-60 lg:w-auto"
             >
               {calendarLoading && (
                 <span className="h-4 w-4 animate-spin rounded-full border-2 border-black/20 border-t-black" />
@@ -1722,7 +1666,7 @@ ${section.content}`,
 
 
         <section className="mb-8 sm:mb-16">
-          <div className="mx-auto max-w-4xl rounded-[24px] border border-white/10 bg-zinc-950/70 p-4 sm:rounded-[32px] sm:p-6">
+          <div className="mx-auto max-w-3xl rounded-[20px] border border-white/10 bg-zinc-950/70 p-4 sm:rounded-[28px] sm:p-5">
             <div className="mb-3 flex items-center justify-between gap-4">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.3em] text-zinc-500">
@@ -1778,7 +1722,7 @@ ${section.content}`,
               Pricing
             </p>
 
-            <h2 className="mb-4 text-[1.65rem] font-bold sm:text-5xl">
+            <h2 className="mb-4 text-2xl font-bold sm:text-4xl">
               Choose your content engine.
             </h2>
 
@@ -1789,7 +1733,7 @@ ${section.content}`,
           </div>
 
           <div className="grid gap-6 lg:grid-cols-3">
-            <div className="rounded-[28px] border border-white/10 bg-zinc-950/70 p-6 shadow-xl shadow-purple-950/10 transition hover:-translate-y-1 hover:border-purple-400/30 sm:rounded-[32px] sm:p-8">
+            <div className="rounded-[28px] border border-white/10 bg-zinc-950/70 p-6 shadow-xl shadow-purple-950/10 transition hover:-translate-y-1 hover:border-purple-400/30 sm:rounded-[32px] sm:p-6">
               <h3 className="mb-2 text-2xl font-bold">Free</h3>
 
               <p className="mb-6 text-zinc-400">For testing the product.</p>
@@ -1816,7 +1760,7 @@ ${section.content}`,
               </a>
             </div>
 
-            <div className="relative scale-[1.02] rounded-[28px] border border-purple-200 bg-white p-6 text-black shadow-2xl shadow-purple-500/25 ring-4 ring-purple-500/10 transition hover:-translate-y-1 sm:rounded-[32px] sm:p-8">
+            <div className="relative scale-[1.02] rounded-[28px] border border-purple-200 bg-white p-6 text-black shadow-2xl shadow-purple-500/25 ring-4 ring-purple-500/10 transition hover:-translate-y-1 sm:rounded-[32px] sm:p-6">
               <div className="mb-5 inline-flex rounded-full bg-black px-4 py-2 text-sm font-bold text-white lg:absolute lg:-top-4 lg:left-1/2 lg:mb-0 lg:-translate-x-1/2">
                 Most popular
               </div>
@@ -1828,7 +1772,7 @@ ${section.content}`,
               </p>
 
               <div className="mb-8">
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-3">
                   <span className="text-4xl font-bold sm:text-5xl">$9.99</span>
 
                   <span className="rounded-full bg-black px-3 py-1 text-xs font-bold uppercase tracking-wide text-white">
@@ -1859,7 +1803,7 @@ ${section.content}`,
               </button>
             </div>
 
-            <div className="rounded-[28px] border border-white/10 bg-zinc-950/70 p-6 shadow-xl shadow-purple-950/10 transition hover:-translate-y-1 hover:border-purple-400/30 sm:rounded-[32px] sm:p-8">
+            <div className="rounded-[28px] border border-white/10 bg-zinc-950/70 p-6 shadow-xl shadow-purple-950/10 transition hover:-translate-y-1 hover:border-purple-400/30 sm:rounded-[32px] sm:p-6">
               <h3 className="mb-2 text-2xl font-bold">Pro</h3>
 
               <p className="mb-4 text-zinc-400">
@@ -1867,7 +1811,7 @@ ${section.content}`,
               </p>
 
               <div className="mb-8">
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-3">
                   <span className="text-4xl font-bold sm:text-5xl">$19.99</span>
 
                   <span className="rounded-full border border-purple-400/30 bg-purple-500/10 px-3 py-1 text-xs font-bold uppercase tracking-wide text-purple-100">
@@ -1910,7 +1854,7 @@ ${section.content}`,
         <footer className="border-t border-zinc-800 py-10">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <div className="flex items-center gap-3">
+              <div className="flex flex-wrap items-center gap-3">
                 <img
                   src="/logo-icon.png"
                   alt="Repurso"
