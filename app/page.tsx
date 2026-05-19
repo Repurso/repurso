@@ -74,24 +74,24 @@ const LOADING_STEPS = [
 
 const FAQ_ITEMS = [
   {
-    question: "What does Repurso do?",
+    question: "What is Repurso?",
     answer:
-      "Repurso turns one idea into platform-ready content for LinkedIn, X, Instagram, TikTok, YouTube, Facebook, Threads, Snapchat and Pinterest.",
+      "Repurso is an AI content repurposing workspace that turns one raw idea into platform-ready posts, captions, scripts and content angles.",
   },
   {
-    question: "Can I rewrite generated content?",
+    question: "Who is Repurso built for?",
     answer:
-      "Yes. Each output can be rewritten to be more viral, more professional, shorter, longer or more emotional.",
+      "Repurso is built for creators, founders, marketers and small teams who want to publish more consistently without rewriting the same idea manually.",
   },
   {
-    question: "Is there a free plan?",
+    question: "Which platforms does Repurso support?",
     answer:
-      "Yes. The free plan includes 20 generations so you can test the workflow before upgrading.",
+      "Repurso creates content for LinkedIn, X, Instagram, TikTok, YouTube, Facebook, Threads, Snapchat and Pinterest.",
   },
   {
-    question: "Can I cancel paid plans?",
+    question: "Can I improve generated content?",
     answer:
-      "Yes. Paid plans include a 3-day free trial and can be cancelled anytime.",
+      "Yes. You can rewrite outputs to be more viral, more professional, shorter, longer, more emotional, more storytelling-focused and more.",
   },
 ];
 
@@ -817,33 +817,55 @@ export default function HomePage() {
         <section className="mb-10 grid items-start gap-4 lg:mb-16 lg:grid-cols-[0.8fr_1.2fr] lg:gap-8">
           <div className="pt-2 lg:sticky lg:top-6">
             <div className="mb-3 inline-flex rounded-full border border-purple-400/20 bg-purple-500/10 px-3 py-1.5 text-xs sm:px-4 sm:py-2 sm:text-sm text-purple-100 shadow-lg shadow-purple-950/20">
-              AI content repurposing tool
+              AI content workspace for creators and teams
             </div>
 
-            <h2 className="mb-4 bg-gradient-to-br from-white via-white to-purple-200 bg-clip-text text-[1.75rem] font-bold leading-tight sm:text-5xl text-transparent sm:mb-5 sm:text-5xl">
-              Turn one idea into content for every platform.
-            </h2>
+            <h1 className="mb-4 bg-gradient-to-br from-white via-white to-purple-200 bg-clip-text text-[2rem] font-black leading-tight text-transparent sm:mb-5 sm:text-6xl">
+              Create platform-ready content from one idea.
+            </h1>
 
             <p className="mb-4 text-sm leading-6 text-zinc-400 sm:mb-6 sm:text-lg sm:leading-8">
-              Repurso helps creators, founders and marketers transform one idea
-              into platform-ready content for LinkedIn, X, Instagram, TikTok,
-              YouTube, Facebook, Threads, Snapchat and Pinterest.
+              Repurso turns raw thoughts into polished posts, captions, hooks,
+              scripts and content plans for every major social platform.
             </p>
-<div className="mb-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+
+            <div className="mb-4 grid grid-cols-3 gap-2 text-center text-[11px] text-zinc-400 sm:mb-6 sm:text-sm">
+              <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-3 py-3">
+                <span className="block text-base font-bold text-white sm:text-xl">9</span>
+                Platforms
+              </div>
+
+              <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-3 py-3">
+                <span className="block text-base font-bold text-white sm:text-xl">1</span>
+                Idea
+              </div>
+
+              <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-3 py-3">
+                <span className="block text-base font-bold text-white sm:text-xl">AI</span>
+                Workflow
+              </div>
+            </div>
+
+            <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
               <a
                 href="#generator"
                 className="rounded-xl bg-white px-5 py-3 text-center text-sm font-bold text-black shadow-lg shadow-purple-950/30 transition hover:-translate-y-0.5 hover:bg-zinc-200 sm:px-8 sm:py-4 sm:text-base"
               >
-                Try it free
+                Generate free content
               </a>
 
               <a
-                href="#pricing"
+                href="#hook-generator"
                 className="rounded-xl border border-white/10 bg-white/[0.03] px-5 py-3 text-center text-sm font-bold transition hover:-translate-y-0.5 hover:border-purple-400/40 hover:bg-purple-500/10 sm:px-8 sm:py-4 sm:text-base"
               >
-                View pricing
+                Try hook generator
               </a>
             </div>
+
+            <p className="mb-5 text-xs leading-5 text-zinc-500 sm:text-sm">
+              No complicated setup. Paste an idea, choose a style and generate
+              content you can copy, improve or export.
+            </p>
 
             <div className="hidden rounded-[28px] border border-white/10 bg-zinc-950/70 p-5 shadow-2xl shadow-purple-950/10 backdrop-blur lg:block">
               <div className="mb-4 flex items-center justify-between">
@@ -870,10 +892,11 @@ export default function HomePage() {
 
               <div className="mt-5 rounded-3xl border border-purple-400/20 bg-purple-500/10 p-4">
                 <p className="mb-2 text-sm font-semibold text-purple-100">
-                  Example workflow
+                  Professional content workflow
                 </p>
                 <p className="text-sm leading-6 text-zinc-400">
-                  Paste one raw idea and get publish-ready versions for every major social channel.
+                  Generate platform-native posts, rewrite weak sections, export
+                  finished content and keep your best prompts in one place.
                 </p>
               </div>
             </div>
@@ -884,11 +907,12 @@ export default function HomePage() {
             className="rounded-[18px] border border-white/10 bg-zinc-950/70 p-3.5 sm:p-7 shadow-2xl shadow-purple-950/20 backdrop-blur sm:rounded-[32px] sm:p-7"
           >
             <h3 className="mb-2 text-xl font-bold sm:text-4xl">
-              Generate content
+              Start with one idea
             </h3>
 
             <p className="mb-4 text-xs leading-5 text-zinc-400 sm:mb-6 sm:text-lg">
-              Paste your content and let Repurso turn it into multiple formats.
+              Paste a rough idea, launch note, thread, script or article.
+              Repurso will turn it into polished content for every platform.
             </p>
             <div className="mb-6">
               <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] sm:mb-3 sm:text-sm sm:tracking-[0.25em] text-zinc-500">
@@ -975,7 +999,7 @@ export default function HomePage() {
             </div>
 
             <textarea
-              placeholder="Paste your idea, tweet, article, video script or raw thoughts here..."
+              placeholder="Example: We are launching an AI SaaS that helps creators turn one idea into posts for every platform..."
               className="mb-3 h-24 w-full rounded-2xl sm:h-44 sm:rounded-3xl border border-white/10 bg-black/70 p-3 text-sm sm:p-5 text-white outline-none transition placeholder:text-zinc-600 focus:border-purple-400/50 focus:ring-4 focus:ring-purple-500/10 sm:h-44 sm:p-5 sm:text-base"
               value={input}
               onChange={(e) => setInput(e.target.value)}
@@ -1557,11 +1581,11 @@ ${section.content}`,
             </p>
 
             <h2 className="mb-4 text-[1.65rem] font-bold sm:text-5xl">
-              Built for faster content workflows.
+              A cleaner way to create social content.
             </h2>
 
             <p className="mx-auto max-w-2xl text-base leading-7 text-zinc-400 sm:text-lg sm:leading-8">
-              Stop rewriting the same idea manually. Generate, improve and export content from one focused workspace.
+              Move from blank page to publish-ready content faster, with one workspace for generation, rewriting, exporting and prompt reuse.
             </p>
           </div>
 
