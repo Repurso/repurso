@@ -766,7 +766,7 @@ export default function HomePage() {
         <div className="absolute bottom-[-160px] left-[-120px] h-[280px] w-[280px] rounded-full bg-violet-700/10 blur-[100px] sm:h-[420px] sm:w-[420px] sm:blur-[130px]" />
       </div>
 
-      <div className="mx-auto max-w-7xl">
+      <div className="mx-auto max-w-6xl">
         <nav className="sticky top-2 z-40 mb-4 flex flex-col gap-2 rounded-xl border border-white/10 bg-black/55 px-2.5 py-2 shadow-2xl shadow-purple-950/20 backdrop-blur-xl sm:top-4 sm:mb-8 sm:flex-row sm:items-center sm:justify-between sm:rounded-3xl sm:px-4 sm:py-3">
           <div className="flex items-center justify-between">
             <Link href="/" className="group flex items-center gap-3">
@@ -859,21 +859,21 @@ export default function HomePage() {
           </div>
         </nav>
 
-        <section className="mb-7 grid items-start gap-4 sm:mb-12 lg:grid-cols-[0.82fr_1.18fr] lg:gap-8">
+        <section className="mb-7 grid items-start gap-4 sm:mb-12 lg:grid-cols-[0.72fr_1.28fr] lg:gap-7">
           <div className="pt-2 lg:sticky lg:top-6">
             <div className="mb-3 inline-flex rounded-full border border-purple-400/20 bg-purple-500/10 px-3 py-1.5 text-xs text-purple-100 shadow-lg shadow-purple-950/20 sm:px-4 sm:py-2 sm:text-sm">
               AI content repurposing for creators
             </div>
 
-            <h1 className="mb-3 bg-gradient-to-br from-white via-white to-purple-200 bg-clip-text text-[2.15rem] font-black leading-[0.98] tracking-tight text-transparent sm:mb-5 sm:text-6xl">
+            <h1 className="mb-3 max-w-xl bg-gradient-to-br from-white via-white to-purple-200 bg-clip-text text-[2.15rem] font-black leading-[0.98] tracking-tight text-transparent sm:mb-5 sm:text-6xl">
               Turn one idea into weeks of content.
             </h1>
 
-            <p className="mb-4 max-w-xl text-sm leading-6 text-zinc-400 sm:mb-6 sm:text-lg sm:leading-8">
-              Repurso transforms raw ideas into posts, hooks, scripts, captions and content plans built for every major platform.
+            <p className="mb-4 max-w-lg text-sm leading-6 text-zinc-400 sm:mb-6 sm:text-lg sm:leading-8">
+              Repurso turns raw thoughts into platform-ready posts, hooks, scripts and captions in seconds.
             </p>
 
-            <div className="mb-4 grid grid-cols-3 gap-2 text-center text-[11px] text-zinc-400 sm:mb-6 sm:max-w-lg sm:text-sm">
+            <div className="mb-4 grid max-w-lg grid-cols-3 gap-2 text-center text-[11px] text-zinc-400 sm:mb-6 sm:text-sm">
               <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-3 py-3">
                 <span className="block text-base font-bold text-white sm:text-xl">1</span>
                 Idea
@@ -906,135 +906,88 @@ export default function HomePage() {
               </a>
             </div>
 
-            <div className="mb-5 flex flex-wrap gap-2 text-xs text-zinc-500 sm:text-sm">
-              <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5">
-                Built for creators
-              </span>
-              <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5">
-                Founder-friendly
-              </span>
+            <div className="mb-5 flex max-w-lg flex-wrap gap-2 text-xs text-zinc-500 sm:text-sm">
               <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5">
                 No workflow setup
               </span>
+              <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5">
+                Creator-friendly
+              </span>
+              <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5">
+                Export-ready
+              </span>
             </div>
 
-            <div className="hidden rounded-[28px] border border-white/10 bg-zinc-950/70 p-5 shadow-2xl shadow-purple-950/10 backdrop-blur lg:block">
-              <div className="mb-4 flex items-center justify-between">
-                <p className="text-sm text-zinc-500">What you get</p>
-                <span className="rounded-full bg-purple-500/10 px-3 py-1 text-xs font-semibold text-purple-200">
-                  Platform-native
-                </span>
-              </div>
-
-              <div className="grid gap-3">
-                {[
-                  "LinkedIn posts",
-                  "X/Twitter posts",
-                  "Instagram captions",
-                  "TikTok scripts",
-                  "YouTube descriptions",
-                  "Pinterest descriptions",
-                ].map((item) => (
-                  <div
-                    key={item}
-                    className="flex items-center justify-between rounded-2xl border border-white/10 bg-black/70 p-3 text-sm text-zinc-300"
+            <div className="hidden max-w-lg rounded-[24px] border border-purple-400/20 bg-purple-500/10 p-4 shadow-2xl shadow-purple-950/10 lg:block">
+              <p className="text-sm font-semibold text-purple-100">
+                Try these prompts
+              </p>
+              <div className="mt-3 grid gap-2">
+                {QUICK_START_PROMPTS.map((item) => (
+                  <button
+                    key={item.title}
+                    type="button"
+                    onClick={() => {
+                      setInput(item.prompt);
+                      track("quick_prompt_used", { prompt: item.title });
+                    }}
+                    className="rounded-2xl border border-white/10 bg-black/50 px-4 py-3 text-left text-sm text-zinc-300 transition hover:border-purple-400/40 hover:bg-purple-500/10"
                   >
-                    <span>{item}</span>
-                    <span className="text-purple-300">✓</span>
-                  </div>
+                    <span className="font-semibold text-white">{item.title}</span>
+                    <span className="mt-1 block text-xs text-zinc-500">
+                      {item.description}
+                    </span>
+                  </button>
                 ))}
-              </div>
-
-              <div className="mt-5 rounded-3xl border border-purple-400/20 bg-purple-500/10 p-4">
-                <p className="mb-2 text-sm font-semibold text-purple-100">
-                  Try these prompts
-                </p>
-                <p className="text-sm leading-6 text-zinc-400">
-                  “AI SaaS launch”, “Founder story”, “Fitness creator tips”.
-                </p>
               </div>
             </div>
           </div>
 
           <section
             id="generator"
-            className="rounded-[18px] border border-white/10 bg-zinc-950/70 p-3.5 shadow-2xl shadow-purple-950/20 backdrop-blur sm:rounded-[32px] sm:p-7"
+            className="rounded-[18px] border border-white/10 bg-zinc-950/70 p-3.5 shadow-2xl shadow-purple-950/20 backdrop-blur sm:rounded-[28px] sm:p-5"
           >
-            <h3 className="mb-2 text-xl font-bold sm:text-4xl">
+            <h3 className="mb-2 text-xl font-bold sm:text-3xl">
               Generate your content
             </h3>
 
-            <p className="mb-4 text-xs leading-5 text-zinc-400 sm:mb-6 sm:text-lg">
-              Paste an idea. Get platform-ready content in seconds.
+            <p className="mb-4 text-xs leading-5 text-zinc-400 sm:text-base">
+              Paste an idea. Choose a style. Generate publish-ready content.
             </p>
-            <div className="mb-6 hidden sm:block">
-              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] sm:mb-3 sm:text-sm sm:tracking-[0.25em] text-zinc-500">
-                Quality Mode
-              </p>
+            <div className="mb-4 grid gap-3 sm:grid-cols-[0.45fr_0.55fr]">
+              <label className="block">
+                <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.22em] text-zinc-500">
+                  Quality
+                </span>
+                <select
+                  value={qualityMode}
+                  onChange={(e) => setQualityMode(e.target.value as QualityModeId)}
+                  className="h-12 w-full rounded-2xl border border-white/10 bg-black/70 px-4 text-sm font-semibold text-white outline-none focus:border-purple-400/50"
+                >
+                  {QUALITY_MODES.map((mode) => (
+                    <option key={mode.id} value={mode.id}>
+                      {mode.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
 
-              <div className="grid gap-2 sm:grid-cols-3">
-                {QUALITY_MODES.map((mode) => {
-                  const isSelected = qualityMode === mode.id;
-
-                  return (
-                    <button
-                      key={mode.id}
-                      type="button"
-                      onClick={() => setQualityMode(mode.id)}
-                      className={`rounded-xl border p-2.5 text-left sm:rounded-2xl sm:p-4 transition sm:p-4 ${
-                        isSelected
-                          ? "border-white bg-white text-black shadow-lg shadow-purple-950/20"
-                          : "border-white/10 bg-black/70 text-white hover:-translate-y-0.5 hover:border-purple-400/40 hover:bg-purple-500/10"
-                      }`}
-                    >
-                      <h4 className="mb-1 font-bold">{mode.name}</h4>
-
-                      <p
-                        className={`hidden text-xs leading-5 sm:block ${
-                          isSelected ? "text-zinc-700" : "text-zinc-400"
-                        }`}
-                      >
-                        {mode.description}
-                      </p>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            <div className="mb-6 hidden sm:block">
-              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] sm:mb-3 sm:text-sm sm:tracking-[0.25em] text-zinc-500">
-                Template
-              </p>
-
-              <div className="grid grid-cols-2 gap-2 sm:grid-cols-2 xl:grid-cols-5">
-                {PROMPT_TEMPLATES.map((template) => {
-                  const isSelected = selectedTemplate === template.id;
-
-                  return (
-                    <button
-                      key={template.id}
-                      type="button"
-                      onClick={() => setSelectedTemplate(template.id)}
-                      className={`rounded-xl border p-2.5 text-left sm:rounded-2xl sm:p-4 transition sm:p-4 ${
-                        isSelected
-                          ? "border-white bg-white text-black shadow-lg shadow-purple-950/20"
-                          : "border-white/10 bg-black/70 text-white hover:-translate-y-0.5 hover:border-purple-400/40 hover:bg-purple-500/10"
-                      }`}
-                    >
-                      <h4 className="mb-1 font-bold">{template.name}</h4>
-
-                      <p
-                        className={`hidden text-xs leading-5 sm:block ${
-                          isSelected ? "text-zinc-700" : "text-zinc-400"
-                        }`}
-                      >
-                        {template.description}
-                      </p>
-                    </button>
-                  );
-                })}
-              </div>
+              <label className="block">
+                <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.22em] text-zinc-500">
+                  Template
+                </span>
+                <select
+                  value={selectedTemplate}
+                  onChange={(e) => setSelectedTemplate(e.target.value as PromptTemplateId)}
+                  className="h-12 w-full rounded-2xl border border-white/10 bg-black/70 px-4 text-sm font-semibold text-white outline-none focus:border-purple-400/50"
+                >
+                  {PROMPT_TEMPLATES.map((template) => (
+                    <option key={template.id} value={template.id}>
+                      {template.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
             </div>
 
             <div className="mb-3 flex items-center justify-between gap-4">
@@ -1053,73 +1006,24 @@ export default function HomePage() {
 
             <textarea
               placeholder="Example: We are launching an AI SaaS that helps creators turn one idea into posts for every platform..."
-              className="mb-3 h-28 w-full rounded-2xl border border-white/10 bg-black/70 p-3 text-sm text-white outline-none transition placeholder:text-zinc-600 focus:border-purple-400/50 focus:ring-4 focus:ring-purple-500/10 sm:h-44 sm:rounded-3xl sm:p-5 sm:text-base"
+              className="mb-3 h-28 w-full rounded-2xl border border-white/10 bg-black/70 p-3 text-sm text-white outline-none transition placeholder:text-zinc-600 focus:border-purple-400/50 focus:ring-4 focus:ring-purple-500/10 sm:h-36 sm:rounded-3xl sm:p-5 sm:text-base"
               value={input}
               onChange={(e) => setInput(e.target.value)}
             />
 
-            <div className="mb-5">
-              <div className="h-2 overflow-hidden rounded-full bg-zinc-900">
-                <div
-                  className={`h-full rounded-full transition-all ${
-                    characterCount > characterLimit ? "bg-red-500" : "bg-white"
-                  }`}
-                  style={{
-                    width: `${Math.min(
-                      (characterCount / characterLimit) * 100,
-                      100
-                    )}%`,
-                  }}
-                />
-              </div>
-
-              <div className="mt-3 hidden gap-2 sm:grid sm:grid-cols-2">
-                <div className="rounded-xl border border-zinc-800 bg-black p-3 sm:rounded-2xl sm:p-4">
-                  <div className="mb-2 flex items-center justify-between text-sm">
-                    <span className="text-zinc-500">Generations</span>
-                    <span className="font-semibold text-white">
-                      {generationUsage} / {generationLimit}
-                    </span>
-                  </div>
-
-                  <div className="h-2 overflow-hidden rounded-full bg-zinc-900">
-                    <div
-                      className="h-full rounded-full bg-purple-500 shadow-[0_0_18px_rgba(168,85,247,0.55)] transition-all duration-700"
-                      style={{
-                        width: `${generationPercent}%`,
-                      }}
-                    />
-                  </div>
-                </div>
-
-                <div className="rounded-xl border border-zinc-800 bg-black p-3 sm:rounded-2xl sm:p-4">
-                  <div className="mb-2 flex items-center justify-between text-sm">
-                    <span className="text-zinc-500">Rewrites</span>
-                    <span className="font-semibold text-white">
-                      {rewriteUsage} / {rewriteLimit}
-                    </span>
-                  </div>
-
-                  <div className="h-2 overflow-hidden rounded-full bg-zinc-900">
-                    <div
-                      className="h-full rounded-full bg-purple-500 shadow-[0_0_18px_rgba(168,85,247,0.55)] transition-all duration-700"
-                      style={{
-                        width: `${rewritePercent}%`,
-                      }}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <p className="mt-3 hidden text-sm text-zinc-500 sm:block">
-                Current plan:{" "}
-                <span className="font-semibold capitalize text-white">
-                  {userPlan}
-                </span>
-              </p>
+            <div className="mb-4 flex flex-wrap items-center gap-2 text-xs text-zinc-500 sm:text-sm">
+              <span className="rounded-full border border-white/10 bg-black/60 px-3 py-1.5">
+                Plan: <span className="font-semibold capitalize text-white">{userPlan}</span>
+              </span>
+              <span className="rounded-full border border-white/10 bg-black/60 px-3 py-1.5">
+                Generations: <span className="font-semibold text-white">{generationUsage}/{generationLimit}</span>
+              </span>
+              <span className="rounded-full border border-white/10 bg-black/60 px-3 py-1.5">
+                Rewrites: <span className="font-semibold text-white">{rewriteUsage}/{rewriteLimit}</span>
+              </span>
             </div>
 
-            <div className="mb-3 hidden flex-col gap-2 sm:flex lg:flex-row">
+            <div className="hidden">
               <input
                 type="text"
                 placeholder="Prompt title..."
@@ -1164,7 +1068,7 @@ export default function HomePage() {
                 characterCount > characterLimit ||
                 generationUsage >= generationLimit
               }
-              className="group inline-flex w-full items-center justify-center gap-3 rounded-xl bg-white px-6 py-3 text-sm sm:rounded-2xl sm:px-10 sm:py-5 sm:text-lg font-bold text-black shadow-xl shadow-purple-950/30 transition hover:-translate-y-0.5 hover:bg-zinc-200 disabled:translate-y-0 disabled:opacity-60 sm:w-auto sm:px-10 sm:py-5 sm:text-lg"
+              className="group inline-flex w-full items-center justify-center gap-3 rounded-xl bg-white px-6 py-3 text-sm font-bold text-black shadow-xl shadow-purple-950/30 transition hover:-translate-y-0.5 hover:bg-zinc-200 disabled:translate-y-0 disabled:opacity-60 sm:w-auto sm:rounded-2xl sm:px-8 sm:py-4 sm:text-base"
             >
               {loading && (
                 <span className="h-5 w-5 animate-spin rounded-full border-2 border-black/20 border-t-black" />
@@ -1521,7 +1425,17 @@ ${section.content}`,
             </div>
           )}
         </section>
-        <section className="hidden sm:mb-20 sm:block">
+
+        <section className="mb-8 grid gap-3 sm:hidden">
+          <a
+            href="#pricing"
+            className="rounded-2xl border border-white/10 bg-zinc-950/70 p-4 text-center font-bold text-white"
+          >
+            View plans after generating
+          </a>
+        </section>
+
+        <section className="hidden sm:mb-14 sm:block">
   <div className="mb-6 text-center sm:mb-14">
     <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-zinc-500">
       How it works
@@ -1578,78 +1492,9 @@ ${section.content}`,
   </div>
 </section>
 
-<section className="hidden">
-  <div className="mb-10 text-center sm:mb-14">
-    <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-zinc-500">
-      Built for
-    </p>
 
-    <h2 className="mb-4 text-[1.65rem] font-bold sm:text-5xl">
-      Made for modern creators.
-    </h2>
-  </div>
-
-  <div className="grid gap-6 lg:grid-cols-3">
-    <div className="rounded-[28px] border border-white/10 bg-zinc-950/70 p-6 shadow-xl shadow-purple-950/10 transition hover:-translate-y-1 hover:border-purple-400/30 hover:bg-zinc-900/70">
-      <h3 className="mb-4 text-2xl font-bold">Creators</h3>
-
-      <p className="leading-7 text-zinc-400">
-        Turn one content idea into posts for every social platform in minutes.
-      </p>
-    </div>
-
-    <div className="rounded-[28px] border border-white/10 bg-zinc-950/70 p-6 shadow-xl shadow-purple-950/10 transition hover:-translate-y-1 hover:border-purple-400/30 hover:bg-zinc-900/70">
-      <h3 className="mb-4 text-2xl font-bold">Founders</h3>
-
-      <p className="leading-7 text-zinc-400">
-        Build audience consistently without spending hours rewriting content.
-      </p>
-    </div>
-
-    <div className="rounded-[28px] border border-white/10 bg-zinc-950/70 p-6 shadow-xl shadow-purple-950/10 transition hover:-translate-y-1 hover:border-purple-400/30 hover:bg-zinc-900/70">
-      <h3 className="mb-4 text-2xl font-bold">Marketing teams</h3>
-
-      <p className="leading-7 text-zinc-400">
-        Speed up social workflows and generate multiple content angles faster.
-      </p>
-    </div>
-  </div>
-</section>
-
-<section className="mb-20 hidden rounded-[32px] border border-purple-400/20 bg-gradient-to-br from-purple-950/35 via-zinc-950 to-black p-8 shadow-2xl shadow-purple-950/20 sm:block sm:p-12">
-  <div className="mx-auto max-w-3xl text-center">
-    <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-zinc-500">
-      Start creating
-    </p>
-
-    <h2 className="mb-5 text-4xl font-bold sm:text-5xl">
-      Turn one idea into weeks of content.
-    </h2>
-
-    <p className="mb-8 text-lg leading-8 text-zinc-400">
-      No complicated workflow. Paste your content, generate instantly and
-      publish everywhere.
-    </p>
-
-    <div className="flex flex-col justify-center gap-4 sm:flex-row">
-      <a
-        href="#generator"
-        className="rounded-xl bg-white px-5 py-3 text-center text-sm font-bold text-black shadow-lg shadow-purple-950/30 transition hover:-translate-y-0.5 hover:bg-zinc-200 sm:px-8 sm:py-4 sm:text-base"
-      >
-        Try Repurso Free
-      </a>
-
-      <a
-        href="#pricing"
-        className="rounded-xl border border-white/10 bg-white/[0.03] px-5 py-3 text-center text-sm font-bold transition hover:-translate-y-0.5 hover:border-purple-400/40 hover:bg-purple-500/10 sm:px-8 sm:py-4 sm:text-base"
-      >
-        View Pricing
-      </a>
-    </div>
-  </div>
-</section>
-        <section className="mb-14 hidden sm:mb-20 sm:block">
-          <div className="mb-12 text-center">
+<section className="mb-14 hidden sm:mb-20 sm:block">
+          <div className="mb-8 text-center">
             <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-zinc-500">
               Why Repurso
             </p>
@@ -1690,7 +1535,7 @@ ${section.content}`,
           </div>
         </section>
 
-        <section id="pricing" className="py-8 sm:py-16">
+        <section id="pricing" className="py-8 sm:py-12">
           <div className="mb-12 text-center">
             <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-zinc-500">
               Pricing
@@ -1734,7 +1579,7 @@ ${section.content}`,
               </a>
             </div>
 
-            <div className="relative rounded-[28px] border border-white bg-white p-6 text-black shadow-2xl shadow-purple-950/30 transition hover:-translate-y-1 sm:rounded-[32px] sm:p-8">
+            <div className="relative scale-[1.02] rounded-[28px] border border-purple-200 bg-white p-6 text-black shadow-2xl shadow-purple-500/25 ring-4 ring-purple-500/10 transition hover:-translate-y-1 sm:rounded-[32px] sm:p-8">
               <div className="mb-5 inline-flex rounded-full bg-black px-4 py-2 text-sm font-bold text-white lg:absolute lg:-top-4 lg:left-1/2 lg:mb-0 lg:-translate-x-1/2">
                 Most popular
               </div>
